@@ -2,6 +2,9 @@ package com.account.rpc.dto;
 
 import java.io.Serializable;
 
+/**
+ * 账本信息
+ */
 public class AccountDto implements Serializable {
     /**
      * pin

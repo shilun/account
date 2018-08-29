@@ -12,7 +12,7 @@ public class InvertBizDto implements Serializable {
      */
     private String tokenName;
     /**
-     * 1 付款 2 收款 3 充值 4 提币
+     * 业务类型
      */
     private BizTypeEnum bizType;
     /**
@@ -27,6 +27,7 @@ public class InvertBizDto implements Serializable {
      * 冻结
      */
     private Long freeze;
+
 
     public String getPin() {
         return pin;
