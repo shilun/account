@@ -1,6 +1,9 @@
 package com.account.domain;
 
 import com.common.util.AbstractBaseEntity;
+
+import java.math.BigDecimal;
+
 /**
  * 
  * @desc 账户信息 account
@@ -8,14 +11,28 @@ import com.common.util.AbstractBaseEntity;
  */
 public class Account extends AbstractBaseEntity implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 代理商id
+	 */
+	private Long proxyId;
 	/**pin*/
 	private String pin;
 	/**币种*/
 	private String tokenType;
 	/**总余额*/
-	private Long amount;
+	private BigDecimal amount;
 	/**冻结*/
-	private Long freeze;
+	private BigDecimal freeze;
+
+
+	public Long getProxyId() {
+		return proxyId;
+	}
+
+	public void setProxyId(Long proxyId) {
+		this.proxyId = proxyId;
+	}
 
 	public String getPin() {
 		return pin;
@@ -33,19 +50,19 @@ public class Account extends AbstractBaseEntity implements java.io.Serializable 
 		this.tokenType = tokenType;
 	}
 
-	public Long getAmount() {
+	public BigDecimal getAmount() {
 		return amount;
 	}
 
-	public void setAmount(Long amount) {
+	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
 
-	public Long getFreeze() {
+	public BigDecimal getFreeze() {
 		return freeze;
 	}
 
-	public void setFreeze(Long freeze) {
+	public void setFreeze(BigDecimal freeze) {
 		this.freeze = freeze;
 	}
 }

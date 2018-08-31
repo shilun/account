@@ -18,10 +18,6 @@
         </dependency>
 
 
-        <dependency>
-            <groupId>com.jiahou</groupId>
-            <version>1.0.0</version>
-            <artifactId>com.passport.rpc</artifactId>
-        </dependency>
+
     </dependencies>
 </project>

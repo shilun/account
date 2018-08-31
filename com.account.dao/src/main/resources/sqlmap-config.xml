@@ -11,7 +11,7 @@
     </settings>
     <typeAliases>
         <typeAlias alias="Account" type="com.account.domain.Account"/>
-        <typeAlias alias="AccountDetailt" type="com.account.domain.AccountDetailt"/>
+        <typeAlias alias="AccountDetailt" type="com.account.domain.AccountDetail"/>
 
 
     </typeAliases>

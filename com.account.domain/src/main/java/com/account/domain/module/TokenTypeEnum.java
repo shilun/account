@@ -5,7 +5,9 @@ package com.account.domain.module;
  */
 public enum TokenTypeEnum {
     RMB("人民币"),
-    GoldCoin("金币");
+    GoldCoin("金币"),
+    RMB_TEST("测试账户"),
+    GoldCoin_Test("测试金币");
 
     TokenTypeEnum(String label) {
         this.lable = label;

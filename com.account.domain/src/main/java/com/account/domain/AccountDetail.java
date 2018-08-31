@@ -2,15 +2,23 @@ package com.account.domain;
 
 import com.common.util.AbstractBaseEntity;
 
+import java.math.BigDecimal;
+
 /**
  * @desc 账本流水账
  */
-public class AccountDetailt extends AbstractBaseEntity implements java.io.Serializable {
+public class AccountDetail extends AbstractBaseEntity implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
     /**
      * pin
      */
     private String pin;
+
+    /**
+     * 代理商id
+     */
+    private Long proxyId;
+
     /**
      * 代币类型
      */
@@ -22,31 +30,44 @@ public class AccountDetailt extends AbstractBaseEntity implements java.io.Serial
     /**
      * 业务标识（外键流水号）
      */
-    private String bizId;
+    private Long bizId;
     /**
      * before_总余额
      */
-    private Long beforeAmount;
+    private BigDecimal beforeAmount;
     /**
      * before_冻结余额
      */
-    private Long beforeFreeze;
+    private BigDecimal beforeFreeze;
     /**
      * change_总余额
      */
-    private Long changeAmount;
+    private BigDecimal changeAmount;
     /**
      * change_冻结余额
      */
-    private Long changeFreeze;
+    private BigDecimal changeFreeze;
     /**
      * after_总余额
      */
-    private Long afterAmount;
+    private BigDecimal afterAmount;
     /**
      * after_冻结余额
      */
-    private Long afterFreeze;
+    private BigDecimal afterFreeze;
+
+    /**
+     * 1 正常 2 回滚
+     */
+    private Integer status;
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     public String getPin() {
         return pin;
@@ -54,6 +75,14 @@ public class AccountDetailt extends AbstractBaseEntity implements java.io.Serial
 
     public void setPin(String pin) {
         this.pin = pin;
+    }
+
+    public Long getProxyId() {
+        return proxyId;
+    }
+
+    public void setProxyId(Long proxyId) {
+        this.proxyId = proxyId;
     }
 
     public String getTokenName() {
@@ -72,59 +101,59 @@ public class AccountDetailt extends AbstractBaseEntity implements java.io.Serial
         this.bizType = bizType;
     }
 
-    public String getBizId() {
+    public Long getBizId() {
         return bizId;
     }
 
-    public void setBizId(String bizId) {
+    public void setBizId(Long bizId) {
         this.bizId = bizId;
     }
 
-    public Long getBeforeAmount() {
+    public BigDecimal getBeforeAmount() {
         return beforeAmount;
     }
 
-    public void setBeforeAmount(Long beforeAmount) {
+    public void setBeforeAmount(BigDecimal beforeAmount) {
         this.beforeAmount = beforeAmount;
     }
 
-    public Long getBeforeFreeze() {
+    public BigDecimal getBeforeFreeze() {
         return beforeFreeze;
     }
 
-    public void setBeforeFreeze(Long beforeFreeze) {
+    public void setBeforeFreeze(BigDecimal beforeFreeze) {
         this.beforeFreeze = beforeFreeze;
     }
 
-    public Long getChangeAmount() {
+    public BigDecimal getChangeAmount() {
         return changeAmount;
     }
 
-    public void setChangeAmount(Long changeAmount) {
+    public void setChangeAmount(BigDecimal changeAmount) {
         this.changeAmount = changeAmount;
     }
 
-    public Long getChangeFreeze() {
+    public BigDecimal getChangeFreeze() {
         return changeFreeze;
     }
 
-    public void setChangeFreeze(Long changeFreeze) {
+    public void setChangeFreeze(BigDecimal changeFreeze) {
         this.changeFreeze = changeFreeze;
     }
 
-    public Long getAfterAmount() {
+    public BigDecimal getAfterAmount() {
         return afterAmount;
     }
 
-    public void setAfterAmount(Long afterAmount) {
+    public void setAfterAmount(BigDecimal afterAmount) {
         this.afterAmount = afterAmount;
     }
 
-    public Long getAfterFreeze() {
+    public BigDecimal getAfterFreeze() {
         return afterFreeze;
     }
 
-    public void setAfterFreeze(Long afterFreeze) {
+    public void setAfterFreeze(BigDecimal afterFreeze) {
         this.afterFreeze = afterFreeze;
     }
 }

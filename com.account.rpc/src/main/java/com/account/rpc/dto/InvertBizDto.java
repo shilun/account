@@ -1,16 +1,21 @@
 package com.account.rpc.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * 业务实体
  */
 public class InvertBizDto implements Serializable {
     private String pin;
+    /***
+     * 代理商标识
+     */
+    private Long proxyId;
     /**
      * 代币类型
      */
-    private String tokenName;
+    private String tokenType;
     /**
      * 业务类型
      */
@@ -22,12 +27,20 @@ public class InvertBizDto implements Serializable {
     /**
      * 总余额
      */
-    private Long amount;
+    private BigDecimal amount;
     /**
      * 冻结
      */
-    private Long freeze;
+    private BigDecimal freeze;
 
+
+    public Long getProxyId() {
+        return proxyId;
+    }
+
+    public void setProxyId(Long proxyId) {
+        this.proxyId = proxyId;
+    }
 
     public String getPin() {
         return pin;
@@ -37,12 +50,12 @@ public class InvertBizDto implements Serializable {
         this.pin = pin;
     }
 
-    public String getTokenName() {
-        return tokenName;
+    public String getTokenType() {
+        return tokenType;
     }
 
-    public void setTokenName(String tokenName) {
-        this.tokenName = tokenName;
+    public void setTokenType(String tokenType) {
+        this.tokenType = tokenType;
     }
 
     public BizTypeEnum getBizType() {
@@ -61,19 +74,19 @@ public class InvertBizDto implements Serializable {
         this.bizId = bizId;
     }
 
-    public Long getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Long amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
-    public Long getFreeze() {
+    public BigDecimal getFreeze() {
         return freeze;
     }
 
-    public void setFreeze(Long freeze) {
+    public void setFreeze(BigDecimal freeze) {
         this.freeze = freeze;
     }
 }

@@ -1,6 +1,7 @@
 package com.account.rpc.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * 账本信息
@@ -17,11 +18,11 @@ public class AccountDto implements Serializable {
     /**
      * 总余额
      */
-    private Long amount;
+    private BigDecimal amount;
     /**
      * 冻结
      */
-    private Long freeze;
+    private BigDecimal freeze;
 
     public String getPin() {
         return pin;
@@ -39,20 +40,19 @@ public class AccountDto implements Serializable {
         this.tokenType = tokenType;
     }
 
-    public Long getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Long amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
-    public Long getFreeze() {
+    public BigDecimal getFreeze() {
         return freeze;
     }
 
-    public void setFreeze(Long freeze) {
+    public void setFreeze(BigDecimal freeze) {
         this.freeze = freeze;
     }
-
 }

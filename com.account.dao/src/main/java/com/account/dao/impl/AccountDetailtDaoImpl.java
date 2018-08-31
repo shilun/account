@@ -1,10 +1,9 @@
-package com.account.dao.impl; 
-import java.util.List;
+package com.account.dao.impl;
 
 import com.common.util.DefaultBaseDao;
 
 import com.account.dao.AccountDetailtDao;
-import com.account.domain.AccountDetailt;
+import com.account.domain.AccountDetail;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class AccountDetailtDaoImpl extends DefaultBaseDao<AccountDetailt> implements AccountDetailtDao  {
+public class AccountDetailtDaoImpl extends DefaultBaseDao<AccountDetail> implements AccountDetailtDao  {
 	private static final long serialVersionUID = 1L;
 	private final static String NAMESPACE = "com.account.dao.AccountDetailtDao.";
 	
