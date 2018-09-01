@@ -1,11 +1,10 @@
-package com.account.web.controller;
+package com.account.web;
 
 import com.common.exception.BizException;
 import com.common.util.RPCResult;
 import com.common.util.StringUtils;
 import com.common.web.AbstractController;
 import com.passport.rpc.AdminRPCService;
-import com.passport.rpc.UserRPCService;
 import com.passport.rpc.dto.UserDTO;
 import org.apache.log4j.Logger;
 
