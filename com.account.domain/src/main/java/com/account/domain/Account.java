@@ -24,7 +24,16 @@ public class Account extends AbstractBaseEntity implements java.io.Serializable 
 	private BigDecimal amount;
 	/**冻结*/
 	private BigDecimal freeze;
+	/**状态 1 启用 2 禁用*/
+	private Integer status;
 
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 
 	public Long getProxyId() {
 		return proxyId;

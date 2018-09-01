@@ -101,6 +101,24 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         return result;
     }
 
+    @Override
+    public RPCResult<List<String>> invertBizs(List<InvertBizDto> dtos) {
+        RPCResult result=new RPCResult();
+        List<String> faildList=new ArrayList<>();
+        for(InvertBizDto dto:dtos){
+            try{
+                newBiz(dto);
+            }
+            catch(Exception e){
+                logger.error("执行业务失败", e);
+                faildList.add(dto.getBizId());
+            }
+        }
+        result.setSuccess(true);
+        result.setData(faildList);
+        return result;
+    }
+
     @Transactional
     public void newBiz(InvertBizDto dto) {
         Account query = new Account();

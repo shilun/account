@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.account.dao.AccountDao">
+<mapper namespace="com.account.dao.MoneyPassCfgDao">
 <sql id="limit">
 	<if test="startRow != null and endRow !=null">limit #{startRow},#{endRow}</if>
 </sql>	
@@ -14,55 +14,49 @@
 		<if test="id != null "><![CDATA[AND id =#{id}]]></if>		
 		<if test="pin != null "><![CDATA[AND pin =#{pin}]]></if>		
 		<if test="proxyId != null "><![CDATA[AND proxy_id =#{proxyId}]]></if>		
-		<if test="tokenType != null "><![CDATA[AND token_type =#{tokenType}]]></if>		
-		<if test="amount != null "><![CDATA[AND amount =#{amount}]]></if>		
-		<if test="freeze != null "><![CDATA[AND freeze =#{freeze}]]></if>		
-		<if test="status != null "><![CDATA[AND status =#{status}]]></if>		
+		<if test="pass != null "><![CDATA[AND pass =#{pass}]]></if>		
 		<if test="delStatus != null "><![CDATA[AND del_status =#{delStatus}]]></if>		
 		<if test="createTime != null "><![CDATA[AND create_time =#{createTime}]]></if>		
 		<if test="updateTime != null "><![CDATA[AND update_time =#{updateTime}]]></if>		
 	</where>
 </sql>
 <sql id="columns">
-	id as id ,pin as pin ,proxy_id as proxyId ,token_type as tokenType ,amount as amount ,freeze as freeze ,status as status ,del_status as delStatus ,create_time as createTime ,update_time as updateTime 
+	id as id ,pin as pin ,proxy_id as proxyId ,pass as pass ,del_status as delStatus ,create_time as createTime ,update_time as updateTime 
 </sql>
-<insert id="insert" parameterType="account">
-  	insert into account
-  	(id,pin,proxy_id,token_type,amount,freeze,status,del_status,create_time,update_time)
+<insert id="insert" parameterType="moneyPassCfg">
+  	insert into money_pass_cfg
+  	(id,pin,proxy_id,pass,del_status,create_time,update_time)
   	values
-  	(#{id},#{pin},#{proxyId},#{tokenType},#{amount},#{freeze},#{status},#{delStatus},#{createTime},#{updateTime})
+  	(#{id},#{pin},#{proxyId},#{pass},#{delStatus},#{createTime},#{updateTime})
  	<selectKey keyProperty="id" resultType="long" order="AFTER">
         select last_insert_id()
     </selectKey>
 </insert>
 
 <delete id="del" parameterType="long">  
-    update  account set del_status=2,update_Time=now() where id = #{id}
+    update  money_pass_cfg set del_status=2,update_Time=now() where id = #{id}
 </delete> 
   
-<update id="update" parameterType="account">
-	update account 
+<update id="update" parameterType="moneyPassCfg">
+	update money_pass_cfg 
   	<set>
   				<if test="pin != null "><![CDATA[ pin =#{pin},]]></if>		
   				<if test="proxyId != null "><![CDATA[ proxy_id =#{proxyId},]]></if>		
-  				<if test="tokenType != null "><![CDATA[ token_type =#{tokenType},]]></if>		
-  				<if test="amount != null "><![CDATA[ amount =#{amount},]]></if>		
-  				<if test="freeze != null "><![CDATA[ freeze =#{freeze},]]></if>		
-  				<if test="status != null "><![CDATA[ status =#{status},]]></if>		
+  				<if test="pass != null "><![CDATA[ pass =#{pass},]]></if>		
   				<if test="delStatus != null "><![CDATA[ del_status =#{delStatus},]]></if>		
   				<if test="createTime != null "><![CDATA[ create_time =#{createTime},]]></if>		
   				<if test="updateTime != null "><![CDATA[ update_time =#{updateTime},]]></if>		
   	</set> 
     where  id=#{id}
   </update> 
-  <select id="queryCount" parameterType="account" resultType="int">
-        select count(1) from account 
+  <select id="queryCount" parameterType="moneyPassCfg" resultType="int">
+        select count(1) from money_pass_cfg 
         <include refid="Condition"/>
   </select> 
-  <select id="query" parameterType="account" resultType="account">
+  <select id="query" parameterType="moneyPassCfg" resultType="moneyPassCfg">
         select 
          <include refid="columns"/>
-		from account 
+		from money_pass_cfg 
         <include refid="Condition"/>
 	<include refid="orderCondition"/>
         <include refid="limit"/>        

@@ -28,6 +28,14 @@ public interface AccountRPCService {
      */
     RPCResult<Boolean> invertBiz(InvertBizDto dto);
 
+
+    /**
+     * 批量执行业务
+     * @param dtos
+     * @return
+     */
+    RPCResult<List<String>> invertBizs(List<InvertBizDto> dtos);
+
     /**
      * 回滚业务
      * @param bizType
@@ -35,5 +43,7 @@ public interface AccountRPCService {
      * @return
      */
     RPCResult<Boolean> invertBizBack(BizTypeEnum bizType, Long bizId);
+
+
 
 }
