@@ -79,6 +79,7 @@
     "@types/lodash": "4.14.104",
     "@types/node": "6.0.60",
     "loaders.css": "0.1.2",
+    "node-sass": "^4.9.3",
     "ts-node": "4.1.0",
     "tslint": "5.9.1",
     "typescript": "2.5.3"
