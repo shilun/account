@@ -16,20 +16,8 @@ export const menu = [
     link: '/system',
     icon: 'fa fa-gears',
     submenu: [{
-      text: '运营用户管理',
-      link: '/system/admin/list'
-    },
-    {
-      text: '运营角色管理',
-      link: '/system/role/list'
-    },
-    {
-      text: '客户管理',
-      link: '/system/user/list'
-    },
-      {
-        text: '代理商管理',
-        link: '/system/proxy/list'
-      }]
+      text: '用户账本管理',
+      link: '/system/account/list'
+    }]
   }
 ];

@@ -1,30 +1,26 @@
-package com.account.rpc.dto;
+package com.account.web.controller.dto;
 
-import java.io.Serializable;
+import com.common.util.AbstractDTO;
+
 import java.math.BigDecimal;
 
-/**
- * 账本信息
- */
-public class AccountDto implements Serializable {
-    private Long proxyId;
-    /**
-     * pin
-     */
-    private String pin;
-    /**
-     * 币种
-     */
-    private String tokenType;
-    /**
-     * 总余额
-     */
-    private BigDecimal amount;
-    /**
-     * 冻结
-     */
-    private BigDecimal freeze;
+public class AccountDto extends AbstractDTO {
 
+    /**
+     * 代理商id
+     */
+    private Long proxyId;
+    /**pin*/
+    private String pin;
+    /**币种*/
+    private String tokenType;
+    /**总余额*/
+    private BigDecimal amount;
+
+    /**冻结*/
+    private BigDecimal freeze;
+    /**状态 1 启用 2 禁用*/
+    private Integer status;
 
     public Long getProxyId() {
         return proxyId;
@@ -64,5 +60,13 @@ public class AccountDto implements Serializable {
 
     public void setFreeze(BigDecimal freeze) {
         this.freeze = freeze;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

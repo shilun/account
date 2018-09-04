@@ -3,6 +3,7 @@ package com.account.web.controller;
 import com.account.web.AbstractClientController;
 import com.account.web.controller.dto.LoginDto;
 import com.account.web.controller.dto.PasswordChangeDto;
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.common.exception.BizException;
 import com.common.util.RPCResult;
 import com.common.util.StringUtils;
@@ -23,7 +24,7 @@ import java.util.Map;
 @RequestMapping(value = "/login", method = {RequestMethod.POST})
 public class LoginController extends AbstractClientController {
 
-    @Resource
+    @Reference
     private AdminRPCService adminRPCService;
 
     @RequestMapping("in")

@@ -6,9 +6,9 @@ import {GlobalService} from "../../../services/global.service";
 
 @Component({
   selector: 'app-user-list',
-  templateUrl: './user-list.component.html'
+  templateUrl: './account-list.component.html'
 })
-export class UserListComponent extends AbstractController implements OnInit {
+export class AccountListComponent extends AbstractController implements OnInit {
   statuses:any;
   constructor(protected userService: UserService,protected globalService: GlobalService,  protected route: ActivatedRoute, protected router: Router) {
     super(userService, route, router);

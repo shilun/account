@@ -1,5 +1,6 @@
 package com.account.web.interceptor;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.common.annotation.RoleResource;
 import com.common.constants.GlobalContstants;
 import com.common.util.RPCResult;
@@ -21,7 +22,7 @@ import java.util.List;
 @Component
 public class ResourceHandlerInterceptor implements HandlerInterceptor {
     private Logger logger = Logger.getLogger(ResourceHandlerInterceptor.class);
-    @Resource
+    @Reference
     private AdminRPCService adminRPCService;
 
     @Override

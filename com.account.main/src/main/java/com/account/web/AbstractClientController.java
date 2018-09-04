@@ -1,5 +1,6 @@
 package com.account.web;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.common.exception.BizException;
 import com.common.util.RPCResult;
 import com.common.util.StringUtils;
@@ -8,7 +9,6 @@ import com.passport.rpc.AdminRPCService;
 import com.passport.rpc.dto.UserDTO;
 import org.apache.log4j.Logger;
 
-import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 
 /**
@@ -16,7 +16,7 @@ import javax.servlet.http.Cookie;
  */
 public abstract class AbstractClientController extends AbstractController {
 
-    @Resource
+    @Reference
     protected AdminRPCService adminRPCService;
     private static final Logger LOGGER = Logger.getLogger(AbstractClientController.class);
 
