@@ -23,7 +23,8 @@ import java.util.Map;
 @RequestMapping(value = "/login", method = {RequestMethod.POST})
 public class LoginController extends AbstractClientController {
 
-
+    @Reference
+    protected AdminRPCService adminRPCService;
     @RequestMapping("in")
     public Map<String, Object> login(@RequestBody LoginDto dto, HttpServletResponse response) {
         return buildMessage(new IExecute() {
