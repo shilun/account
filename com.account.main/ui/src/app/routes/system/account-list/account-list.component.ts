@@ -16,7 +16,7 @@ export class AccountListComponent extends AbstractController implements OnInit {
   }
 
   async ngOnInit() {
-    this.list(this.entity);
+    await this.list(this.entity);
     let result = await this.globalService.list('yesorno');
     if (result.success) {
       this.statuses = result.data.list;

@@ -15,7 +15,7 @@ public class InvertBizDto implements Serializable {
     /**
      * 代币类型
      */
-    private String tokenType;
+    private TokenTypeEnum tokenType;
     /**
      * 业务类型
      */
@@ -33,6 +33,13 @@ public class InvertBizDto implements Serializable {
      */
     private BigDecimal freeze;
 
+    public TokenTypeEnum getTokenType() {
+        return tokenType;
+    }
+
+    public void setTokenType(TokenTypeEnum tokenType) {
+        this.tokenType = tokenType;
+    }
 
     public Long getProxyId() {
         return proxyId;
@@ -50,13 +57,6 @@ public class InvertBizDto implements Serializable {
         this.pin = pin;
     }
 
-    public String getTokenType() {
-        return tokenType;
-    }
-
-    public void setTokenType(String tokenType) {
-        this.tokenType = tokenType;
-    }
 
     public BizTypeEnum getBizType() {
         return bizType;

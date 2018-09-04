@@ -127,7 +127,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         Account account = accountService.findByOne(query);
         if (account == null) {
             account = new Account();
-            account.setTokenType(dto.getTokenType());
+            account.setTokenType(dto.getTokenType().name());
             account.setFreeze(BigDecimal.ZERO);
             account.setAmount(BigDecimal.ZERO);
             account.setProxyId(dto.getProxyId());
