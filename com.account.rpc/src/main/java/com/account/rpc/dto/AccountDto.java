@@ -15,7 +15,7 @@ public class AccountDto implements Serializable {
     /**
      * 币种
      */
-    private String tokenType;
+    private TokenTypeEnum tokenType;
     /**
      * 总余额
      */
@@ -42,14 +42,6 @@ public class AccountDto implements Serializable {
         this.pin = pin;
     }
 
-    public String getTokenType() {
-        return tokenType;
-    }
-
-    public void setTokenType(String tokenType) {
-        this.tokenType = tokenType;
-    }
-
     public BigDecimal getAmount() {
         return amount;
     }
@@ -64,5 +56,13 @@ public class AccountDto implements Serializable {
 
     public void setFreeze(BigDecimal freeze) {
         this.freeze = freeze;
+    }
+
+    public TokenTypeEnum getTokenType() {
+        return tokenType;
+    }
+
+    public void setTokenType(TokenTypeEnum tokenType) {
+        this.tokenType = tokenType;
     }
 }
