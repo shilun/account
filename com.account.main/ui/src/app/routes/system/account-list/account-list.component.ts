@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AbstractController} from '../../../common/abstract.controller';
-import {AccountService} from '../../../services/user.service';
 import {GlobalService} from "../../../services/global.service";
+import {AccountService} from "../../../services/account.service";
 
 @Component({
   selector: 'app-user-list',
