@@ -11,13 +11,13 @@ import {LayoutModule} from './layout/layout.module';
 import {SharedModule} from './shared/shared.module';
 import {RoutesModule} from './routes/routes.module';
 import {HashLocationStrategy, LocationStrategy} from '@angular/common';
-import {UserService} from './services/user.service';
 import {ConfigService} from './services/config.service';
 import {LoginService} from './services/login.service';
 import {AdminService} from './services/admin.service';
 import {RoleService} from './services/role.service';
 import {GlobalService} from './services/global.service';
 import {ProxyService} from './services/proxy.service';
+import {AccountService} from "./services/account.service";
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -45,7 +45,7 @@ export function createTranslateLoader(http: HttpClient) {
   providers: [
     ConfigService,
     LoginService,
-    UserService,
+    AccountService,
     AdminService,
     RoleService,
     GlobalService,

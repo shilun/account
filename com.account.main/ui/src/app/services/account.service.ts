@@ -3,10 +3,10 @@ import {AbstractBaseService} from '../common/abstract-base.service';
 import {HttpClient} from '@angular/common/http';
 
 @Injectable()
-export class UserService extends AbstractBaseService {
+export class AccountService extends AbstractBaseService {
 
   constructor(http: HttpClient) {
-    super(http, '/user');
+    super(http, '/account');
   }
 
 }

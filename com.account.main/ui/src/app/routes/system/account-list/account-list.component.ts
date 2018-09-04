@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AbstractController} from '../../../common/abstract.controller';
-import {UserService} from '../../../services/user.service';
+import {AccountService} from '../../../services/user.service';
 import {GlobalService} from "../../../services/global.service";
 
 @Component({
@@ -10,7 +10,7 @@ import {GlobalService} from "../../../services/global.service";
 })
 export class AccountListComponent extends AbstractController implements OnInit {
   statuses:any;
-  constructor(protected userService: UserService,protected globalService: GlobalService,  protected route: ActivatedRoute, protected router: Router) {
+  constructor(protected userService: AccountService, protected globalService: GlobalService, protected route: ActivatedRoute, protected router: Router) {
     super(userService, route, router);
     this.entity = {};
   }
