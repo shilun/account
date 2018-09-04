@@ -10,6 +10,8 @@ import {AccountService} from "../../../services/account.service";
 })
 export class AccountListComponent extends AbstractController implements OnInit {
   statuses:any;
+  public pageSize: number = 10;
+  public pageIndex: number = 0;
   constructor(protected userService: AccountService, protected globalService: GlobalService, protected route: ActivatedRoute, protected router: Router) {
     super(userService, route, router);
     this.entity = {};
