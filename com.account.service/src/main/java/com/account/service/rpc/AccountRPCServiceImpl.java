@@ -10,7 +10,6 @@ import com.account.rpc.dto.BizTypeEnum;
 import com.account.rpc.dto.InvertBizDto;
 import com.account.service.AccountDetailtService;
 import com.account.service.AccountService;
-import com.common.exception.BizException;
 import com.common.util.BeanCoper;
 import com.common.util.RPCResult;
 import org.apache.log4j.Logger;
@@ -43,7 +42,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
             result.setData(resultlist);
             return result;
         } catch (Exception e) {
-            logger.error("查询账户失败");
+            logger.error("查询账户失败",e);
             result.setSuccess(false);
         }
         result.setMessage("查询账户失败");
@@ -68,6 +67,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
             if (!moneyed) {
                 Account e = new Account();
                 e.setPin(pin);
+                e.setTokenType(type.name());
                 e.setProxyId(proxyId);
                 e.setAmount(BigDecimal.ZERO);
                 e.setFreeze(BigDecimal.ZERO);
@@ -79,6 +79,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         for (Account item : list) {
             AccountDto dto = new AccountDto();
             BeanCoper.copyProperties(dto, item);
+            dto.setTokenType(TokenTypeEnum.findByName(item.getTokenType()));
             resultlist.add(dto);
         }
         return resultlist;

@@ -1,4 +1,7 @@
-package com.account.rpc.dto;
+package com.account.domain.module;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 币种
@@ -11,6 +14,18 @@ public enum TokenTypeEnum {
 
     TokenTypeEnum(String label) {
         this.lable = label;
+    }
+    private static Map<String,TokenTypeEnum> maps;
+    static {
+        maps=new HashMap<>();
+        TokenTypeEnum[] values = TokenTypeEnum.values();
+        for(TokenTypeEnum item:values){
+            maps.put(item.name(),item);
+        }
+    }
+
+    public static TokenTypeEnum findByName(String name){
+        return maps.get(name);
     }
 
     private String lable;
