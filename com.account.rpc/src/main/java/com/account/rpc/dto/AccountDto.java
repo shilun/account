@@ -1,6 +1,5 @@
 package com.account.rpc.dto;
 
-import com.account.domain.module.TokenTypeEnum;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
