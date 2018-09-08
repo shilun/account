@@ -30,7 +30,12 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
     /**
      * 业务标识（外键流水号）
      */
-    private Long bizId;
+    private String bizId;
+
+    /***
+     * 账本类型
+     */
+    private String tokenType;
     /**
      * before_总余额
      */
@@ -60,6 +65,14 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
      * 1 正常 2 回滚
      */
     private Integer status;
+
+    public String getTokenType() {
+        return tokenType;
+    }
+
+    public void setTokenType(String tokenType) {
+        this.tokenType = tokenType;
+    }
 
     public Integer getStatus() {
         return status;
@@ -101,11 +114,11 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
         this.bizType = bizType;
     }
 
-    public Long getBizId() {
+    public String getBizId() {
         return bizId;
     }
 
-    public void setBizId(Long bizId) {
+    public void setBizId(String bizId) {
         this.bizId = bizId;
     }
 

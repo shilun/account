@@ -1,5 +1,6 @@
 package com.account.web;
 
+import com.account.service.RPCServiceBean;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.common.exception.BizException;
 import com.common.util.RPCResult;
@@ -9,6 +10,7 @@ import com.passport.rpc.AdminRPCService;
 import com.passport.rpc.dto.UserDTO;
 import org.apache.log4j.Logger;
 
+import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 
 /**
@@ -16,14 +18,14 @@ import javax.servlet.http.Cookie;
  */
 public abstract class AbstractClientController extends AbstractController {
 
-    @Reference
-    protected AdminRPCService adminRPCService;
+    @Resource
+    protected RPCServiceBean rpcServiceBean;
     private static final Logger LOGGER = Logger.getLogger(AbstractClientController.class);
 
 
     protected UserDTO getUser() {
         String token = getToken();
-        RPCResult<UserDTO> userDTOResult = adminRPCService.verificationToken(token);
+        RPCResult<UserDTO> userDTOResult = rpcServiceBean.getAdminRPCService().verificationToken(token);
         if (userDTOResult.getSuccess()) {
             return userDTOResult.getData();
         }
@@ -48,7 +50,7 @@ public abstract class AbstractClientController extends AbstractController {
 
     protected String getPin() {
         String token = getToken();
-        RPCResult<UserDTO> userDTOResult = adminRPCService.verificationToken(token);
+        RPCResult<UserDTO> userDTOResult = rpcServiceBean.getAdminRPCService().verificationToken(token);
         if (userDTOResult.getSuccess()) {
             return userDTOResult.getData().getPin();
         }

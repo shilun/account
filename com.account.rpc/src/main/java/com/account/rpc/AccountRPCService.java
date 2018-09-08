@@ -42,7 +42,7 @@ public interface AccountRPCService {
      * @param bizId
      * @return
      */
-    RPCResult<Boolean> invertBizBack(BizTypeEnum bizType, Long bizId);
+    RPCResult<Boolean> invertBizBack(BizTypeEnum bizType, String bizId);
 
 
 

@@ -89,7 +89,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
     public RPCResult<Boolean> invertBiz(InvertBizDto dto) {
         RPCResult result = new RPCResult<>();
         try {
-            newBiz(dto);
+            accountService.newBiz(dto);
             result.setSuccess(true);
             return result;
         } catch (Exception e) {
@@ -107,7 +107,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         List<String> faildList=new ArrayList<>();
         for(InvertBizDto dto:dtos){
             try{
-                newBiz(dto);
+                accountService.newBiz(dto);
             }
             catch(Exception e){
                 logger.error("执行业务失败", e);
@@ -119,63 +119,11 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         return result;
     }
 
-    @Transactional
-    public void newBiz(InvertBizDto dto) {
-        Account query = new Account();
-        query.setProxyId(dto.getProxyId());
-        query.setPin(dto.getPin());
-        Account account = accountService.findByOne(query);
-        if (account == null) {
-            account = new Account();
-            account.setTokenType(dto.getTokenType().name());
-            account.setFreeze(BigDecimal.ZERO);
-            account.setAmount(BigDecimal.ZERO);
-            account.setProxyId(dto.getProxyId());
-            account.setPin(dto.getPin());
-        }
-        AccountDetail detail = new AccountDetail();
-        detail.setBeforeAmount(account.getAmount());
-        detail.setBeforeFreeze(account.getFreeze());
-        if (dto.getAmount().compareTo(BigDecimal.ZERO) > 0) {
-            account.setAmount(account.getAmount().add(dto.getAmount()));
-        }
-        if (dto.getAmount().compareTo(BigDecimal.ZERO) < 0) {
-            account.getAmount().subtract(dto.getAmount());
-        }
-        if (dto.getFreeze().compareTo(BigDecimal.ZERO) > 0) {
-            account.setFreeze(account.getFreeze().add(dto.getFreeze()));
-        }
-        if (dto.getFreeze().compareTo(BigDecimal.ZERO) < 0) {
-            account.setAmount(account.getAmount().subtract(dto.getFreeze()));
-            account.setFreeze(account.getFreeze().subtract(dto.getFreeze()));
-        }
-        if (account.getAmount().compareTo(BigDecimal.ZERO) < 0) {
-            throw new BizException("invertBiz.account.error", "执行业务失败,余额不足");
-        }
-        if (account.getFreeze().compareTo(BigDecimal.ZERO) < 0) {
-            throw new BizException("invertBiz.freeze.error", "执行业务失败,冻结账户不足");
-        }
-        detail.setChangeAmount(dto.getAmount());
-        detail.setChangeFreeze(dto.getFreeze());
 
-        detail.setAfterAmount(account.getAmount());
-        detail.setAfterFreeze(account.getFreeze());
-
-        if (account.getId() == null) {
-            accountService.save(account);
-        } else {
-            Account upEntity = new Account();
-            upEntity.setId(upEntity.getId());
-            upEntity.setAmount(account.getAmount());
-            upEntity.setFreeze(account.getFreeze());
-        }
-        detail.setStatus(DetailStatusEnum.Normal.getValue());
-        accountDetailtService.save(detail);
-    }
 
 
     @Override
-    public RPCResult<Boolean> invertBizBack(BizTypeEnum bizType, Long bizId) {
+    public RPCResult<Boolean> invertBizBack(BizTypeEnum bizType, String bizId) {
         RPCResult result = new RPCResult();
         try {
             rollBackBiz(bizType, bizId);
@@ -191,7 +139,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
     }
 
     @Transactional
-    public void rollBackBiz(BizTypeEnum bizType, Long bizId) {
+    public void rollBackBiz(BizTypeEnum bizType, String bizId) {
         AccountDetail query = new AccountDetail();
         query.setBizType(bizType.getValue());
         query.setBizId(bizId);

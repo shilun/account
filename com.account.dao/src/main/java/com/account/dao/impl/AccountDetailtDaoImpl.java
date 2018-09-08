@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AccountDetailtDaoImpl extends DefaultBaseDao<AccountDetail> implements AccountDetailtDao  {
 	private static final long serialVersionUID = 1L;
-	private final static String NAMESPACE = "com.account.dao.AccountDetailtDao.";
+	private final static String NAMESPACE = "com.account.dao.AccountDetailDao.";
 	
 	@Override
 	public String getNameSpace(String statement) {		
