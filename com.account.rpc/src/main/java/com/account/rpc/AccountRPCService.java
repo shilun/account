@@ -22,28 +22,20 @@ public interface AccountRPCService {
 
     /**
      * 执行业务
-     *
+     * amount 正数时 账户加余额 负数时增加余额
+     * freeze 正数 则从amount 转账到 freeze 则，负数时则直接减少锁定余额
      * @param dto
      * @return
      */
     RPCResult<Boolean> invertBiz(InvertBizDto dto);
 
-
     /**
      * 批量执行业务
+     * amount 正数时 账户加余额 负数时增加余额
+     * freeze 正数 则从amount 转账到 freeze 则，负数时则直接减少锁定余额
      * @param dtos
      * @return
      */
     RPCResult<List<String>> invertBizs(List<InvertBizDto> dtos);
-
-    /**
-     * 回滚业务
-     * @param bizType
-     * @param bizId
-     * @return
-     */
-    RPCResult<Boolean> invertBizBack(BizTypeEnum bizType, String bizId);
-
-
 
 }

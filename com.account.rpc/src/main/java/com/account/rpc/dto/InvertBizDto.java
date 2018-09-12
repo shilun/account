@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 
 /**
  * 业务实体
+ *
  */
 public class InvertBizDto implements Serializable {
     private String pin;
@@ -26,11 +27,11 @@ public class InvertBizDto implements Serializable {
      */
     private String bizId;
     /**
-     * 总余额
+     * 可用余额数
      */
     private BigDecimal amount;
     /**
-     * 冻结
+     * 冻结数
      */
     private BigDecimal freeze;
 

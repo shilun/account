@@ -122,22 +122,22 @@ public class AccountRPCServiceImpl implements AccountRPCService {
 
 
 
-
-    @Override
-    public RPCResult<Boolean> invertBizBack(BizTypeEnum bizType, String bizId) {
-        RPCResult result = new RPCResult();
-        try {
-            rollBackBiz(bizType, bizId);
-            result.setSuccess(true);
-            return result;
-        } catch (Exception e) {
-            logger.error("业务回滚失败", e);
-        }
-        result.setSuccess(false);
-        result.setCode("account.invertBizBack.error");
-        result.setMessage("业务回滚失败");
-        return result;
-    }
+//
+//    @Override
+//    public RPCResult<Boolean> invertBizBack(BizTypeEnum bizType, String bizId) {
+//        RPCResult result = new RPCResult();
+//        try {
+//            rollBackBiz(bizType, bizId);
+//            result.setSuccess(true);
+//            return result;
+//        } catch (Exception e) {
+//            logger.error("业务回滚失败", e);
+//        }
+//        result.setSuccess(false);
+//        result.setCode("account.invertBizBack.error");
+//        result.setMessage("业务回滚失败");
+//        return result;
+//    }
 
     @Transactional
     public void rollBackBiz(BizTypeEnum bizType, String bizId) {
