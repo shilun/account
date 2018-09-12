@@ -100,10 +100,10 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
 			account.getAmount().subtract(dto.getAmount());
 		}
 		if (dto.getFreeze().compareTo(BigDecimal.ZERO) > 0) {
+			account.setAmount(account.getAmount().subtract(dto.getFreeze()));
 			account.setFreeze(account.getFreeze().add(dto.getFreeze()));
 		}
 		if (dto.getFreeze().compareTo(BigDecimal.ZERO) < 0) {
-			account.setAmount(account.getAmount().subtract(dto.getFreeze()));
 			account.setFreeze(account.getFreeze().subtract(dto.getFreeze()));
 		}
 		if (account.getAmount().compareTo(BigDecimal.ZERO) < 0) {
