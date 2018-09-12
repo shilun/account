@@ -18,7 +18,7 @@ public class AccountDto implements Serializable {
      */
     private TokenTypeEnum tokenType;
     /**
-     * 总余额
+     * 余额
      */
     private BigDecimal amount;
     /**
