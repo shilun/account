@@ -1,19 +1,23 @@
 package com.account.rpc.dto;
 
+import com.common.util.GlosseryEnumUtils;
+import com.common.util.IGlossary;
+
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * 币种
  */
-public enum TokenTypeEnum {
-    RMB("人民币"),
-    GoldCoin("金币"),
-    RMB_TEST("测试账户"),
-    GoldCoin_Test("测试金币");
+public enum TokenTypeEnum implements IGlossary {
+    RMB("人民币",1),
+    GoldCoin("金币",2),
+    RMB_TEST("测试账户",3),
+    GoldCoin_Test("测试金币",4);
 
-    TokenTypeEnum(String label) {
-        this.lable = label;
+    TokenTypeEnum(String name,Integer value) {
+        this.name = name;
+        this.value=value;
     }
     private static Map<String,TokenTypeEnum> maps;
     static {
@@ -27,16 +31,15 @@ public enum TokenTypeEnum {
     public static TokenTypeEnum findByName(String name){
         return maps.get(name);
     }
-
-    private String lable;
+    private Integer value;
     private String name;
 
-    public String getLable() {
-        return lable;
+    public String getName() {
+        return name;
     }
 
-
-    public String getName() {
-        return name();
+    @Override
+    public Integer getValue() {
+        return value;
     }
 }
