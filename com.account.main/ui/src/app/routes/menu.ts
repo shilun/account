@@ -12,12 +12,13 @@ export const menu = [
     heading: true
   },
   {
-    text: '系统管理',
-    link: '/system',
     icon: 'fa fa-gears',
-    submenu: [{
-      text: '用户账本管理',
-      link: '/system/account/list'
-    }]
+    text: '账本配置管理',
+    link: '/system/config/list'
+  },
+  {
+    icon: 'fa fa-gears',
+    text: '用户账本管理',
+    link: '/system/account/list'
   }
 ];

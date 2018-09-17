@@ -3,7 +3,7 @@
 
 const PROXY_CONFIG = {
   "/api": {
-    "target": "http://localhost:8000",
+    "target": "http://main.account.jiahou.com:8001",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug",

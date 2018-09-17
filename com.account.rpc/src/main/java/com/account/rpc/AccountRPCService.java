@@ -1,10 +1,9 @@
 package com.account.rpc;
 
-import com.account.rpc.dto.AccountDto;
-import com.account.rpc.dto.BizTypeEnum;
-import com.account.rpc.dto.InvertBizDto;
+import com.account.rpc.dto.*;
 import com.common.util.RPCResult;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -27,7 +26,7 @@ public interface AccountRPCService {
      * @param dto
      * @return
      */
-    RPCResult<Boolean> invertBiz(InvertBizDto dto);
+    RPCResult invertBiz(InvertBizDto dto);
 
     /**
      * 批量执行业务
@@ -38,4 +37,33 @@ public interface AccountRPCService {
      */
     RPCResult<List<String>> invertBizs(List<InvertBizDto> dtos);
 
+    /**
+     * 账户汇率转账
+     * @param proxyId 代理商id
+     * @param pin 用户 pin
+     * @param sourceType 源币种
+     * @param sourceAmount 源数量
+     * @param targetType 目标币种
+     * @return
+     */
+    RPCResult changeTo(Long proxyId, String pin, TokenTypeEnum sourceType,BigDecimal sourceAmount, TokenTypeEnum targetType);
+
+    /**
+     * 汇率查询
+     * @param sourceType 源
+     * @param targetType 目标
+     * @return
+     */
+    RPCResult<BigDecimal> queryRate(TokenTypeEnum sourceType, TokenTypeEnum targetType);
+
+
+    /**
+     * 查询账本详情
+     * @param proxyId
+     * @param pin
+     * @param page
+     * @param size
+     * @return
+     */
+    RPCResult<List<AccountDetailDto>> queryDetail(Long proxyId,String pin,Integer page,Integer size);
 }

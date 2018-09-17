@@ -13,6 +13,7 @@
         <typeAlias alias="Account" type="com.account.domain.Account"/>
         <typeAlias alias="AccountDetail" type="com.account.domain.AccountDetail"/>
         <typeAlias alias="MoneyPassCfg" type="com.account.domain.MoneyPassCfg"/>
+        <typeAlias alias="Config" type="com.account.domain.Config"/>
 
     </typeAliases>
     <typeHandlers>
@@ -23,5 +24,6 @@
         <mapper resource="sqlmap/Account.xml"/>
         <mapper resource="sqlmap/AccountDetail.xml"/>
         <mapper resource="sqlmap/MoneyPassCfg.xml"/>
+        <mapper resource="sqlmap/Config.xml"/>
     </mappers>
 </configuration>

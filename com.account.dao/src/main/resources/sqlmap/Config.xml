@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.account.dao.ConfigDao">
+<sql id="limit">
+	<if test="startRow != null and endRow !=null">limit #{startRow},#{endRow}</if>
+</sql>	
+<sql id="orderCondition">
+	<if test="orderColumn != null and orderColumn != ''">ORDER BY ${orderColumn} </if>
+</sql>
+
+<sql id="Condition">
+	<where>
+		<if test="id != null "><![CDATA[AND id =#{id}]]></if>		
+		<if test="name != null "><![CDATA[AND name =#{name}]]></if>		
+		<if test="keyName != null "><![CDATA[AND key_name =#{keyName}]]></if>		
+		<if test="content != null "><![CDATA[AND content =#{content}]]></if>		
+		<if test="delStatus != null "><![CDATA[AND del_status =#{delStatus}]]></if>		
+		<if test="createTime != null "><![CDATA[AND create_time =#{createTime}]]></if>		
+		<if test="updateTime != null "><![CDATA[AND update_time =#{updateTime}]]></if>		
+	</where>
+</sql>
+<sql id="columns">
+	id as id ,name as name ,key_name as keyName ,content as content ,del_status as delStatus ,create_time as createTime ,update_time as updateTime 
+</sql>
+<insert id="insert" parameterType="config">
+  	insert into config
+  	(id,name,key_name,content,del_status,create_time,update_time)
+  	values
+  	(#{id},#{name},#{keyName},#{content},#{delStatus},#{createTime},#{updateTime})
+ 	<selectKey keyProperty="id" resultType="long" order="AFTER">
+        select last_insert_id()
+    </selectKey>
+</insert>
+
+<delete id="del" parameterType="long">  
+    update  config set del_status=2,update_Time=now() where id = #{id}
+</delete> 
+  
+<update id="update" parameterType="config">
+	update config 
+  	<set>
+  				<if test="name != null "><![CDATA[ name =#{name},]]></if>		
+  				<if test="keyName != null "><![CDATA[ key_name =#{keyName},]]></if>		
+  				<if test="content != null "><![CDATA[ content =#{content},]]></if>		
+  				<if test="delStatus != null "><![CDATA[ del_status =#{delStatus},]]></if>		
+  				<if test="createTime != null "><![CDATA[ create_time =#{createTime},]]></if>		
+  				<if test="updateTime != null "><![CDATA[ update_time =#{updateTime},]]></if>		
+  	</set> 
+    where  id=#{id}
+  </update> 
+  <select id="queryCount" parameterType="config" resultType="int">
+        select count(1) from config 
+        <include refid="Condition"/>
+  </select> 
+  <select id="query" parameterType="config" resultType="config">
+        select 
+         <include refid="columns"/>
+		from config 
+        <include refid="Condition"/>
+	<include refid="orderCondition"/>
+        <include refid="limit"/>        
+  </select> 
+  </mapper>

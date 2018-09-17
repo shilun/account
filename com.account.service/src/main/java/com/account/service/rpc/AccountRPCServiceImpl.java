@@ -2,6 +2,7 @@ package com.account.service.rpc;
 
 import com.account.domain.Account;
 import com.account.domain.AccountDetail;
+import com.account.domain.Config;
 import com.account.domain.module.DetailStatusEnum;
 import com.account.rpc.AccountRPCService;
 import com.account.rpc.dto.AccountDto;
@@ -10,8 +11,10 @@ import com.account.rpc.dto.InvertBizDto;
 import com.account.rpc.dto.TokenTypeEnum;
 import com.account.service.AccountDetailtService;
 import com.account.service.AccountService;
+import com.account.service.ConfigService;
 import com.common.util.BeanCoper;
 import com.common.util.RPCResult;
+import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +36,9 @@ public class AccountRPCServiceImpl implements AccountRPCService {
     @Resource
     private AccountDetailtService accountDetailtService;
 
+    @Resource
+    private ConfigService configService;
+
     @Override
     public RPCResult<List<AccountDto>> queryAccount(String pin, Long proxyId) {
         RPCResult<List<AccountDto>> result = new RPCResult<>();
@@ -42,7 +48,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
             result.setData(resultlist);
             return result;
         } catch (Exception e) {
-            logger.error("查询账户失败",e);
+            logger.error("查询账户失败", e);
             result.setSuccess(false);
         }
         result.setMessage("查询账户失败");
@@ -104,13 +110,12 @@ public class AccountRPCServiceImpl implements AccountRPCService {
 
     @Override
     public RPCResult<List<String>> invertBizs(List<InvertBizDto> dtos) {
-        RPCResult result=new RPCResult();
-        List<String> faildList=new ArrayList<>();
-        for(InvertBizDto dto:dtos){
-            try{
+        RPCResult result = new RPCResult();
+        List<String> faildList = new ArrayList<>();
+        for (InvertBizDto dto : dtos) {
+            try {
                 accountService.newBiz(dto);
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 logger.error("执行业务失败", e);
                 faildList.add(dto.getBizId());
             }
@@ -120,7 +125,21 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         return result;
     }
 
-
+    @Override
+    public RPCResult changeTo(Long proxyId, String pin, TokenTypeEnum sourceType, BigDecimal sourceAmount, TokenTypeEnum targetType) {
+        RPCResult result = new RPCResult();
+        try {
+            accountDetailtService.changeTo(proxyId, pin, sourceType, sourceAmount, targetType);
+            result.setSuccess(true);
+            return result;
+        } catch (Exception e) {
+            logger.error("AccountRPCServiceImpl.changeTo.error", e);
+            result.setSuccess(false);
+            result.setCode("changeTo.error");
+            result.setMessage("转账失败");
+            return result;
+        }
+    }
 
 //
 //    @Override
@@ -174,4 +193,21 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         upAccount.setId(detail.getId());
         upAccount.setStatus(DetailStatusEnum.Rollback.getValue());
     }
+
+    @Override
+    public RPCResult<BigDecimal> queryRate(TokenTypeEnum sourceType, TokenTypeEnum targetType) {
+        RPCResult<BigDecimal> result = new RPCResult<>();
+        try {
+            BigDecimal value = configService.findRate(sourceType, targetType);
+            result.setData(value);
+            result.setSuccess(true);
+            return result;
+        } catch (Exception e) {
+            logger.error("AccountRPCServiceImpl.queryRate", e);
+            result.setCode("queryRate.error");
+            result.setMessage("查询汇率失败");
+            return result;
+        }
+    }
+
 }
