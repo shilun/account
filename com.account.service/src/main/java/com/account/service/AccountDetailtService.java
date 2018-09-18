@@ -1,9 +1,11 @@
 package com.account.service; 
+import com.account.rpc.dto.AccountDetailDto;
 import com.account.rpc.dto.TokenTypeEnum;
 import com.common.util.AbstractBaseService;
 import com.account.domain.AccountDetail;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 
@@ -19,5 +21,7 @@ public interface AccountDetailtService extends AbstractBaseService<AccountDetail
      * @param sourceAmount
      * @param targetType
      */
-    public void changeTo(Long proxyId, String pin, TokenTypeEnum sourceType, BigDecimal sourceAmount, TokenTypeEnum targetType);
+    public void changeTo(Long proxyId, String pin, Integer sourceType, BigDecimal sourceAmount, Integer targetType);
+
+    public List<AccountDetailDto> queryDetailList(Long proxyId,String pin,Integer page,Integer size);
 }

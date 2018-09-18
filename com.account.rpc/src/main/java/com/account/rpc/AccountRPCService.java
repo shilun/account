@@ -46,7 +46,7 @@ public interface AccountRPCService {
      * @param targetType 目标币种
      * @return
      */
-    RPCResult changeTo(Long proxyId, String pin, TokenTypeEnum sourceType,BigDecimal sourceAmount, TokenTypeEnum targetType);
+    RPCResult changeTo(Long proxyId, String pin, Integer sourceType,BigDecimal sourceAmount, Integer targetType);
 
     /**
      * 汇率查询
@@ -54,7 +54,7 @@ public interface AccountRPCService {
      * @param targetType 目标
      * @return
      */
-    RPCResult<BigDecimal> queryRate(TokenTypeEnum sourceType, TokenTypeEnum targetType);
+    RPCResult<BigDecimal> queryRate(Integer sourceType, Integer targetType);
 
 
     /**

@@ -20,17 +20,24 @@ public enum TokenTypeEnum implements IGlossary {
         this.value=value;
     }
     private static Map<String,TokenTypeEnum> maps;
+    private static Map<Integer,TokenTypeEnum> valueMaps;
     static {
         maps=new HashMap<>();
+        valueMaps=new HashMap<>();
         TokenTypeEnum[] values = TokenTypeEnum.values();
         for(TokenTypeEnum item:values){
             maps.put(item.name(),item);
+            valueMaps.put(item.getValue(),item);
         }
     }
 
     public static TokenTypeEnum findByName(String name){
         return maps.get(name);
     }
+    public static TokenTypeEnum findByValue(Integer value){
+        return valueMaps.get(value);
+    }
+
     private Integer value;
     private String name;
 

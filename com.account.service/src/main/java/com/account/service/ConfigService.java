@@ -19,5 +19,5 @@ public interface ConfigService extends AbstractBaseService<Config> {
      * @param targetType
      * @return
      */
-    public BigDecimal findRate(TokenTypeEnum sourceType, TokenTypeEnum targetType);
+    public BigDecimal findRate(Integer sourceType, Integer targetType);
 }

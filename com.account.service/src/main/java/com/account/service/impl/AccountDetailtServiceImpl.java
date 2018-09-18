@@ -3,6 +3,7 @@ package com.account.service.impl;
 import com.account.dao.AccountDetailtDao;
 import com.account.domain.Account;
 import com.account.domain.AccountDetail;
+import com.account.rpc.dto.AccountDetailDto;
 import com.account.rpc.dto.AccountDto;
 import com.account.rpc.dto.TokenTypeEnum;
 import com.account.service.AccountDetailtService;
@@ -10,6 +11,7 @@ import com.account.service.AccountService;
 import com.account.service.ConfigService;
 import com.common.exception.BizException;
 import com.common.util.AbstractBaseDao;
+import com.common.util.BeanCoper;
 import com.common.util.DefaultBaseService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +43,7 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
     }
 
     @Transactional
-    public void changeTo(Long proxyId, String pin, TokenTypeEnum sourceType, BigDecimal sourceAmount, TokenTypeEnum targetType) {
+    public void changeTo(Long proxyId, String pin, Integer sourceType, BigDecimal sourceAmount, Integer targetType) {
         Account query = new Account();
         query.setPin(pin);
         query.setProxyId(proxyId);
@@ -68,10 +70,10 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
         Account sourceAccount = null;
         Account targetAccount = null;
         for (Account item : list) {
-            if (sourceType.name().equals(item.getTokenType())) {
+            if (TokenTypeEnum.findByValue(sourceType).equals(item.getTokenType())) {
                 sourceAccount = item;
             }
-            if (targetType.name().equals(item.getTokenType())) {
+            if (TokenTypeEnum.findByValue(targetType).equals(item.getTokenType())) {
                 targetAccount = item;
             }
             if (sourceAccount != null && targetAccount != null) {
@@ -104,6 +106,27 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
         }
         upTargetAccount.setAmount(targetAccount.getAmount().add(total));
         accountService.save(upTargetAccount);
+    }
+
+    @Override
+    public List<AccountDetailDto> queryDetailList(Long proxyId, String pin, Integer page, Integer size) {
+        List<AccountDetailDto> accountDetailDtos = new ArrayList<>();
+        AccountDetail query = new AccountDetail();
+        query.setProxyId(proxyId);
+        query.setPin(pin);
+        query.setOrderColumn("id");
+        query.setOrderTpe(2);
+        query.setStartRow((page-1)*size);
+        query.setEndRow(page*size);
+        List<AccountDetail> accountDetails = getBaseDao().query(query);
+        if(!accountDetails.isEmpty()){
+            for(AccountDetail detail : accountDetails){
+                AccountDetailDto accountDetailDto = new AccountDetailDto();
+                BeanCoper.copyProperties(accountDetailDto,detail);
+                accountDetailDtos.add(accountDetailDto);
+            }
+        }
+        return accountDetailDtos;
     }
 
 

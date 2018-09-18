@@ -5,10 +5,7 @@ import com.account.domain.AccountDetail;
 import com.account.domain.Config;
 import com.account.domain.module.DetailStatusEnum;
 import com.account.rpc.AccountRPCService;
-import com.account.rpc.dto.AccountDto;
-import com.account.rpc.dto.BizTypeEnum;
-import com.account.rpc.dto.InvertBizDto;
-import com.account.rpc.dto.TokenTypeEnum;
+import com.account.rpc.dto.*;
 import com.account.service.AccountDetailtService;
 import com.account.service.AccountService;
 import com.account.service.ConfigService;
@@ -126,7 +123,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
     }
 
     @Override
-    public RPCResult changeTo(Long proxyId, String pin, TokenTypeEnum sourceType, BigDecimal sourceAmount, TokenTypeEnum targetType) {
+    public RPCResult changeTo(Long proxyId, String pin, Integer sourceType, BigDecimal sourceAmount, Integer targetType) {
         RPCResult result = new RPCResult();
         try {
             accountDetailtService.changeTo(proxyId, pin, sourceType, sourceAmount, targetType);
@@ -195,7 +192,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
     }
 
     @Override
-    public RPCResult<BigDecimal> queryRate(TokenTypeEnum sourceType, TokenTypeEnum targetType) {
+    public RPCResult<BigDecimal> queryRate(Integer sourceType, Integer targetType) {
         RPCResult<BigDecimal> result = new RPCResult<>();
         try {
             BigDecimal value = configService.findRate(sourceType, targetType);
@@ -208,6 +205,28 @@ public class AccountRPCServiceImpl implements AccountRPCService {
             result.setMessage("查询汇率失败");
             return result;
         }
+    }
+
+    @Override
+    public RPCResult<List<AccountDetailDto>> queryDetail(Long proxyId, String pin, Integer page, Integer size) {
+        RPCResult<List<AccountDetailDto>> rpcResult = new RPCResult<>();
+        try {
+            List<AccountDetailDto> accountDetailDtos = accountDetailtService.queryDetailList(proxyId,pin,page,size);
+            if(!accountDetailDtos.isEmpty()){
+                rpcResult.setSuccess(true);
+                rpcResult.setData(accountDetailDtos);
+            }else{
+                rpcResult.setSuccess(false);
+                rpcResult.setCode("AccountRPCServiceImpl.queryDetail.null");
+                rpcResult.setMessage("查询数据为空");
+            }
+        }catch (Exception e){
+            logger.error("AccountRPCServiceImpl.queryAccountDetail.error", e);
+            rpcResult.setSuccess(false);
+            rpcResult.setCode("queryDetail.error");
+            rpcResult.setMessage("查询数据失败");
+        }
+        return rpcResult;
     }
 
 }

@@ -44,12 +44,12 @@ public class ConfigServiceImpl extends DefaultBaseService<Config> implements Con
 		return configDao;
 	}
 
-	public BigDecimal findRate(TokenTypeEnum sourceType, TokenTypeEnum targetType) {
+	public BigDecimal findRate(Integer sourceType, Integer targetType) {
 		Config query = new Config();
-		query.setKeyName("rate_" + sourceType.name());
+		query.setKeyName("rate_" + TokenTypeEnum.findByValue(sourceType).name());
 		query = findByOne(query);
 		String content = query.getContent();
 		JSONObject jsonObject = JSONObject.fromObject(content);
-		return BigDecimal.valueOf(jsonObject.getDouble(targetType.name()));
+		return BigDecimal.valueOf(jsonObject.getDouble(TokenTypeEnum.findByValue(targetType).name()));
 	}
 }
