@@ -115,8 +115,8 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
         query.setPin(pin);
         query.setOrderColumn("id");
         query.setOrderTpe(2);
-        query.setStartRow((page-1)*size);
-        query.setEndRow(page*size);
+//        query.setStartRow((page-1)*size);
+//        query.setEndRow(page*size);
         List<AccountDetail> accountDetails = getBaseDao().query(query);
         if(!accountDetails.isEmpty()){
             for(AccountDetail detail : accountDetails){

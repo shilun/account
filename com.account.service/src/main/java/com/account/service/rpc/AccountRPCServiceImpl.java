@@ -234,15 +234,14 @@ public class AccountRPCServiceImpl implements AccountRPCService {
 
     @Override
     public RPCResult<Page<AccountDetailDto>> queryDetail(AccountDetailDto dto) {
-
         RPCResult<Page<AccountDetailDto>> rpcResult = new RPCResult<>();
         try {
-            List<AccountDetailDto> accountDetailDtos = accountDetailtService.queryDetailList(dto);
-            if(!accountDetailDtos.isEmpty()){
-//                Page<AccountDetailDto> page = new PageImpl<>(accountDetailDtos,dto.getPageinfo(), dto.getPageinfo().getSize());
-//                rpcResult.setSuccess(true);
-//                rpcResult.setData(page);
-            }else{
+            List<AccountDetailDto> accountDetailDtos = accountDetailtService.queryDetailList(dto.getProxyId(),dto.getPin(),dto.getPageinfo().getPage().getPageNumber(),dto.getPageinfo().getPage().getPageSize());
+            if (!accountDetailDtos.isEmpty()) {
+                Page<AccountDetailDto> accountDetailDtos1 = new PageImpl<>(accountDetailDtos, dto.getPageinfo().getPage(), dto.getPageinfo().getSize());
+                rpcResult.setSuccess(true);
+                rpcResult.setData(accountDetailDtos1);
+            } else {
                 rpcResult.setSuccess(false);
                 rpcResult.setCode("AccountRPCServiceImpl.queryDetail.null");
                 rpcResult.setMessage("查询数据为空");
