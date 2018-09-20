@@ -22,5 +22,20 @@ public interface AccountDetailtService extends AbstractBaseService<AccountDetail
      */
     public void changeTo(Long proxyId, String pin, Integer sourceType, BigDecimal sourceAmount, Integer targetType);
 
+    /**
+     * 账本详情
+     * @param proxyId
+     * @param pin
+     * @param page
+     * @param size
+     * @return
+     */
     public List<AccountDetailDto> queryDetailList(Long proxyId,String pin,Integer page,Integer size);
+
+    /**
+     * 账本详情
+     * @param dto
+     * @return
+     */
+    public List<AccountDetailDto> queryDetailList(AccountDetailDto dto);
 }
