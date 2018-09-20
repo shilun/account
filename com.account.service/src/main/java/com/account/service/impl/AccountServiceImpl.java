@@ -44,7 +44,6 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
 		return accountDao;
 	}
 
-
 	@Transactional
 	public void newBiz(InvertBizDto dto) {
 		if(dto.getAmount()==null&&dto.getFreeze()==null){
@@ -56,7 +55,7 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
 		if(StringUtils.isBlank(dto.getPin())){
 			throw new BizException("dto.error.pin","数据验证失败");
 		}
-		if(dto.getTestStatus()==null){
+		if(dto.getTest()==null){
 			throw new BizException("dto.error.testStatus","数据验证失败");
 		}
 		if(dto.getTokenType()==null){
@@ -72,7 +71,7 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
 		AccountDetail findDetail = new AccountDetail();
 		findDetail.setBizType(dto.getBizType());
 		findDetail.setBizId(dto.getBizId());
-		findDetail.setTestStatus(dto.getTestStatus());
+		findDetail.setTest(dto.getTest());
 		findDetail = accountDetailtService.findByOne(findDetail);
 		if(findDetail!=null){
 			return ;
@@ -89,18 +88,19 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
 			account.setTokenType(tokenType.name());
 			account.setFreeze(BigDecimal.ZERO);
 			account.setAmount(BigDecimal.ZERO);
-			account.setTestStatus(dto.getTestStatus());
+			account.setTest(dto.getTest());
 			account.setProxyId(dto.getProxyId());
 			account.setPin(dto.getPin());
 		}
 		AccountDetail detail = new AccountDetail();
 		detail.setPin(dto.getPin());
-		detail.setTestStatus(dto.getTestStatus());
+		detail.setTest(dto.getTest());
 		detail.setProxyId(dto.getProxyId());
 		detail.setTokenType(tokenType.name());
 		detail.setStatus(YesOrNoEnum.YES.getValue());
 		detail.setBizType(bizTypeEnum.getValue());
 		detail.setBizId(dto.getBizId());
+		detail.setTest(dto.getTest());
 		detail.setBeforeAmount(account.getAmount());
 		detail.setBeforeFreeze(account.getFreeze());
 		if (dto.getAmount().compareTo(BigDecimal.ZERO) > 0) {

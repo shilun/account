@@ -38,14 +38,14 @@ public class InvertBizDto implements Serializable {
     /**
      * 是否为测试
      */
-    private Integer testStatus;
+    private Integer test;
 
-    public Integer getTestStatus() {
-        return testStatus;
+    public Integer getTest() {
+        return test;
     }
 
-    public void setTestStatus(Integer testStatus) {
-        this.testStatus = testStatus;
+    public void setTest(Integer test) {
+        this.test = test;
     }
 
     public Integer getTokenType() {

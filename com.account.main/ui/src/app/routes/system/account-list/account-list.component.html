@@ -21,7 +21,7 @@
       <th>币种</th>
       <th>总额</th>
       <th>锁定</th>
-      <th>测试</th>
+      <th>类型</th>
       <th>状态</th>
     </tr>
     </thead>
@@ -33,7 +33,10 @@
         <td>{{valuePare(item.tokenType,tokentypes)}}</td>
         <td>{{item.amount}}</td>
         <td>{{item.freeze}}</td>
-        <td>{{valuePare(item.testStatus,statuses)}}</td>
+        <td>
+          <ng-container *ngIf="item.test==2">正式</ng-container>
+          <ng-container *ngIf="item.test==1">测式</ng-container>
+        </td>
         <td>{{item.createTime}}</td>
       </tr>
     </ng-container>

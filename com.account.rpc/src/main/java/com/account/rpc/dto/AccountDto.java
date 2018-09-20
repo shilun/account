@@ -28,14 +28,14 @@ public class AccountDto implements Serializable {
     /**
      * 是否为测试 1 否 2 是
      */
-    private Integer testStatus;
+    private Integer test;
 
-    public Integer getTestStatus() {
-        return testStatus;
+    public Integer getTest() {
+        return test;
     }
 
-    public void setTestStatus(Integer testStatus) {
-        this.testStatus = testStatus;
+    public void setTest(Integer test) {
+        this.test = test;
     }
 
     public Long getProxyId() {
