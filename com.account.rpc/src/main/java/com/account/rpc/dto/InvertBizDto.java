@@ -17,11 +17,11 @@ public class InvertBizDto implements Serializable {
     /**
      * 代币类型
      */
-    private TokenTypeEnum tokenType;
+    private Integer tokenType;
     /**
      * 业务类型
      */
-    private BizTypeEnum bizType;
+    private Integer bizType;
     /**
      * 业务标识（外键流水号）
      */
@@ -35,11 +35,24 @@ public class InvertBizDto implements Serializable {
      */
     private BigDecimal freeze;
 
-    public TokenTypeEnum getTokenType() {
+    /**
+     * 是否为测试
+     */
+    private Integer testStatus;
+
+    public Integer getTestStatus() {
+        return testStatus;
+    }
+
+    public void setTestStatus(Integer testStatus) {
+        this.testStatus = testStatus;
+    }
+
+    public Integer getTokenType() {
         return tokenType;
     }
 
-    public void setTokenType(TokenTypeEnum tokenType) {
+    public void setTokenType(Integer tokenType) {
         this.tokenType = tokenType;
     }
 
@@ -60,11 +73,11 @@ public class InvertBizDto implements Serializable {
     }
 
 
-    public BizTypeEnum getBizType() {
+    public Integer getBizType() {
         return bizType;
     }
 
-    public void setBizType(BizTypeEnum bizType) {
+    public void setBizType(Integer bizType) {
         this.bizType = bizType;
     }
 

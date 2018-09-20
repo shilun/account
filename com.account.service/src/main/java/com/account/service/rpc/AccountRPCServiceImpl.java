@@ -2,8 +2,9 @@ package com.account.service.rpc;
 
 import com.account.domain.Account;
 import com.account.domain.AccountDetail;
-import com.account.domain.Config;
+import com.account.domain.module.BizTypeEnum;
 import com.account.domain.module.DetailStatusEnum;
+import com.account.domain.module.TokenTypeEnum;
 import com.account.rpc.AccountRPCService;
 import com.account.rpc.dto.*;
 import com.account.service.AccountDetailtService;
@@ -11,7 +12,6 @@ import com.account.service.AccountService;
 import com.account.service.ConfigService;
 import com.common.util.BeanCoper;
 import com.common.util.RPCResult;
-import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -82,7 +82,8 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         for (Account item : list) {
             AccountDto dto = new AccountDto();
             BeanCoper.copyProperties(dto, item);
-            dto.setTokenType(TokenTypeEnum.findByName(item.getTokenType()));
+            TokenTypeEnum byName = TokenTypeEnum.findByName(item.getTokenType());
+            dto.setTokenType(byName.getValue());
             resultlist.add(dto);
         }
         return resultlist;
@@ -211,16 +212,16 @@ public class AccountRPCServiceImpl implements AccountRPCService {
     public RPCResult<List<AccountDetailDto>> queryDetail(Long proxyId, String pin, Integer page, Integer size) {
         RPCResult<List<AccountDetailDto>> rpcResult = new RPCResult<>();
         try {
-            List<AccountDetailDto> accountDetailDtos = accountDetailtService.queryDetailList(proxyId,pin,page,size);
-            if(!accountDetailDtos.isEmpty()){
+            List<AccountDetailDto> accountDetailDtos = accountDetailtService.queryDetailList(proxyId, pin, page, size);
+            if (!accountDetailDtos.isEmpty()) {
                 rpcResult.setSuccess(true);
                 rpcResult.setData(accountDetailDtos);
-            }else{
+            } else {
                 rpcResult.setSuccess(false);
                 rpcResult.setCode("AccountRPCServiceImpl.queryDetail.null");
                 rpcResult.setMessage("查询数据为空");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("AccountRPCServiceImpl.queryAccountDetail.error", e);
             rpcResult.setSuccess(false);
             rpcResult.setCode("queryDetail.error");

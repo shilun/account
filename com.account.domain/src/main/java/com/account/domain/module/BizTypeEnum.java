@@ -1,4 +1,4 @@
-package com.account.rpc.dto;
+package com.account.domain.module;
 
 import com.common.util.IGlossary;
 

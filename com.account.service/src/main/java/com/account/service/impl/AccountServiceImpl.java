@@ -6,7 +6,9 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import com.account.domain.AccountDetail;
+import com.account.domain.module.BizTypeEnum;
 import com.account.domain.module.DetailStatusEnum;
+import com.account.domain.module.TokenTypeEnum;
 import com.account.rpc.dto.InvertBizDto;
 import com.account.service.AccountDetailtService;
 import com.common.exception.BizException;
@@ -16,6 +18,7 @@ import com.common.util.DefaultBaseService;
 import com.account.domain.Account;
 import com.account.dao.AccountDao;
 import com.account.service.AccountService;
+import com.common.util.GlosseryEnumUtils;
 import com.common.util.StringUtils;
 import com.common.util.model.YesOrNoEnum;
 import org.springframework.stereotype.Service;
@@ -44,7 +47,6 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
 
 	@Transactional
 	public void newBiz(InvertBizDto dto) {
-
 		if(dto.getAmount()==null&&dto.getFreeze()==null){
 			throw new BizException("dto.error","数据验证失败");
 		}
@@ -53,6 +55,9 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
 		}
 		if(StringUtils.isBlank(dto.getPin())){
 			throw new BizException("dto.error.pin","数据验证失败");
+		}
+		if(dto.getTestStatus()==null){
+			throw new BizException("dto.error.testStatus","数据验证失败");
 		}
 		if(dto.getTokenType()==null){
 			throw new BizException("dto.error.tokenType","数据验证失败");
@@ -65,8 +70,9 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
 		}
 
 		AccountDetail findDetail = new AccountDetail();
-		findDetail.setBizType(dto.getBizType().getValue());
+		findDetail.setBizType(dto.getBizType());
 		findDetail.setBizId(dto.getBizId());
+		findDetail.setTestStatus(dto.getTestStatus());
 		findDetail = accountDetailtService.findByOne(findDetail);
 		if(findDetail!=null){
 			return ;
@@ -74,22 +80,26 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
 		Account query = new Account();
 		query.setProxyId(dto.getProxyId());
 		query.setPin(dto.getPin());
-		query.setTokenType(dto.getTokenType().name());
+		TokenTypeEnum tokenType=GlosseryEnumUtils.getItem(TokenTypeEnum.class,dto.getTokenType());
+		BizTypeEnum bizTypeEnum=GlosseryEnumUtils.getItem(BizTypeEnum.class,dto.getBizType());
+		query.setTokenType(tokenType.name());
 		Account account = findByOne(query);
 		if (account == null) {
 			account = new Account();
-			account.setTokenType(dto.getTokenType().name());
+			account.setTokenType(tokenType.name());
 			account.setFreeze(BigDecimal.ZERO);
 			account.setAmount(BigDecimal.ZERO);
+			account.setTestStatus(dto.getTestStatus());
 			account.setProxyId(dto.getProxyId());
 			account.setPin(dto.getPin());
 		}
 		AccountDetail detail = new AccountDetail();
 		detail.setPin(dto.getPin());
+		detail.setTestStatus(dto.getTestStatus());
 		detail.setProxyId(dto.getProxyId());
-		detail.setTokenType(dto.getTokenType().name());
+		detail.setTokenType(tokenType.name());
 		detail.setStatus(YesOrNoEnum.YES.getValue());
-		detail.setBizType(dto.getBizType().getValue());
+		detail.setBizType(bizTypeEnum.getValue());
 		detail.setBizId(dto.getBizId());
 		detail.setBeforeAmount(account.getAmount());
 		detail.setBeforeFreeze(account.getFreeze());

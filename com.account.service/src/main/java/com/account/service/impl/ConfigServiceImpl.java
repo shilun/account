@@ -1,12 +1,11 @@
 package com.account.service.impl; 
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 
-import com.account.rpc.dto.TokenTypeEnum;
+import com.account.domain.module.TokenTypeEnum;
 import com.common.util.AbstractBaseDao;
 import com.common.util.DefaultBaseService;
 

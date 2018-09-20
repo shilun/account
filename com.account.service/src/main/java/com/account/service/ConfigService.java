@@ -1,9 +1,7 @@
 package com.account.service;
 
-import com.account.rpc.dto.TokenTypeEnum;
 import com.common.util.AbstractBaseService;
 import com.account.domain.Config;
-import net.sf.json.JSONObject;
 
 import java.math.BigDecimal;
 

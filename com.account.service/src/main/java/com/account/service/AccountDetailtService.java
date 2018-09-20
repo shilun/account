@@ -1,6 +1,5 @@
 package com.account.service; 
 import com.account.rpc.dto.AccountDetailDto;
-import com.account.rpc.dto.TokenTypeEnum;
 import com.common.util.AbstractBaseService;
 import com.account.domain.AccountDetail;
 

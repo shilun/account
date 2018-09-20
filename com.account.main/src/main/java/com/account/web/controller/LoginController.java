@@ -42,8 +42,8 @@ public class LoginController extends AbstractClientController {
 
 
     @RequestMapping("out")
-    public RPCResult<Boolean> loginOut() {
-        return buildRPCMessage(new IExecute() {
+    public Map<String,Object> loginOut() {
+        return buildMessage(new IExecute() {
             @Override
             public Object getData() {
                 return adminRPCService.loginOut(getToken());
@@ -67,8 +67,8 @@ public class LoginController extends AbstractClientController {
     }
 
     @RequestMapping("changePass")
-    public RPCResult changePass(@RequestBody PasswordChangeDto dto) {
-        return buildRPCMessage(new IExecute() {
+    public Map<String, Object> changePass(@RequestBody PasswordChangeDto dto) {
+        return buildMessage(new IExecute() {
             @Override
             public Object getData() {
                 return adminRPCService.changePass(getPin(), dto.getOldPassword(), dto.getNewPassword());
