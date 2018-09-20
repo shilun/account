@@ -18,7 +18,6 @@ export class ConfigListComponent extends AbstractController implements OnInit {
     this.pageSize=30;
   }
 
-
   async list(query): Promise<void> {
     return super.list(query);
   }

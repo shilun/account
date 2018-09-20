@@ -17,10 +17,11 @@
     <thead>
     <tr>
       <th>pin</th>
-      <th>代理商标识</th>
+      <th>代理商</th>
       <th>币种</th>
       <th>总额</th>
       <th>锁定</th>
+      <th>类型</th>
       <th>状态</th>
     </tr>
     </thead>
@@ -28,10 +29,14 @@
     <ng-container *ngFor="let item of listData.list">
       <tr>
         <td>{{item.pin}}</td>
-        <td>{{item.proxyId}}</td>
-        <td>{{item.tokenType}}</td>
+        <td>{{valuePare(item.proxyId,proxyes)}}</td>
+        <td>{{valuePare(item.tokenType,tokentypes)}}</td>
         <td>{{item.amount}}</td>
         <td>{{item.freeze}}</td>
+        <td>
+          <ng-container *ngIf="item.test==2">正式</ng-container>
+          <ng-container *ngIf="item.test==1">测式</ng-container>
+        </td>
         <td>{{item.createTime}}</td>
       </tr>
     </ng-container>

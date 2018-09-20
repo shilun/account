@@ -66,6 +66,20 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
      */
     private Integer status;
 
+
+    /**
+     * 是否为测试
+     */
+    private Integer test;
+
+    public Integer getTest() {
+        return test;
+    }
+
+    public void setTest(Integer test) {
+        this.test = test;
+    }
+
     public String getTokenType() {
         return tokenType;
     }

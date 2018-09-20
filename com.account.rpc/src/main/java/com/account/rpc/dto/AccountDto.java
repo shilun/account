@@ -16,7 +16,7 @@ public class AccountDto implements Serializable {
     /**
      * 币种
      */
-    private TokenTypeEnum tokenType;
+    private Integer tokenType;
     /**
      * 余额
      */
@@ -25,7 +25,18 @@ public class AccountDto implements Serializable {
      * 冻结
      */
     private BigDecimal freeze;
+    /**
+     * 是否为测试 1 否 2 是
+     */
+    private Integer test;
 
+    public Integer getTest() {
+        return test;
+    }
+
+    public void setTest(Integer test) {
+        this.test = test;
+    }
 
     public Long getProxyId() {
         return proxyId;
@@ -59,11 +70,11 @@ public class AccountDto implements Serializable {
         this.freeze = freeze;
     }
 
-    public TokenTypeEnum getTokenType() {
+    public Integer getTokenType() {
         return tokenType;
     }
 
-    public void setTokenType(TokenTypeEnum tokenType) {
+    public void setTokenType(Integer tokenType) {
         this.tokenType = tokenType;
     }
 }

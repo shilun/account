@@ -1,6 +1,5 @@
-package com.account.rpc.dto;
+package com.account.domain.module;
 
-import com.common.util.GlosseryEnumUtils;
 import com.common.util.IGlossary;
 
 import java.util.HashMap;
@@ -11,10 +10,7 @@ import java.util.Map;
  */
 public enum TokenTypeEnum implements IGlossary {
     RMB("人民币",1),
-    GoldCoin("金币",2),
-    RMB_TEST("测试账户",3),
-    GoldCoin_Test("测试金币",4);
-
+    GoldCoin("金币",2);
     TokenTypeEnum(String name,Integer value) {
         this.name = name;
         this.value=value;

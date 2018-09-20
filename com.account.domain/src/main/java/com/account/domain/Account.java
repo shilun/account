@@ -27,6 +27,19 @@ public class Account extends AbstractBaseEntity implements java.io.Serializable 
 	/**状态 1 启用 2 禁用*/
 	private Integer status;
 
+	/**
+	 * 是否为测试
+	 */
+	private Integer test;
+
+	public Integer getTest() {
+		return test;
+	}
+
+	public void setTest(Integer test) {
+		this.test = test;
+	}
+
 	public Integer getStatus() {
 		return status;
 	}
