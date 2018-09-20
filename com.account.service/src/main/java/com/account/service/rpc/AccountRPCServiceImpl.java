@@ -13,6 +13,8 @@ import com.common.util.BeanCoper;
 import com.common.util.RPCResult;
 import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -213,8 +215,33 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         try {
             List<AccountDetailDto> accountDetailDtos = accountDetailtService.queryDetailList(proxyId,pin,page,size);
             if(!accountDetailDtos.isEmpty()){
+
                 rpcResult.setSuccess(true);
                 rpcResult.setData(accountDetailDtos);
+            }else{
+                rpcResult.setSuccess(false);
+                rpcResult.setCode("AccountRPCServiceImpl.queryDetail.null");
+                rpcResult.setMessage("查询数据为空");
+            }
+        }catch (Exception e){
+            logger.error("AccountRPCServiceImpl.queryAccountDetail.error", e);
+            rpcResult.setSuccess(false);
+            rpcResult.setCode("queryDetail.error");
+            rpcResult.setMessage("查询数据失败");
+        }
+        return rpcResult;
+    }
+
+    @Override
+    public RPCResult<Page<AccountDetailDto>> queryDetail(AccountDetailDto dto) {
+
+        RPCResult<Page<AccountDetailDto>> rpcResult = new RPCResult<>();
+        try {
+            List<AccountDetailDto> accountDetailDtos = accountDetailtService.queryDetailList(dto);
+            if(!accountDetailDtos.isEmpty()){
+//                Page<AccountDetailDto> page = new PageImpl<>(accountDetailDtos,dto.getPageinfo(), dto.getPageinfo().getSize());
+//                rpcResult.setSuccess(true);
+//                rpcResult.setData(page);
             }else{
                 rpcResult.setSuccess(false);
                 rpcResult.setCode("AccountRPCServiceImpl.queryDetail.null");

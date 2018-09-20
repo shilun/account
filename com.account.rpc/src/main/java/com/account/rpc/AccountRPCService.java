@@ -2,6 +2,7 @@ package com.account.rpc;
 
 import com.account.rpc.dto.*;
 import com.common.util.RPCResult;
+import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -66,4 +67,11 @@ public interface AccountRPCService {
      * @return
      */
     RPCResult<List<AccountDetailDto>> queryDetail(Long proxyId,String pin,Integer page,Integer size);
+
+    /**
+     * 查询账本详情
+     * @param accountDetailDto
+     * @return
+     */
+    RPCResult<Page<AccountDetailDto>> queryDetail(AccountDetailDto accountDetailDto);
 }

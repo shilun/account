@@ -129,5 +129,28 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
         return accountDetailDtos;
     }
 
+    @Override
+    public List<AccountDetailDto> queryDetailList(AccountDetailDto dto) {
+        List<AccountDetailDto> accountDetailDtos = new ArrayList<>();
+        int page = dto.getPageinfo().getPage().getPageNumber();
+        int size = dto.getPageinfo().getSize();
+        AccountDetail query = new AccountDetail();
+        query.setProxyId(dto.getProxyId());
+        query.setPin(dto.getPin());
+        query.setOrderColumn("id");
+        query.setOrderTpe(2);
+        query.setStartRow((page-1)*size);
+        query.setEndRow(page*size);
+        List<AccountDetail> accountDetails = getBaseDao().query(query);
+        if(!accountDetails.isEmpty()){
+            for(AccountDetail detail : accountDetails){
+                AccountDetailDto accountDetailDto = new AccountDetailDto();
+                BeanCoper.copyProperties(accountDetailDto,detail);
+                accountDetailDtos.add(accountDetailDto);
+            }
+        }
+        return accountDetailDtos;
+    }
+
 
 }

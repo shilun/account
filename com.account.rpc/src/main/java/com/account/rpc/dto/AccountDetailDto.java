@@ -1,15 +1,21 @@
 package com.account.rpc.dto;
 
+import com.common.util.AbstractDTO;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class AccountDetailDto implements Serializable {
+public class AccountDetailDto extends AbstractDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
      * 代理商id
      */
     private Long proxyId;
+    /**
+     * pin
+     */
+    private String pin;
 
     /**
      * 代币类型
@@ -57,6 +63,14 @@ public class AccountDetailDto implements Serializable {
 
     public Long getProxyId() {
         return proxyId;
+    }
+
+    public String getPin() {
+        return pin;
+    }
+
+    public void setPin(String pin) {
+        this.pin = pin;
     }
 
     public void setProxyId(Long proxyId) {
