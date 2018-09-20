@@ -15,12 +15,13 @@ public class InvertBizDto implements Serializable {
      */
     private Long proxyId;
     /**
-     * 代币类型
+     * 币种
+     * 人民币 1   金币 2
      */
     private Integer tokenType;
     /**
-     * 业务类型
-     */
+     * 业务类型 充值 1 提款 2  棋牌 3  彩票 4  小游戏 5
+    */
     private Integer bizType;
     /**
      * 业务标识（外键流水号）
