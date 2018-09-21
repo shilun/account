@@ -43,8 +43,6 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
 	public AbstractBaseDao<Account> getBaseDao() {
 		return accountDao;
 	}
-
-	@Transactional
 	public void newBiz(InvertBizDto dto) {
 		if(dto.getAmount()==null&&dto.getFreeze()==null){
 			throw new BizException("dto.error","数据验证失败");
@@ -70,7 +68,9 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
 		}
 
 		AccountDetail findDetail = new AccountDetail();
+
 		findDetail.setBizType(dto.getBizType());
+		findDetail.setProxyId(dto.getProxyId());
 		findDetail.setBizId(dto.getBizId());
 		findDetail.setTest(dto.getTest());
 		findDetail = accountDetailtService.findByOne(findDetail);
@@ -80,6 +80,7 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
 		Account query = new Account();
 		query.setProxyId(dto.getProxyId());
 		query.setPin(dto.getPin());
+		query.setTest(dto.getTest());
 		BizTypeEnum bizTypeEnum=GlosseryEnumUtils.getItem(BizTypeEnum.class,dto.getBizType());
 		query.setTokenType(dto.getTokenType());
 		Account account = findByOne(query);
