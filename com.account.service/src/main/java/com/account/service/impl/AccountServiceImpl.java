@@ -80,13 +80,12 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
 		Account query = new Account();
 		query.setProxyId(dto.getProxyId());
 		query.setPin(dto.getPin());
-		TokenTypeEnum tokenType=GlosseryEnumUtils.getItem(TokenTypeEnum.class,dto.getTokenType());
 		BizTypeEnum bizTypeEnum=GlosseryEnumUtils.getItem(BizTypeEnum.class,dto.getBizType());
-		query.setTokenType(tokenType.name());
+		query.setTokenType(dto.getTokenType());
 		Account account = findByOne(query);
 		if (account == null) {
 			account = new Account();
-			account.setTokenType(tokenType.name());
+			account.setTokenType(dto.getTokenType());
 			account.setFreeze(BigDecimal.ZERO);
 			account.setAmount(BigDecimal.ZERO);
 			account.setTest(dto.getTest());
@@ -97,7 +96,7 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
 		detail.setPin(dto.getPin());
 		detail.setTest(dto.getTest());
 		detail.setProxyId(dto.getProxyId());
-		detail.setTokenType(tokenType.name());
+		detail.setTokenType(dto.getTokenType());
 		detail.setStatus(YesOrNoEnum.YES.getValue());
 		detail.setBizType(bizTypeEnum.getValue());
 		detail.setBizId(dto.getBizId());

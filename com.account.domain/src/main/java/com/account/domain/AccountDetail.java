@@ -20,10 +20,6 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
     private Long proxyId;
 
     /**
-     * 代币类型
-     */
-    private String tokenName;
-    /**
      * 业务类型 1 棋牌 2 彩票 3小游戏
      */
     private Integer bizType;
@@ -35,7 +31,7 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
     /***
      * 账本类型
      */
-    private String tokenType;
+    private Integer tokenType;
     /**
      * before_总余额
      */
@@ -72,6 +68,14 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
      */
     private Integer test;
 
+    public Integer getTokenType() {
+        return tokenType;
+    }
+
+    public void setTokenType(Integer tokenType) {
+        this.tokenType = tokenType;
+    }
+
     public Integer getTest() {
         return test;
     }
@@ -80,13 +84,6 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
         this.test = test;
     }
 
-    public String getTokenType() {
-        return tokenType;
-    }
-
-    public void setTokenType(String tokenType) {
-        this.tokenType = tokenType;
-    }
 
     public Integer getStatus() {
         return status;
@@ -110,14 +107,6 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
 
     public void setProxyId(Long proxyId) {
         this.proxyId = proxyId;
-    }
-
-    public String getTokenName() {
-        return tokenName;
-    }
-
-    public void setTokenName(String tokenName) {
-        this.tokenName = tokenName;
     }
 
     public Integer getBizType() {

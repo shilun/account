@@ -11,6 +11,7 @@ import com.account.service.AccountDetailtService;
 import com.account.service.AccountService;
 import com.account.service.ConfigService;
 import com.common.util.BeanCoper;
+import com.common.util.GlosseryEnumUtils;
 import com.common.util.RPCResult;
 import org.apache.log4j.Logger;
 import org.springframework.data.domain.Page;
@@ -64,7 +65,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         for (TokenTypeEnum type : TokenTypeEnum.values()) {
             boolean moneyed = false;
             for (Account item : list) {
-                if (type.name().equalsIgnoreCase(item.getTokenType())) {
+                if (type.getValue().intValue()==item.getTokenType()) {
                     moneyed = true;
                     break;
                 }
@@ -72,11 +73,11 @@ public class AccountRPCServiceImpl implements AccountRPCService {
             if (!moneyed) {
                 Account e = new Account();
                 e.setPin(pin);
-                e.setTokenType(type.name());
+                e.setTokenType(type.getValue());
                 e.setProxyId(proxyId);
                 e.setAmount(BigDecimal.ZERO);
                 e.setFreeze(BigDecimal.ZERO);
-                e.setTokenType(type.name());
+                e.setTokenType(type.getValue());
                 list.add(e);
             }
         }
@@ -84,8 +85,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         for (Account item : list) {
             AccountDto dto = new AccountDto();
             BeanCoper.copyProperties(dto, item);
-            TokenTypeEnum byName = TokenTypeEnum.findByName(item.getTokenType());
-            dto.setTokenType(byName.getValue());
+            dto.setTokenType(item.getTokenType());
             resultlist.add(dto);
         }
         return resultlist;
@@ -166,7 +166,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         AccountDetail detail = accountDetailtService.findByOne(query);
         Account queryAccount = new Account();
         queryAccount.setPin(detail.getPin());
-        queryAccount.setTokenType(detail.getTokenName());
+        queryAccount.setTokenType(detail.getTokenType());
         Account account = accountService.findByOne(queryAccount);
         if (detail.getChangeAmount().compareTo(BigDecimal.ZERO) > 0) {
             account.setAmount(account.getAmount().subtract(detail.getChangeAmount()));

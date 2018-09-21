@@ -19,7 +19,7 @@ public class Account extends AbstractBaseEntity implements java.io.Serializable 
 	/**pin*/
 	private String pin;
 	/**币种*/
-	private String tokenType;
+	private Integer tokenType;
 	/**总余额*/
 	private BigDecimal amount;
 	/**冻结*/
@@ -64,11 +64,11 @@ public class Account extends AbstractBaseEntity implements java.io.Serializable 
 		this.pin = pin;
 	}
 
-	public String getTokenType() {
+	public Integer getTokenType() {
 		return tokenType;
 	}
 
-	public void setTokenType(String tokenType) {
+	public void setTokenType(Integer tokenType) {
 		this.tokenType = tokenType;
 	}
 

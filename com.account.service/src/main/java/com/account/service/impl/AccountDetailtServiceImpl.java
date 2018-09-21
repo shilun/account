@@ -58,11 +58,11 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
             if (!moneyed) {
                 Account e = new Account();
                 e.setPin(pin);
-                e.setTokenType(type.name());
+                e.setTokenType(type.getValue());
                 e.setProxyId(proxyId);
                 e.setAmount(BigDecimal.ZERO);
                 e.setFreeze(BigDecimal.ZERO);
-                e.setTokenType(type.name());
+                e.setTokenType(type.getValue());
                 list.add(e);
             }
         }
