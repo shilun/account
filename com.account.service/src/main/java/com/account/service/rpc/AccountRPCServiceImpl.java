@@ -6,12 +6,13 @@ import com.account.domain.module.BizTypeEnum;
 import com.account.domain.module.DetailStatusEnum;
 import com.account.domain.module.TokenTypeEnum;
 import com.account.rpc.AccountRPCService;
-import com.account.rpc.dto.*;
+import com.account.rpc.dto.AccountDetailDto;
+import com.account.rpc.dto.AccountDto;
+import com.account.rpc.dto.InvertBizDto;
 import com.account.service.AccountDetailtService;
 import com.account.service.AccountService;
 import com.account.service.ConfigService;
 import com.common.util.BeanCoper;
-import com.common.util.GlosseryEnumUtils;
 import com.common.util.RPCResult;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
@@ -19,12 +20,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -33,7 +30,7 @@ import java.util.List;
 
 @Service
 @com.alibaba.dubbo.config.annotation.Service
-public class AccountRPCServiceImpl implements AccountRPCService ,ApplicationContextAware {
+public class AccountRPCServiceImpl implements AccountRPCService {
 
     private Logger logger = Logger.getLogger(AccountRPCServiceImpl.class);
 
@@ -45,11 +42,6 @@ public class AccountRPCServiceImpl implements AccountRPCService ,ApplicationCont
 
     @Resource
     private ConfigService configService;
-    private  ApplicationContext context;
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.context=applicationContext;
-    }
 
     @Override
     public RPCResult<List<AccountDto>> queryAccount(String pin, Long proxyId) {
@@ -107,22 +99,13 @@ public class AccountRPCServiceImpl implements AccountRPCService ,ApplicationCont
 
     public RPCResult<Boolean> invertBiz(InvertBizDto dto) {
         RPCResult result = new RPCResult<>();
-        DataSourceTransactionManager transactionManager = null;
-        DefaultTransactionDefinition def =null;
-        TransactionStatus status=null;
 
         try {
 
-            transactionManager=context.getBean("defaultTrans", DataSourceTransactionManager.class);
-            def= new DefaultTransactionDefinition();
-            def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-            status = transactionManager.getTransaction(def);
             accountService.newBiz(dto);
-            transactionManager.commit(status);
             result.setSuccess(true);
             return result;
         } catch (Exception e) {
-            transactionManager.commit(status);
             logger.error("执行业务失败", e);
         }
         result.setCode("account.invertBiz.error");

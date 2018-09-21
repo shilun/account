@@ -43,6 +43,7 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
 	public AbstractBaseDao<Account> getBaseDao() {
 		return accountDao;
 	}
+	@Transactional
 	public void newBiz(InvertBizDto dto) {
 		if(dto.getAmount()==null&&dto.getFreeze()==null){
 			throw new BizException("dto.error","数据验证失败");
