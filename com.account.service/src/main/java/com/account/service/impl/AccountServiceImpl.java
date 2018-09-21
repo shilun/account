@@ -55,8 +55,9 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
 		if(StringUtils.isBlank(dto.getPin())){
 			throw new BizException("dto.error.pin","数据验证失败");
 		}
+		//默认为正试账户
 		if(dto.getTest()==null){
-			throw new BizException("dto.error.testStatus","数据验证失败");
+			dto.setTest(YesOrNoEnum.NO.getValue());
 		}
 		if(dto.getTokenType()==null){
 			throw new BizException("dto.error.tokenType","数据验证失败");
