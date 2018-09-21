@@ -1,6 +1,7 @@
-package com.account.service.impl; 
+package com.account.service.impl;
 
 import java.math.BigDecimal;
+import java.text.MessageFormat;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -11,7 +12,10 @@ import com.account.domain.module.DetailStatusEnum;
 import com.account.domain.module.TokenTypeEnum;
 import com.account.rpc.dto.InvertBizDto;
 import com.account.service.AccountDetailtService;
+import com.common.exception.ApplicationException;
 import com.common.exception.BizException;
+import com.common.redis.DistributedLock;
+import com.common.redis.DistributedLockUtil;
 import com.common.util.AbstractBaseDao;
 import com.common.util.DefaultBaseService;
 
@@ -21,123 +25,142 @@ import com.account.service.AccountService;
 import com.common.util.GlosseryEnumUtils;
 import com.common.util.StringUtils;
 import com.common.util.model.YesOrNoEnum;
+import org.apache.log4j.Logger;
+import org.apache.log4j.spi.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
 /**
- * 
  * @desc 账户信息 account
- *
  */
 @Service
-public class AccountServiceImpl extends DefaultBaseService<Account> implements AccountService  {
+public class AccountServiceImpl extends DefaultBaseService<Account> implements AccountService {
+    private Logger logger = Logger.getLogger(AccountServiceImpl.class);
+    @Resource
+    private AccountDao accountDao;
 
-	@Resource
-	private AccountDao accountDao;
+    @Resource
+    private DistributedLockUtil distributedLockUtil;
+    private String user_login_key = "account.lock.pin.{0}";
+    @Resource
+    private AccountDetailtService accountDetailtService;
 
-	@Resource
-	private AccountDetailtService accountDetailtService;
-	
-	@Override
-	public AbstractBaseDao<Account> getBaseDao() {
-		return accountDao;
-	}
-	@Transactional
-	public void newBiz(InvertBizDto dto) {
-		if(dto.getAmount()==null&&dto.getFreeze()==null){
-			throw new BizException("dto.error","数据验证失败");
-		}
-		if(StringUtils.isBlank(dto.getBizId())){
-			throw new BizException("dto.error.BizId","数据验证失败");
-		}
-		if(StringUtils.isBlank(dto.getPin())){
-			throw new BizException("dto.error.pin","数据验证失败");
-		}
-		//默认为正试账户
-		if(dto.getTest()==null){
-			dto.setTest(YesOrNoEnum.NO.getValue());
-		}
-		if(dto.getTokenType()==null){
-			throw new BizException("dto.error.tokenType","数据验证失败");
-		}
-		if(dto.getFreeze()==null){
-			dto.setFreeze(BigDecimal.ZERO);
-		}
-		if(dto.getAmount()==null){
-			dto.setAmount(BigDecimal.ZERO);
-		}
+    @Override
+    public AbstractBaseDao<Account> getBaseDao() {
+        return accountDao;
+    }
 
-		AccountDetail findDetail = new AccountDetail();
+    @Transactional
+    public void newBiz(InvertBizDto dto) {
+        if (dto.getAmount() == null && dto.getFreeze() == null) {
+            throw new BizException("dto.error", "数据验证失败");
+        }
+        if (StringUtils.isBlank(dto.getBizId())) {
+            throw new BizException("dto.error.BizId", "数据验证失败");
+        }
+        if (StringUtils.isBlank(dto.getPin())) {
+            throw new BizException("dto.error.pin", "数据验证失败");
+        }
+        //默认为正试账户
+        if (dto.getTest() == null) {
+            dto.setTest(YesOrNoEnum.NO.getValue());
+        }
+        if (dto.getTokenType() == null) {
+            throw new BizException("dto.error.tokenType", "数据验证失败");
+        }
+        if (dto.getFreeze() == null) {
+            dto.setFreeze(BigDecimal.ZERO);
+        }
+        if (dto.getAmount() == null) {
+            dto.setAmount(BigDecimal.ZERO);
+        }
+        String lock_key = MessageFormat.format(user_login_key, dto.getPin());
+        DistributedLock distributedLock = distributedLockUtil.getDistributedLock(lock_key);
+        boolean acquire = distributedLock.acquire();
+        if (!acquire) {
+            return;
+        }
+        try {
+            AccountDetail findDetail = new AccountDetail();
 
-		findDetail.setBizType(dto.getBizType());
-		findDetail.setProxyId(dto.getProxyId());
-		findDetail.setBizId(dto.getBizId());
-		findDetail.setTest(dto.getTest());
-		findDetail = accountDetailtService.findByOne(findDetail);
-		if(findDetail!=null){
-			return ;
-		}
-		Account query = new Account();
-		query.setProxyId(dto.getProxyId());
-		query.setPin(dto.getPin());
-		query.setTest(dto.getTest());
-		BizTypeEnum bizTypeEnum=GlosseryEnumUtils.getItem(BizTypeEnum.class,dto.getBizType());
-		query.setTokenType(dto.getTokenType());
-		Account account = findByOne(query);
-		if (account == null) {
-			account = new Account();
-			account.setTokenType(dto.getTokenType());
-			account.setFreeze(BigDecimal.ZERO);
-			account.setAmount(BigDecimal.ZERO);
-			account.setTest(dto.getTest());
-			account.setProxyId(dto.getProxyId());
-			account.setPin(dto.getPin());
-		}
-		AccountDetail detail = new AccountDetail();
-		detail.setPin(dto.getPin());
-		detail.setTest(dto.getTest());
-		detail.setProxyId(dto.getProxyId());
-		detail.setTokenType(dto.getTokenType());
-		detail.setStatus(YesOrNoEnum.YES.getValue());
-		detail.setBizType(bizTypeEnum.getValue());
-		detail.setBizId(dto.getBizId());
-		detail.setTest(dto.getTest());
-		detail.setBeforeAmount(account.getAmount());
-		detail.setBeforeFreeze(account.getFreeze());
-		if (dto.getAmount().compareTo(BigDecimal.ZERO) > 0) {
-			account.setAmount(account.getAmount().add(dto.getAmount()));
-		}
-		if (dto.getAmount().compareTo(BigDecimal.ZERO) < 0) {
-			account.getAmount().subtract(dto.getAmount());
-		}
-		if (dto.getFreeze().compareTo(BigDecimal.ZERO) > 0) {
-			account.setAmount(account.getAmount().subtract(dto.getFreeze()));
-			account.setFreeze(account.getFreeze().add(dto.getFreeze()));
-		}
-		if (account.getAmount().compareTo(BigDecimal.ZERO) < 0) {
-			throw new BizException("invertBiz.account.error", "执行业务失败,余额不足");
-		}
-		if (account.getFreeze().compareTo(BigDecimal.ZERO) < 0) {
-			throw new BizException("invertBiz.freeze.error", "执行业务失败,冻结账户不足");
-		}
-		detail.setChangeAmount(dto.getAmount());
-		detail.setChangeFreeze(dto.getFreeze());
+            findDetail.setBizType(dto.getBizType());
+            findDetail.setProxyId(dto.getProxyId());
+            findDetail.setBizId(dto.getBizId());
+            findDetail.setTest(dto.getTest());
+            findDetail = accountDetailtService.findByOne(findDetail);
+            if (findDetail != null) {
+                return;
+            }
+            Account query = new Account();
+            query.setProxyId(dto.getProxyId());
+            query.setPin(dto.getPin());
+            query.setTest(dto.getTest());
+            BizTypeEnum bizTypeEnum = GlosseryEnumUtils.getItem(BizTypeEnum.class, dto.getBizType());
+            query.setTokenType(dto.getTokenType());
+            Account account = findByOne(query);
+            if (account == null) {
+                account = new Account();
+                account.setTokenType(dto.getTokenType());
+                account.setFreeze(BigDecimal.ZERO);
+                account.setAmount(BigDecimal.ZERO);
+                account.setTest(dto.getTest());
+                account.setProxyId(dto.getProxyId());
+                account.setPin(dto.getPin());
+            }
+            AccountDetail detail = new AccountDetail();
+            detail.setPin(dto.getPin());
+            detail.setTest(dto.getTest());
+            detail.setProxyId(dto.getProxyId());
+            detail.setTokenType(dto.getTokenType());
+            detail.setStatus(YesOrNoEnum.YES.getValue());
+            detail.setBizType(bizTypeEnum.getValue());
+            detail.setBizId(dto.getBizId());
+            detail.setTest(dto.getTest());
+            detail.setBeforeAmount(account.getAmount());
+            detail.setBeforeFreeze(account.getFreeze());
+            if (dto.getAmount().compareTo(BigDecimal.ZERO) > 0) {
+                account.setAmount(account.getAmount().add(dto.getAmount()));
+            }
+            if (dto.getAmount().compareTo(BigDecimal.ZERO) < 0) {
+                account.getAmount().subtract(dto.getAmount());
+            }
+            if (dto.getFreeze().compareTo(BigDecimal.ZERO) > 0) {
+                account.setAmount(account.getAmount().subtract(dto.getFreeze()));
+                account.setFreeze(account.getFreeze().add(dto.getFreeze()));
+            }
+            if (account.getAmount().compareTo(BigDecimal.ZERO) < 0) {
+                throw new BizException("invertBiz.account.error", "执行业务失败,余额不足");
+            }
+            if (account.getFreeze().compareTo(BigDecimal.ZERO) < 0) {
+                throw new BizException("invertBiz.freeze.error", "执行业务失败,冻结账户不足");
+            }
+            detail.setChangeAmount(dto.getAmount());
+            detail.setChangeFreeze(dto.getFreeze());
 
-		detail.setAfterAmount(account.getAmount());
-		detail.setAfterFreeze(account.getFreeze());
+            detail.setAfterAmount(account.getAmount());
+            detail.setAfterFreeze(account.getFreeze());
 
-		if (account.getId() == null) {
-			save(account);
-		} else {
-			Account upEntity = new Account();
-			upEntity.setId(account.getId());
-			upEntity.setAmount(account.getAmount());
-			upEntity.setFreeze(account.getFreeze());
-			up(upEntity);
-		}
-		detail.setStatus(DetailStatusEnum.Normal.getValue());
-		accountDetailtService.add(detail);
-	}
-	
+            if (account.getId() == null) {
+                save(account);
+            } else {
+                Account upEntity = new Account();
+                upEntity.setId(account.getId());
+                upEntity.setAmount(account.getAmount());
+                upEntity.setFreeze(account.getFreeze());
+                up(upEntity);
+            }
+            detail.setStatus(DetailStatusEnum.Normal.getValue());
+            accountDetailtService.add(detail);
+        } catch (BizException biz) {
+            throw biz;
+        } catch (Exception e) {
+            logger.error("newBiz.error", e);
+            throw new ApplicationException("newBiz.error");
+        } finally {
+            distributedLock.release();
+        }
+    }
+
+
 }
