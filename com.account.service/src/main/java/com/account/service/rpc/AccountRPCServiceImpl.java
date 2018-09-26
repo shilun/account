@@ -12,13 +12,9 @@ import com.account.rpc.dto.InvertBizDto;
 import com.account.service.AccountDetailtService;
 import com.account.service.AccountService;
 import com.account.service.ConfigService;
-import com.common.redis.DistributedLock;
 import com.common.util.BeanCoper;
 import com.common.util.RPCResult;
 import org.apache.log4j.Logger;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
@@ -26,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,7 +66,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         for (TokenTypeEnum type : TokenTypeEnum.values()) {
             boolean moneyed = false;
             for (Account item : list) {
-                if (type.getValue().intValue()==item.getTokenType()) {
+                if (type.getValue().intValue() == item.getTokenType()) {
                     moneyed = true;
                     break;
                 }
@@ -221,7 +216,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
     public RPCResult<List<AccountDetailDto>> queryDetail(Long proxyId, String pin, Integer page, Integer size) {
         RPCResult<List<AccountDetailDto>> rpcResult = new RPCResult<>();
         try {
-            List<AccountDetailDto> accountDetailDtos = accountDetailtService.queryDetailList(proxyId,pin,page,size);
+            List<AccountDetailDto> accountDetailDtos = accountDetailtService.queryDetailList(proxyId, pin, page, size);
             if (!accountDetailDtos.isEmpty()) {
                 rpcResult.setSuccess(true);
                 rpcResult.setData(accountDetailDtos);
@@ -243,7 +238,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
     public RPCResult<Page<AccountDetailDto>> queryDetail(AccountDetailDto dto) {
         RPCResult<Page<AccountDetailDto>> rpcResult = new RPCResult<>();
         try {
-            List<AccountDetailDto> accountDetailDtos = accountDetailtService.queryDetailList(dto.getProxyId(),dto.getPin(),dto.getPageinfo().getPage().getPageNumber(),dto.getPageinfo().getPage().getPageSize());
+            List<AccountDetailDto> accountDetailDtos = accountDetailtService.queryDetailList(dto.getProxyId(), dto.getPin(), dto.getPageinfo().getPage().getPageNumber(), dto.getPageinfo().getPage().getPageSize());
             if (!accountDetailDtos.isEmpty()) {
                 Page<AccountDetailDto> accountDetailDtos1 = new PageImpl<>(accountDetailDtos, dto.getPageinfo().getPage(), dto.getPageinfo().getSize());
                 rpcResult.setSuccess(true);
@@ -253,13 +248,39 @@ public class AccountRPCServiceImpl implements AccountRPCService {
                 rpcResult.setCode("AccountRPCServiceImpl.queryDetail.null");
                 rpcResult.setMessage("查询数据为空");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("AccountRPCServiceImpl.queryAccountDetail.error", e);
             rpcResult.setSuccess(false);
             rpcResult.setCode("queryDetail.error");
             rpcResult.setMessage("查询数据失败");
         }
         return rpcResult;
+    }
+
+    @Override
+    public RPCResult<BigDecimal> findTotal(Long proxyId, String pin, Integer targetType) {
+        RPCResult<BigDecimal> result = new RPCResult<>();
+        try {
+            BigDecimal total = BigDecimal.ZERO;
+            List<AccountDto> resultlist = getAccountDtos(pin, proxyId);
+            for (AccountDto item : resultlist) {
+                if (targetType.intValue() != item.getTokenType()) {
+                    BigDecimal value = configService.findRate(item.getTokenType(), targetType);
+                    total = total.add(item.getAmount().multiply(value));
+                } else {
+                    total = total.add(item.getAmount());
+                }
+            }
+            result.setSuccess(true);
+            result.setData(total);
+            return result;
+        } catch (Exception e) {
+            logger.error("AccountRPCServiceImpl.findTotal.error", e);
+            result.setSuccess(false);
+            result.setCode("queryDetail.error");
+            result.setMessage("查询数据失败");
+        }
+        return result;
     }
 
 }

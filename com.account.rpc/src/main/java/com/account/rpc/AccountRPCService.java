@@ -74,4 +74,15 @@ public interface AccountRPCService {
      * @return
      */
     RPCResult<Page<AccountDetailDto>> queryDetail(AccountDetailDto accountDetailDto);
+
+    /**
+     * 查询可用总账户金额
+     * @param proxyId 代理商
+     * @param pin 用户pin
+     * @param targetType 目标币种
+     * @return
+     */
+    RPCResult<BigDecimal> findTotal(Long proxyId,String pin,Integer targetType);
+
+
 }
