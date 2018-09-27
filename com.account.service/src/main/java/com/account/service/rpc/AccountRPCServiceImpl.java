@@ -12,6 +12,7 @@ import com.account.rpc.dto.InvertBizDto;
 import com.account.service.AccountDetailtService;
 import com.account.service.AccountService;
 import com.account.service.ConfigService;
+import com.common.exception.BizException;
 import com.common.util.BeanCoper;
 import com.common.util.RPCResult;
 import org.apache.log4j.Logger;
@@ -101,7 +102,13 @@ public class AccountRPCServiceImpl implements AccountRPCService {
             accountService.newBiz(dto);
             result.setSuccess(true);
             return result;
-        } catch (Exception e) {
+        }
+        catch (BizException e) {
+           result.setCode(e.getCode());
+           result.setMessage(e.getMessage());
+           return result;
+        }
+        catch (Exception e) {
             logger.error("执行业务失败", e);
         }
         result.setCode("account.invertBiz.error");
