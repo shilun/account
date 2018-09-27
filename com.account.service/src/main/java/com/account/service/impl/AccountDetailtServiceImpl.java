@@ -50,7 +50,7 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
         for (TokenTypeEnum type : TokenTypeEnum.values()) {
             boolean moneyed = false;
             for (Account item : list) {
-                if (type.name().equals(item.getTokenType())) {
+                if (type.getValue().intValue() == item.getTokenType()) {
                     moneyed = true;
                     break;
                 }
@@ -69,10 +69,10 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
         Account sourceAccount = null;
         Account targetAccount = null;
         for (Account item : list) {
-            if (TokenTypeEnum.findByValue(sourceType).equals(item.getTokenType())) {
+            if (sourceType.intValue()==item.getTokenType()) {
                 sourceAccount = item;
             }
-            if (TokenTypeEnum.findByValue(targetType).equals(item.getTokenType())) {
+            if (targetType.intValue()==item.getTokenType()) {
                 targetAccount = item;
             }
             if (sourceAccount != null && targetAccount != null) {
@@ -83,9 +83,10 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
         BigDecimal rate = configService.findRate(sourceType, targetType);
         BigDecimal total = sourceAmount.multiply(rate);
 
-        sourceAccount.setAmount(sourceAmount.subtract(sourceAmount));
-        if (sourceAccount.getAmount().compareTo(BigDecimal.ZERO) < 0) {
-            throw new BizException("changeTo.error", "转账失败");
+        sourceAccount.setAmount(sourceAccount.getAmount().subtract(sourceAmount));
+
+        if (sourceAccount.getAmount().compareTo(sourceAccount.getFreeze()) < 0) {
+            throw new BizException("changeTo.error", "转账失败,余额不足");
         }
         Account upSourceAccount = null;
         if (sourceAccount.getId() == null) {
@@ -118,10 +119,10 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
 //        query.setStartRow((page-1)*size);
 //        query.setEndRow(page*size);
         List<AccountDetail> accountDetails = getBaseDao().query(query);
-        if(!accountDetails.isEmpty()){
-            for(AccountDetail detail : accountDetails){
+        if (!accountDetails.isEmpty()) {
+            for (AccountDetail detail : accountDetails) {
                 AccountDetailDto accountDetailDto = new AccountDetailDto();
-                BeanCoper.copyProperties(accountDetailDto,detail);
+                BeanCoper.copyProperties(accountDetailDto, detail);
                 accountDetailDtos.add(accountDetailDto);
             }
         }
@@ -138,13 +139,13 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
         query.setPin(dto.getPin());
         query.setOrderColumn("id");
         query.setOrderTpe(2);
-        query.setStartRow((page-1)*size);
-        query.setEndRow(page*size);
+        query.setStartRow((page - 1) * size);
+        query.setEndRow(page * size);
         List<AccountDetail> accountDetails = getBaseDao().query(query);
-        if(!accountDetails.isEmpty()){
-            for(AccountDetail detail : accountDetails){
+        if (!accountDetails.isEmpty()) {
+            for (AccountDetail detail : accountDetails) {
                 AccountDetailDto accountDetailDto = new AccountDetailDto();
-                BeanCoper.copyProperties(accountDetailDto,detail);
+                BeanCoper.copyProperties(accountDetailDto, detail);
                 accountDetailDtos.add(accountDetailDto);
             }
         }

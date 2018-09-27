@@ -141,7 +141,13 @@ public class AccountRPCServiceImpl implements AccountRPCService {
             accountDetailtService.changeTo(proxyId, pin, sourceType, sourceAmount, targetType);
             result.setSuccess(true);
             return result;
-        } catch (Exception e) {
+        }
+        catch (BizException e) {
+            result.setCode(e.getCode());
+            result.setMessage(e.getMessage());
+            return result;
+        }
+        catch (Exception e) {
             logger.error("AccountRPCServiceImpl.changeTo.error", e);
             result.setSuccess(false);
             result.setCode("changeTo.error");
