@@ -20,9 +20,9 @@ public class Account extends AbstractBaseEntity implements java.io.Serializable 
 	private String pin;
 	/**币种*/
 	private Integer tokenType;
-	/**总余额*/
+	/**总金额*/
 	private BigDecimal amount;
-	/**冻结*/
+	/**冻结金额*/
 	private BigDecimal freeze;
 	/**状态 1 启用 2 禁用*/
 	private Integer status;

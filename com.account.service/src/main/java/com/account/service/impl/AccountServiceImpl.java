@@ -1,34 +1,29 @@
 package com.account.service.impl;
 
-import java.math.BigDecimal;
-import java.text.MessageFormat;
-import java.util.List;
-
-import javax.annotation.Resource;
-
+import com.account.dao.AccountDao;
+import com.account.domain.Account;
 import com.account.domain.AccountDetail;
 import com.account.domain.module.BizTypeEnum;
 import com.account.domain.module.DetailStatusEnum;
-import com.account.domain.module.TokenTypeEnum;
 import com.account.rpc.dto.InvertBizDto;
 import com.account.service.AccountDetailtService;
+import com.account.service.AccountService;
 import com.common.exception.ApplicationException;
 import com.common.exception.BizException;
 import com.common.redis.DistributedLock;
 import com.common.redis.DistributedLockUtil;
 import com.common.util.AbstractBaseDao;
 import com.common.util.DefaultBaseService;
-
-import com.account.domain.Account;
-import com.account.dao.AccountDao;
-import com.account.service.AccountService;
 import com.common.util.GlosseryEnumUtils;
 import com.common.util.StringUtils;
 import com.common.util.model.YesOrNoEnum;
 import org.apache.log4j.Logger;
-import org.apache.log4j.spi.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.text.MessageFormat;
 
 
 /**
@@ -76,7 +71,7 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
             dto.setAmount(BigDecimal.ZERO);
         }
         String lock_key = MessageFormat.format(user_login_key, dto.getPin());
-        DistributedLock distributedLock = distributedLockUtil.getDistributedLock(lock_key);
+        DistributedLock distributedLock = distributedLockUtil.getDistributedLock(lock_key, 30 * 1000);
         boolean acquire = distributedLock.acquire();
         if (!acquire) {
             return;
@@ -119,28 +114,21 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
             detail.setTest(dto.getTest());
             detail.setBeforeAmount(account.getAmount());
             detail.setBeforeFreeze(account.getFreeze());
-            if (dto.getAmount().compareTo(BigDecimal.ZERO) > 0) {
-                account.setAmount(account.getAmount().add(dto.getAmount()));
-            }
-            if (dto.getAmount().compareTo(BigDecimal.ZERO) < 0) {
-                account.getAmount().subtract(dto.getAmount());
-            }
-            if (dto.getFreeze().compareTo(BigDecimal.ZERO) > 0) {
-                account.setAmount(account.getAmount().subtract(dto.getFreeze()));
-                account.setFreeze(account.getFreeze().add(dto.getFreeze()));
-            }
-            if (account.getAmount().compareTo(BigDecimal.ZERO) < 0) {
-                throw new BizException("invertBiz.account.error", "执行业务失败,余额不足");
-            }
-            if (account.getFreeze().compareTo(BigDecimal.ZERO) < 0) {
-                throw new BizException("invertBiz.freeze.error", "执行业务失败,冻结账户不足");
-            }
+            account.setAmount(account.getAmount().add(dto.getAmount()));
+            account.setFreeze(account.getFreeze().add(dto.getFreeze()));
             detail.setChangeAmount(dto.getAmount());
             detail.setChangeFreeze(dto.getFreeze());
-
             detail.setAfterAmount(account.getAmount());
             detail.setAfterFreeze(account.getFreeze());
-
+            if (account.getAmount().compareTo(BigDecimal.ZERO) < 0) {
+                throw new BizException("account.error", "账户余额不足");
+            }
+            if (account.getFreeze().compareTo(BigDecimal.ZERO) < 0) {
+                throw new BizException("account.error", "冻结金额不足");
+            }
+            if (account.getAmount().compareTo(account.getFreeze()) < 0) {
+                throw new BizException("account.error", "账户金额不足");
+            }
             if (account.getId() == null) {
                 save(account);
             } else {

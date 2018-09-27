@@ -28,7 +28,7 @@ public class InvertBizDto implements Serializable {
      */
     private String bizId;
     /**
-     * 可用余额数
+     * 总额数
      */
     private BigDecimal amount;
     /**
