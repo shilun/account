@@ -10,7 +10,10 @@ import java.util.Map;
  */
 public enum TokenTypeEnum implements IGlossary {
     RMB("人民币",1),
-    GoldCoin("金币",2);
+    GoldCoin("金币",2),
+    FramCoin("农场币",3),
+    LotteryCoin("彩票币",4);
+
     TokenTypeEnum(String name,Integer value) {
         this.name = name;
         this.value=value;

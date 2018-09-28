@@ -15,6 +15,7 @@ import com.account.service.ConfigService;
 import com.common.exception.BizException;
 import com.common.util.BeanCoper;
 import com.common.util.RPCResult;
+import com.common.util.model.YesOrNoEnum;
 import org.apache.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -102,13 +103,11 @@ public class AccountRPCServiceImpl implements AccountRPCService {
             accountService.newBiz(dto);
             result.setSuccess(true);
             return result;
-        }
-        catch (BizException e) {
-           result.setCode(e.getCode());
-           result.setMessage(e.getMessage());
-           return result;
-        }
-        catch (Exception e) {
+        } catch (BizException e) {
+            result.setCode(e.getCode());
+            result.setMessage(e.getMessage());
+            return result;
+        } catch (Exception e) {
             logger.error("执行业务失败", e);
         }
         result.setCode("account.invertBiz.error");
@@ -141,13 +140,11 @@ public class AccountRPCServiceImpl implements AccountRPCService {
             accountDetailtService.changeTo(proxyId, pin, sourceType, sourceAmount, targetType);
             result.setSuccess(true);
             return result;
-        }
-        catch (BizException e) {
+        } catch (BizException e) {
             result.setCode(e.getCode());
             result.setMessage(e.getMessage());
             return result;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.error("AccountRPCServiceImpl.changeTo.error", e);
             result.setSuccess(false);
             result.setCode("changeTo.error");
@@ -296,4 +293,58 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         return result;
     }
 
+
+    @Override
+    public RPCResult<List<AccountDto>> freezeAll(Long proxyId, String pin, Integer tokenType, Integer testStatus) {
+        RPCResult<List<AccountDto>> result = new RPCResult<>();
+        try {
+            List<Account> accounts = accountService.freezeAll(proxyId, pin, tokenType, testStatus);
+            List<AccountDto> resultList = new ArrayList<>();
+            for (Account item : accounts) {
+                AccountDto dto = new AccountDto();
+                BeanCoper.copyProperties(dto, item);
+                resultList.add(dto);
+            }
+            result.setSuccess(true);
+            result.setData(resultList);
+            return result;
+        } catch (Exception e) {
+            logger.error("查询账户失败", e);
+            result.setSuccess(false);
+        }
+        result.setMessage("查询账户失败");
+        result.setCode("account.queryAccount.error");
+        return result;
+    }
+
+    @Override
+    public RPCResult<AccountDto> findAccount(Long proxyId, String pin, Integer tokenType, Integer testStatus) {
+        RPCResult<AccountDto> result = null;
+        try {
+            Account query = new Account();
+            query.setPin(pin);
+            query.setProxyId(proxyId);
+            query.setTokenType(tokenType);
+            query.setTest(testStatus);
+            query = accountService.findByOne(query);
+            if(query==null){
+                query=new Account();
+                query.setTest(testStatus);
+                query.setAmount(BigDecimal.ZERO);
+                query.setTokenType(tokenType);
+                query.setFreeze(BigDecimal.ZERO);
+                query.setPin(pin);
+                query.setProxyId(proxyId);
+                query.setStatus(YesOrNoEnum.YES.getValue());
+            }
+            AccountDto dto=BeanCoper.copyProperties(AccountDto.class, query);
+            result = new RPCResult<>(dto);
+            return result;
+        } catch (Exception e) {
+            result = new RPCResult<>();
+            result.setMessage("查询账户失败");
+            result.setCode("account.findAccount.error");
+        }
+        return result;
+    }
 }

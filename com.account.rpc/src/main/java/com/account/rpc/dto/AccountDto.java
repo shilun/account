@@ -15,7 +15,7 @@ public class AccountDto implements Serializable {
     private String pin;
     /**
      * 币种
-     * 人民币 1   金币 2
+     * 1(保险箱金币)    2 金币   3 农场币  4彩票币
      */
     private Integer tokenType;
     /**

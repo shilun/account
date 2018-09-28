@@ -29,7 +29,8 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
     private String bizId;
 
     /***
-     * 账本类型
+     * 币种
+     * * 1(人民币)    2 金币   3 农场币  4彩票币
      */
     private Integer tokenType;
     /**

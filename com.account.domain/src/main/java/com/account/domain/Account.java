@@ -18,7 +18,7 @@ public class Account extends AbstractBaseEntity implements java.io.Serializable 
 	private Long proxyId;
 	/**pin*/
 	private String pin;
-	/**币种*/
+	/*** 1(人民币)    2 金币   3 农场币  4彩票币*/
 	private Integer tokenType;
 	/**总金额*/
 	private BigDecimal amount;

@@ -12,6 +12,16 @@ import java.util.List;
  */
 public interface AccountRPCService {
 
+
+    /**
+     * 查询账本信息
+     * @param proxyId
+     * @param pin
+     * @param tokenType   * 人民币 1   金币 2
+     * @param testStatus  * 是否为测试 1 否 2 是
+     * @return
+     */
+    RPCResult<AccountDto>  findAccount(Long proxyId,String pin,Integer tokenType,Integer testStatus);
     /**
      * 查看用户账户
      * @param pin 用户id
@@ -84,5 +94,15 @@ public interface AccountRPCService {
      */
     RPCResult<BigDecimal> findTotal(Long proxyId,String pin,Integer targetType);
 
+
+    /**
+     * 冻结并查询币种
+     * @param proxyId 代理商
+     * @param pin 用户pin
+     * @param tokenType 1 人民币 2 金币
+     * @param testStatus 1 测试 2正试
+     * @return
+     */
+    public RPCResult<List<AccountDto>>  freezeAll(Long proxyId,String pin,Integer tokenType,Integer testStatus);
 
 }

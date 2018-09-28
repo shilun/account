@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
+import java.util.List;
 
 
 /**
@@ -37,7 +38,7 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
 
     @Resource
     private DistributedLockUtil distributedLockUtil;
-    private String user_login_key = "account.lock.pin.{0}";
+    private String user_login_key = "account.newBiz.pin.{0}";
     @Resource
     private AccountDetailtService accountDetailtService;
 
@@ -51,7 +52,16 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
         if (dto.getAmount() == null && dto.getFreeze() == null) {
             throw new BizException("dto.error", "数据验证失败");
         }
+        if (dto.getProxyId() == null) {
+            throw new BizException("dto.error.BizId", "数据验证失败");
+        }
+        if (dto.getTokenType() == null) {
+            throw new BizException("dto.error.BizId", "数据验证失败");
+        }
         if (StringUtils.isBlank(dto.getBizId())) {
+            throw new BizException("dto.error.BizId", "数据验证失败");
+        }
+        if (dto.getBizType() == null) {
             throw new BizException("dto.error.BizId", "数据验证失败");
         }
         if (StringUtils.isBlank(dto.getPin())) {
@@ -150,5 +160,49 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
         }
     }
 
+    /**
+     * 锁定用户所有币key
+     */
+    private String accountFreezeAll_key = "account.freezeAll.pin.{0}";
 
+    @Override
+    public List<Account> freezeAll(Long proxyId, String pin, Integer tokenType, Integer testStatus) {
+        String lock_key = MessageFormat.format(accountFreezeAll_key, pin);
+        if (testStatus == null) {
+            testStatus = YesOrNoEnum.NO.getValue();
+        }
+        DistributedLock distributedLock = null;
+        try {
+            boolean acquire = false;
+            if (testStatus == YesOrNoEnum.NO.getValue()) {
+                distributedLock = distributedLockUtil.getDistributedLock(lock_key, 30 * 1000);
+                acquire = distributedLock.acquire();
+            }
+            if (!acquire) {
+                throw new BizException("freezeAll.error", "冻结失败");
+            }
+            Account query = new Account();
+            query.setProxyId(proxyId);
+            query.setPin(pin);
+            query.setTest(testStatus);
+            List<Account> list = query(query);
+            for (Account item : list) {
+                if (item.getTokenType().intValue() == tokenType.intValue()) {
+                    Account upEntity = new Account();
+                    upEntity.setId(item.getId());
+                    upEntity.setFreeze(item.getAmount());
+                    item.setFreeze(item.getAmount());
+                    up(upEntity);
+                }
+            }
+            return list;
+        } catch (Exception e) {
+            throw new BizException("freezeAll.error", "冻结失败");
+        } finally {
+            if (testStatus == YesOrNoEnum.NO.getValue()) {
+                distributedLock.release();
+            }
+
+        }
+    }
 }
