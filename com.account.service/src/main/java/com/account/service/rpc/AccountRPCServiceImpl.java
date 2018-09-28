@@ -57,6 +57,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
                     dto.setRate(rate);
                 }
                 dto.setAmount(dto.getAmount().subtract(dto.getFreeze()));
+                dto.setFreeze(BigDecimal.ZERO);
             }
             result=new RPCResult<>(resultlist);
             return result;
