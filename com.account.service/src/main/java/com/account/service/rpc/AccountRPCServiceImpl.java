@@ -56,6 +56,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
                     BigDecimal rate = configService.findRate(TokenTypeEnum.RMB.getValue(), dto.getTokenType());
                     dto.setRate(rate);
                 }
+                dto.setAmount(dto.getAmount().subtract(dto.getFreeze()));
             }
             result=new RPCResult<>(resultlist);
             return result;
