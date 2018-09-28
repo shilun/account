@@ -42,6 +42,31 @@ public class AccountRPCServiceImpl implements AccountRPCService {
     @Resource
     private ConfigService configService;
 
+
+    @Override
+    public RPCResult<List<AccountDto>> queryAccountWithRate(String pin, Long proxyId) {
+        RPCResult<List<AccountDto>> result =null;
+        try {
+            List<AccountDto> resultlist = getAccountDtos(pin, proxyId);
+            for(AccountDto dto:resultlist){
+                if(TokenTypeEnum.RMB.getValue().intValue()==dto.getTokenType()){
+                    dto.setRate(BigDecimal.ONE);
+                }
+                else{
+                    BigDecimal rate = configService.findRate(TokenTypeEnum.RMB.getValue(), dto.getTokenType());
+                    dto.setRate(rate);
+                }
+            }
+            result=new RPCResult<>(resultlist);
+            return result;
+        } catch (Exception e) {
+            logger.error("查询账户失败", e);
+            result.setSuccess(false);
+        }
+        result.setMessage("查询账户失败");
+        result.setCode("account.queryAccount.error");
+        return result;
+    }
     @Override
     public RPCResult<List<AccountDto>> queryAccount(String pin, Long proxyId) {
         RPCResult<List<AccountDto>> result = new RPCResult<>();

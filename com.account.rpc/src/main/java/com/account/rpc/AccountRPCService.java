@@ -31,6 +31,14 @@ public interface AccountRPCService {
     RPCResult<List<AccountDto>> queryAccount(String pin, Long proxyId);
 
     /**
+     * 查看用户账户带汇率
+     * @param pin 用户id
+     * @param proxyId 代理商
+     * @return
+     */
+    RPCResult<List<AccountDto>> queryAccountWithRate(String pin, Long proxyId);
+
+    /**
      * 执行业务
      * amount 正数时 账户加余额 负数时增加余额
      * freeze 正数 则从amount 转账到 freeze 则，负数时则直接减少锁定余额

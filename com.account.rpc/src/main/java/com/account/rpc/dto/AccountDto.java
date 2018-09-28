@@ -31,6 +31,20 @@ public class AccountDto implements Serializable {
      */
     private Integer test;
 
+    /**
+     * 汇率
+     */
+    private BigDecimal rate;
+
+
+    public BigDecimal getRate() {
+        return rate;
+    }
+
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
+    }
+
     public Integer getTest() {
         return test;
     }
