@@ -12,6 +12,7 @@ import com.common.exception.BizException;
 import com.common.util.AbstractBaseDao;
 import com.common.util.BeanCoper;
 import com.common.util.DefaultBaseService;
+import com.common.util.model.YesOrNoEnum;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,6 +64,7 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
                 e.setAmount(BigDecimal.ZERO);
                 e.setFreeze(BigDecimal.ZERO);
                 e.setTokenType(type.getValue());
+                e.setStatus(YesOrNoEnum.NO.getValue());
                 list.add(e);
             }
         }
