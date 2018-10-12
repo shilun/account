@@ -122,7 +122,6 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         query.setProxyId(proxyId);
         query.setPin(pin);
         List<Account> list = accountService.query(query);
-        List<Account> emptyList = new ArrayList<>();
         for (TokenTypeEnum type : TokenTypeEnum.values()) {
             boolean moneyed = false;
             for (Account item : list) {
