@@ -19,6 +19,7 @@ import com.common.util.model.YesOrNoEnum;
 import org.apache.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,21 +46,20 @@ public class AccountRPCServiceImpl implements AccountRPCService {
 
     @Override
     public RPCResult<List<AccountDto>> queryAccountWithRate(String pin, Long proxyId) {
-        RPCResult<List<AccountDto>> result =null;
+        RPCResult<List<AccountDto>> result = null;
         try {
             List<AccountDto> resultlist = getAccountDtos(pin, proxyId);
-            for(AccountDto dto:resultlist){
-                if(TokenTypeEnum.RMB.getValue().intValue()==dto.getTokenType()){
+            for (AccountDto dto : resultlist) {
+                if (TokenTypeEnum.RMB.getValue().intValue() == dto.getTokenType()) {
                     dto.setRate(BigDecimal.ONE);
-                }
-                else{
+                } else {
                     BigDecimal rate = configService.findRate(TokenTypeEnum.RMB.getValue(), dto.getTokenType());
                     dto.setRate(rate);
                 }
                 dto.setAmount(dto.getAmount().subtract(dto.getFreeze()));
                 dto.setFreeze(BigDecimal.ZERO);
             }
-            result=new RPCResult<>(resultlist);
+            result = new RPCResult<>(resultlist);
             return result;
         } catch (Exception e) {
             logger.error("查询账户失败", e);
@@ -69,6 +69,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         result.setCode("account.queryAccount.error");
         return result;
     }
+
     @Override
     public RPCResult<List<AccountDto>> queryAccount(String pin, Long proxyId) {
         RPCResult<List<AccountDto>> result = new RPCResult<>();
@@ -76,6 +77,36 @@ public class AccountRPCServiceImpl implements AccountRPCService {
             List<AccountDto> resultlist = getAccountDtos(pin, proxyId);
             result.setSuccess(true);
             result.setData(resultlist);
+            return result;
+        } catch (Exception e) {
+            logger.error("查询账户失败", e);
+            result.setSuccess(false);
+        }
+        result.setMessage("查询账户失败");
+        result.setCode("account.queryAccount.error");
+        return result;
+    }
+
+
+    @Override
+    public RPCResult<List<AccountDto>> queryAccounts(Long proxyId, Integer tokenType, Integer pageIndex, Integer pageSize) {
+        Account query = new Account();
+        query.setProxyId(proxyId);
+        query.setTokenType(tokenType);
+        RPCResult<List<AccountDto>> result = new RPCResult<>();
+        try {
+            List<AccountDto> resultList = new ArrayList<>();
+            Page<Account> accounts = accountService.queryByPage(query, new PageRequest(pageIndex, pageSize));
+            result.setSuccess(true);
+            result.setPageIndex(pageIndex);
+            result.setPageSize(pageSize);
+            result.setTotalCount(accounts.getNumberOfElements());
+            result.setTotalPage(accounts.getTotalPages());
+            for (Account item : accounts.getContent()) {
+                AccountDto accountDto = BeanCoper.copyProperties(AccountDto.class, item);
+                resultList.add(accountDto);
+            }
+            result.setData(resultList);
             return result;
         } catch (Exception e) {
             logger.error("查询账户失败", e);
@@ -354,8 +385,8 @@ public class AccountRPCServiceImpl implements AccountRPCService {
             query.setTokenType(tokenType);
             query.setTest(testStatus);
             query = accountService.findByOne(query);
-            if(query==null){
-                query=new Account();
+            if (query == null) {
+                query = new Account();
                 query.setTest(testStatus);
                 query.setAmount(BigDecimal.ZERO);
                 query.setTokenType(tokenType);
@@ -364,7 +395,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
                 query.setProxyId(proxyId);
                 query.setStatus(YesOrNoEnum.YES.getValue());
             }
-            AccountDto dto=BeanCoper.copyProperties(AccountDto.class, query);
+            AccountDto dto = BeanCoper.copyProperties(AccountDto.class, query);
             result = new RPCResult<>(dto);
             return result;
         } catch (Exception e) {

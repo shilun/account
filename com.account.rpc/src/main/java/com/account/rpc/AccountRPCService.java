@@ -31,6 +31,16 @@ public interface AccountRPCService {
     RPCResult<List<AccountDto>> queryAccount(String pin, Long proxyId);
 
     /**
+     * 查询用户账户
+     * @param proxyId
+     * @param tokenType
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    RPCResult<List<AccountDto>> queryAccounts(Long proxyId,Integer tokenType,Integer pageIndex,Integer pageSize);
+
+    /**
      * 查看用户账户带汇率
      * @param pin 用户id
      * @param proxyId 代理商
