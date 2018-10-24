@@ -27,12 +27,12 @@
             <if test="status != null "><![CDATA[AND status =#{status}]]></if>
             <if test="delStatus != null "><![CDATA[AND del_status =#{delStatus}]]></if>
             <if test="createTime != null "><![CDATA[AND create_time =#{createTime}]]></if>
-            <if test="queryStartTime != null and createTime != null "><![CDATA[AND create_time BETWEEN #{queryStartTime} AND #{createTime}]]></if>
+            <if test="queryStartTime != null and queryEndTime != null "><![CDATA[AND create_time BETWEEN #{queryStartTime} AND #{queryEndTime}]]></if>
             <if test="updateTime != null "><![CDATA[AND update_time =#{updateTime}]]></if>
         </where>
     </sql>
     <sql id="columns">
-	id as id ,pin as pin,test ,proxy_id as proxyId ,token_type as tokenType ,biz_type as bizType ,biz_id as bizId ,before_amount as beforeAmount ,before_freeze as beforeFreeze ,change_amount as changeAmount ,change_freeze as changeFreeze ,after_amount as afterAmount ,after_freeze as afterFreeze ,status as status ,del_status as delStatus ,create_time as createTime ,update_time as updateTime
+	id as id ,pin as pin,test ,proxy_id as proxyId ,token_type as tokenType ,biz_type as bizType ,biz_id as bizId ,charge_type as chargeType,before_amount as beforeAmount ,before_freeze as beforeFreeze ,change_amount as changeAmount ,change_freeze as changeFreeze ,after_amount as afterAmount ,after_freeze as afterFreeze ,status as status ,del_status as delStatus ,create_time as createTime ,update_time as updateTime
 </sql>
     <insert id="insert" parameterType="accountDetail">
         insert into account_detail

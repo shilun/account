@@ -4,6 +4,7 @@ import com.account.dao.AccountDetailtDao;
 import com.account.domain.Account;
 import com.account.domain.AccountDetail;
 import com.account.domain.module.BizTypeEnum;
+import com.account.domain.module.ChargeTypeEnum;
 import com.account.rpc.dto.AccountDetailDto;
 import com.account.domain.module.TokenTypeEnum;
 import com.account.service.AccountDetailtService;
@@ -159,6 +160,7 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
                 BeanCoper.copyProperties(accountDetailDto, detail);
                 accountDetailDto.setBizTypeName(GlosseryEnumUtils.getItem(BizTypeEnum.class,accountDetailDto.getBizType()).getName());
                 accountDetailDto.setTokenName(GlosseryEnumUtils.getItem(TokenTypeEnum.class,accountDetailDto.getTokenType()).getName());
+                accountDetailDto.setChargeTypeName(GlosseryEnumUtils.getItem(ChargeTypeEnum.class,accountDetailDto.getChargeType()).getName());
                 accountDetailDtos.add(accountDetailDto);
             }
         }

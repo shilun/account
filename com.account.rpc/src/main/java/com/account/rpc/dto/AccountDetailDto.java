@@ -49,6 +49,10 @@ public class AccountDetailDto extends AbstractDTO implements Serializable {
      */
     private Integer chargeType;
     /**
+     * 充值方式名称
+     */
+    private String chargeTypeName;
+    /**
      * before_总余额
      */
     private BigDecimal beforeAmount;
@@ -90,6 +94,14 @@ public class AccountDetailDto extends AbstractDTO implements Serializable {
      * 查询结束时间
      */
     private String queryEndTime;
+
+    public String getChargeTypeName() {
+        return chargeTypeName;
+    }
+
+    public void setChargeTypeName(String chargeTypeName) {
+        this.chargeTypeName = chargeTypeName;
+    }
 
     public String getQueryStartTime() {
         return queryStartTime;
