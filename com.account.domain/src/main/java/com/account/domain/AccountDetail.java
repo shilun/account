@@ -23,6 +23,7 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
      * 业务类型 1 棋牌 2 彩票 3小游戏
      */
     private Integer bizType;
+
     /**
      * 业务标识（外键流水号）
      */

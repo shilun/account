@@ -3,6 +3,7 @@ package com.account.service.impl;
 import com.account.dao.AccountDetailtDao;
 import com.account.domain.Account;
 import com.account.domain.AccountDetail;
+import com.account.domain.module.BizTypeEnum;
 import com.account.rpc.dto.AccountDetailDto;
 import com.account.domain.module.TokenTypeEnum;
 import com.account.service.AccountDetailtService;
@@ -12,7 +13,10 @@ import com.common.exception.BizException;
 import com.common.util.AbstractBaseDao;
 import com.common.util.BeanCoper;
 import com.common.util.DefaultBaseService;
+import com.common.util.GlosseryEnumUtils;
 import com.common.util.model.YesOrNoEnum;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -118,8 +122,6 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
         query.setPin(pin);
         query.setOrderColumn("id");
         query.setOrderTpe(2);
-//        query.setStartRow((page-1)*size);
-//        query.setEndRow(page*size);
         List<AccountDetail> accountDetails = getBaseDao().query(query);
         if (!accountDetails.isEmpty()) {
             for (AccountDetail detail : accountDetails) {
@@ -132,26 +134,29 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
     }
 
     @Override
-    public List<AccountDetailDto> queryDetailList(AccountDetailDto dto) {
+    public Page<AccountDetailDto> queryDetailList(AccountDetailDto dto) {
         List<AccountDetailDto> accountDetailDtos = new ArrayList<>();
         int page = dto.getPageinfo().getPage().getPageNumber();
         int size = dto.getPageinfo().getSize();
-        AccountDetail query = new AccountDetail();
-        query.setProxyId(dto.getProxyId());
-        query.setPin(dto.getPin());
+        AccountDetail query = BeanCoper.copyProperties(AccountDetail.class,dto);
         query.setOrderColumn("id");
         query.setOrderTpe(2);
-        query.setStartRow((page - 1) * size);
-        query.setEndRow(page * size);
+        query.setStartRow(page * size);
+        query.setEndRow((page+1) * size);
         List<AccountDetail> accountDetails = getBaseDao().query(query);
+        Integer total = getBaseDao().queryCount(query);
+//        int totalPage = total % size >0 ? total/size+1: total/size;
         if (!accountDetails.isEmpty()) {
             for (AccountDetail detail : accountDetails) {
                 AccountDetailDto accountDetailDto = new AccountDetailDto();
                 BeanCoper.copyProperties(accountDetailDto, detail);
+                accountDetailDto.setBizTypeName(GlosseryEnumUtils.getItem(BizTypeEnum.class,accountDetailDto.getBizType()).getName());
+                accountDetailDto.setTokenName(GlosseryEnumUtils.getItem(TokenTypeEnum.class,accountDetailDto.getTokenType()).getName());
                 accountDetailDtos.add(accountDetailDto);
             }
         }
-        return accountDetailDtos;
+        Page<AccountDetailDto> detailDtoPage = new PageImpl<>(accountDetailDtos,dto.getPageinfo().getPage(),total.longValue());
+        return detailDtoPage;
     }
 
 

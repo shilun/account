@@ -97,11 +97,11 @@ public interface AccountRPCService {
     RPCResult<List<AccountDetailDto>> queryDetail(Long proxyId,String pin,Integer page,Integer size);
 
     /**
-     * 查询账本详情
+     * 查询账本详情 推荐使用这个
      * @param accountDetailDto
      * @return
      */
-    RPCResult<Page<AccountDetailDto>> queryDetail(AccountDetailDto accountDetailDto);
+    RPCResult<List<AccountDetailDto>> queryDetail(AccountDetailDto accountDetailDto);
 
     /**
      * 查询可用总账户金额

@@ -25,11 +25,19 @@ public class AccountDetailDto extends AbstractDTO implements Serializable {
      * 业务类型 1 充值 2 体现 3 棋牌 4 彩票 5小游戏
      */
     private Integer bizType;
+    /**
+     * 业务类型名称
+     */
+    private String bizTypeName;
 
     /***
-     * 账本类型 1 人民币 2 金币 3 测试账户  4 测试金币
+     * 账本类型 1 人民币 2 金币 3 农场币  4 彩票币
      */
-    private String tokenType;
+    private Integer tokenType;
+    /**
+     * 账本类型名称
+     */
+    private String tokenTypeName;
     /**
      * before_总余额
      */
@@ -60,6 +68,21 @@ public class AccountDetailDto extends AbstractDTO implements Serializable {
      */
     private Integer status;
 
+    public String getBizTypeName() {
+        return bizTypeName;
+    }
+
+    public void setBizTypeName(String bizTypeName) {
+        this.bizTypeName = bizTypeName;
+    }
+
+    public String getTokenTypeName() {
+        return tokenTypeName;
+    }
+
+    public void setTokenTypeName(String tokenTypeName) {
+        this.tokenTypeName = tokenTypeName;
+    }
 
     public Long getProxyId() {
         return proxyId;
@@ -93,11 +116,11 @@ public class AccountDetailDto extends AbstractDTO implements Serializable {
         this.bizType = bizType;
     }
 
-    public String getTokenType() {
+    public Integer getTokenType() {
         return tokenType;
     }
 
-    public void setTokenType(String tokenType) {
+    public void setTokenType(Integer tokenType) {
         this.tokenType = tokenType;
     }
 

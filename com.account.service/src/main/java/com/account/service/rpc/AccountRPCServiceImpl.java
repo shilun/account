@@ -302,14 +302,17 @@ public class AccountRPCServiceImpl implements AccountRPCService {
     }
 
     @Override
-    public RPCResult<Page<AccountDetailDto>> queryDetail(AccountDetailDto dto) {
-        RPCResult<Page<AccountDetailDto>> rpcResult = new RPCResult<>();
+    public RPCResult<List<AccountDetailDto>> queryDetail(AccountDetailDto dto) {
+        RPCResult<List<AccountDetailDto>> rpcResult = new RPCResult<>();
         try {
-            List<AccountDetailDto> accountDetailDtos = accountDetailtService.queryDetailList(dto.getProxyId(), dto.getPin(), dto.getPageinfo().getPage().getPageNumber(), dto.getPageinfo().getPage().getPageSize());
-            if (!accountDetailDtos.isEmpty()) {
-                Page<AccountDetailDto> accountDetailDtos1 = new PageImpl<>(accountDetailDtos, dto.getPageinfo().getPage(), dto.getPageinfo().getSize());
+            Page<AccountDetailDto> detailDtoPage = accountDetailtService.queryDetailList(dto);
+            if (detailDtoPage.hasContent()) {
                 rpcResult.setSuccess(true);
-                rpcResult.setData(accountDetailDtos1);
+                rpcResult.setData(detailDtoPage.getContent());
+                rpcResult.setTotalCount(Integer.valueOf((int) detailDtoPage.getTotalElements()));
+                rpcResult.setPageIndex(dto.getPageinfo().getPage().getPageNumber());
+                rpcResult.setTotalPage(detailDtoPage.getTotalPages());
+                rpcResult.setPageSize(detailDtoPage.getSize());
             } else {
                 rpcResult.setSuccess(false);
                 rpcResult.setCode("AccountRPCServiceImpl.queryDetail.null");

@@ -2,6 +2,7 @@ package com.account.service;
 import com.account.rpc.dto.AccountDetailDto;
 import com.common.util.AbstractBaseService;
 import com.account.domain.AccountDetail;
+import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -37,5 +38,5 @@ public interface AccountDetailtService extends AbstractBaseService<AccountDetail
      * @param dto
      * @return
      */
-    public List<AccountDetailDto> queryDetailList(AccountDetailDto dto);
+    public Page<AccountDetailDto> queryDetailList(AccountDetailDto dto);
 }
