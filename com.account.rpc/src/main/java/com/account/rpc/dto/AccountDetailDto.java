@@ -82,6 +82,31 @@ public class AccountDetailDto extends AbstractDTO implements Serializable {
      */
     private Date createTime;
 
+    /**
+     * 查询起始时间
+     */
+    private String queryStartTime;
+    /**
+     * 查询结束时间
+     */
+    private String queryEndTime;
+
+    public String getQueryStartTime() {
+        return queryStartTime;
+    }
+
+    public void setQueryStartTime(String queryStartTime) {
+        this.queryStartTime = queryStartTime;
+    }
+
+    public String getQueryEndTime() {
+        return queryEndTime;
+    }
+
+    public void setQueryEndTime(String queryEndTime) {
+        this.queryEndTime = queryEndTime;
+    }
+
     public Integer getChargeType() {
         return chargeType;
     }

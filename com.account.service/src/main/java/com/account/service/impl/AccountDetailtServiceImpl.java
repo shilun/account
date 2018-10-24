@@ -9,11 +9,9 @@ import com.account.domain.module.TokenTypeEnum;
 import com.account.service.AccountDetailtService;
 import com.account.service.AccountService;
 import com.account.service.ConfigService;
+import com.account.service.utils.TimeUtils;
 import com.common.exception.BizException;
-import com.common.util.AbstractBaseDao;
-import com.common.util.BeanCoper;
-import com.common.util.DefaultBaseService;
-import com.common.util.GlosseryEnumUtils;
+import com.common.util.*;
 import com.common.util.model.YesOrNoEnum;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -23,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -139,10 +138,18 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
         int page = dto.getPageinfo().getPage().getPageNumber();
         int size = dto.getPageinfo().getSize();
         AccountDetail query = BeanCoper.copyProperties(AccountDetail.class,dto);
+        if(StringUtils.isBlank(dto.getQueryStartTime()) && StringUtils.isBlank(dto.getQueryEndTime())){
+           Date date = new Date();
+            query.setQueryStartTime(TimeUtils.getMinTime(date));
+            query.setQueryEndTime(TimeUtils.getMaxTime(date));
+        }else{
+            query.setQueryStartTime(TimeUtils.getMinTime(DateUtil.StringToDate(dto.getQueryStartTime())));
+            query.setQueryEndTime(TimeUtils.getMaxTime(DateUtil.StringToDate(dto.getQueryEndTime())));
+        }
         query.setOrderColumn("id");
         query.setOrderTpe(2);
         query.setStartRow(page * size);
-        query.setEndRow((page+1) * size);
+        query.setEndRow(size);
         List<AccountDetail> accountDetails = getBaseDao().query(query);
         Integer total = getBaseDao().queryCount(query);
 //        int totalPage = total % size >0 ? total/size+1: total/size;

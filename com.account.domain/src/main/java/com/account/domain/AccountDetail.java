@@ -3,6 +3,7 @@ package com.account.domain;
 import com.common.util.AbstractBaseEntity;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @desc 账本流水账
@@ -73,6 +74,31 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
      * 是否为测试
      */
     private Integer test;
+
+    /**
+     * 查询起始时间
+     */
+    private Date queryStartTime;
+    /**
+     * 查询结束时间
+     */
+    private Date queryEndTime;
+
+    public Date getQueryStartTime() {
+        return queryStartTime;
+    }
+
+    public void setQueryStartTime(Date queryStartTime) {
+        this.queryStartTime = queryStartTime;
+    }
+
+    public Date getQueryEndTime() {
+        return queryEndTime;
+    }
+
+    public void setQueryEndTime(Date queryEndTime) {
+        this.queryEndTime = queryEndTime;
+    }
 
     public Integer getChargeType() {
         return chargeType;

@@ -27,6 +27,7 @@
             <if test="status != null "><![CDATA[AND status =#{status}]]></if>
             <if test="delStatus != null "><![CDATA[AND del_status =#{delStatus}]]></if>
             <if test="createTime != null "><![CDATA[AND create_time =#{createTime}]]></if>
+            <if test="queryStartTime != null and createTime != null "><![CDATA[AND create_time BETWEEN #{queryStartTime} AND #{createTime}]]></if>
             <if test="updateTime != null "><![CDATA[AND update_time =#{updateTime}]]></if>
         </where>
     </sql>
