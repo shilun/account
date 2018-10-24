@@ -28,6 +28,10 @@ public class InvertBizDto implements Serializable {
      */
     private String bizId;
     /**
+     * 充值方式 0 数据库默认值  1 支付宝 2 微信 3 银联
+     */
+    private Integer chargeType;
+    /**
      * 总额数
      */
     private BigDecimal amount;
@@ -40,6 +44,14 @@ public class InvertBizDto implements Serializable {
      * 是否为测试
      */
     private Integer test;
+
+    public Integer getChargeType() {
+        return chargeType;
+    }
+
+    public void setChargeType(Integer chargeType) {
+        this.chargeType = chargeType;
+    }
 
     public Integer getTest() {
         return test;

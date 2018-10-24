@@ -35,6 +35,10 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
      */
     private Integer tokenType;
     /**
+     * 充值方式 0 数据库默认值  1 支付宝 2 微信 3 银联
+     */
+    private Integer chargeType;
+    /**
      * before_总余额
      */
     private BigDecimal beforeAmount;
@@ -69,6 +73,14 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
      * 是否为测试
      */
     private Integer test;
+
+    public Integer getChargeType() {
+        return chargeType;
+    }
+
+    public void setChargeType(Integer chargeType) {
+        this.chargeType = chargeType;
+    }
 
     public Integer getTokenType() {
         return tokenType;

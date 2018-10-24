@@ -3,36 +3,28 @@ package com.account.domain.module;
 import com.common.util.IGlossary;
 
 /**
- * 业务类型
+ * 充值类型
  */
-public enum BizTypeEnum implements IGlossary {
+public enum ChargeTypeEnum implements IGlossary {
     /**
-     * 充值
+     * 数据库默认0
      */
-    recharge("充值",1),
+    moren("其他消费",0),
     /**
-     * 提款
+     * 支付宝
      */
-    drawing("提款",2),
+    zhifubao("支付宝",1),
     /**
-     * 棋牌
+     * 微信
      */
-    qipai("棋牌",3),
+    weixin("微信",2),
     /**
-     * 彩票
+     * 银联
      */
-    caipiao("彩票",4),
-    /**
-     * 小游戏
-     */
-    smallgame("小游戏",5),
-    /**
-     * 赠送金币
-     */
-    givecoin("赠送金币",6)
+    yinlian("银联",3),
     ;
 
-    BizTypeEnum(String name, Integer value) {
+    ChargeTypeEnum(String name, Integer value) {
         this.name = name;
         this.value = value;
     }

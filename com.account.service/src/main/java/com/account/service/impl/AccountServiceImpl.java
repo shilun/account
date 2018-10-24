@@ -92,6 +92,7 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
             findDetail.setBizType(dto.getBizType());
             findDetail.setProxyId(dto.getProxyId());
             findDetail.setBizId(dto.getBizId());
+            findDetail.setChargeType(dto.getChargeType());
             findDetail.setTest(dto.getTest());
             findDetail = accountDetailtService.findByOne(findDetail);
             if (findDetail != null) {
@@ -122,6 +123,7 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
             detail.setBizType(bizTypeEnum.getValue());
             detail.setBizId(dto.getBizId());
             detail.setTest(dto.getTest());
+            detail.setChargeType(dto.getChargeType());
             detail.setBeforeAmount(account.getAmount());
             detail.setBeforeFreeze(account.getFreeze());
             account.setAmount(account.getAmount().add(dto.getAmount()));

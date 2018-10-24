@@ -35,9 +35,9 @@
 </sql>
     <insert id="insert" parameterType="accountDetail">
         insert into account_detail
-        (id,pin,test,proxy_id,token_type,biz_type,biz_id,before_amount,before_freeze,change_amount,change_freeze,after_amount,after_freeze,status,del_status,create_time,update_time)
+        (id,pin,test,proxy_id,token_type,biz_type,biz_id,charge_type,before_amount,before_freeze,change_amount,change_freeze,after_amount,after_freeze,status,del_status,create_time,update_time)
         values
-        (#{id},#{pin},#{test},#{proxyId},#{tokenType},#{bizType},#{bizId},#{beforeAmount},#{beforeFreeze},#{changeAmount},#{changeFreeze},#{afterAmount},#{afterFreeze},#{status},#{delStatus},#{createTime},#{updateTime})
+        (#{id},#{pin},#{test},#{proxyId},#{tokenType},#{bizType},#{bizId},#{chargeType},#{beforeAmount},#{beforeFreeze},#{changeAmount},#{changeFreeze},#{afterAmount},#{afterFreeze},#{status},#{delStatus},#{createTime},#{updateTime})
         <selectKey keyProperty="id" resultType="long" order="AFTER">
             select last_insert_id()
         </selectKey>
@@ -56,6 +56,7 @@
             <if test="tokenType != null "><![CDATA[ token_type =#{tokenType},]]></if>
             <if test="bizType != null "><![CDATA[ biz_type =#{bizType},]]></if>
             <if test="bizId != null "><![CDATA[ biz_id =#{bizId},]]></if>
+            <if test="chargeType != null "><![CDATA[ charge_type =#{chargeType},]]></if>
             <if test="beforeAmount != null "><![CDATA[ before_amount =#{beforeAmount},]]></if>
             <if test="beforeFreeze != null "><![CDATA[ before_freeze =#{beforeFreeze},]]></if>
             <if test="changeAmount != null "><![CDATA[ change_amount =#{changeAmount},]]></if>

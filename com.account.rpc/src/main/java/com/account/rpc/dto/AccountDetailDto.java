@@ -4,6 +4,7 @@ import com.common.util.AbstractDTO;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class AccountDetailDto extends AbstractDTO implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -22,9 +23,13 @@ public class AccountDetailDto extends AbstractDTO implements Serializable {
      */
     private String tokenName;
     /**
-     * 业务类型 1 充值 2 体现 3 棋牌 4 彩票 5小游戏
+     * 业务类型 1 充值 2 体现 3 棋牌 4 彩票 5小游戏 6 赠送金币
      */
     private Integer bizType;
+    /**
+     * 业务标识（外键流水号）
+     */
+    private String bizId;
     /**
      * 业务类型名称
      */
@@ -38,6 +43,11 @@ public class AccountDetailDto extends AbstractDTO implements Serializable {
      * 账本类型名称
      */
     private String tokenTypeName;
+
+    /**
+     * 充值方式 0 数据库默认值  1 支付宝 2 微信 3 银联
+     */
+    private Integer chargeType;
     /**
      * before_总余额
      */
@@ -67,6 +77,34 @@ public class AccountDetailDto extends AbstractDTO implements Serializable {
      * 1 正常 2 回滚
      */
     private Integer status;
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+
+    public Integer getChargeType() {
+        return chargeType;
+    }
+
+    public void setChargeType(Integer chargeType) {
+        this.chargeType = chargeType;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getBizId() {
+        return bizId;
+    }
+
+    public void setBizId(String bizId) {
+        this.bizId = bizId;
+    }
 
     public String getBizTypeName() {
         return bizTypeName;
