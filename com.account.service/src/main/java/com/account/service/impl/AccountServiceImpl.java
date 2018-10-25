@@ -123,7 +123,11 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
             detail.setBizType(bizTypeEnum.getValue());
             detail.setBizId(dto.getBizId());
             detail.setTest(dto.getTest());
-            detail.setChargeType(dto.getChargeType());
+            if(dto.getChargeType()!=null){
+                detail.setChargeType(dto.getChargeType());
+            }else {
+                detail.setChargeType(0);
+            }
             detail.setBeforeAmount(account.getAmount());
             detail.setBeforeFreeze(account.getFreeze());
             account.setAmount(account.getAmount().add(dto.getAmount()));
