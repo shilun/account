@@ -141,11 +141,11 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
         AccountDetail query = BeanCoper.copyProperties(AccountDetail.class,dto);
         if(StringUtils.isBlank(dto.getQueryStartTime()) && StringUtils.isBlank(dto.getQueryEndTime())){
 //           Date date = new Date();
-            query.setQueryStartTime(null);
-            query.setQueryEndTime(null);
+            query.setStartCreateTime(null);
+            query.setEndCreateTime(null);
         }else{
-            query.setQueryStartTime(TimeUtils.getMinTime(DateUtil.StringToDate(dto.getQueryStartTime())));
-            query.setQueryEndTime(TimeUtils.getMaxTime(DateUtil.StringToDate(dto.getQueryEndTime())));
+            query.setStartCreateTime(TimeUtils.getMinTime(DateUtil.StringToDate(dto.getQueryStartTime())));
+            query.setEndCreateTime(TimeUtils.getMaxTime(DateUtil.StringToDate(dto.getQueryEndTime())));
         }
         query.setOrderColumn("id");
         query.setOrderTpe(2);

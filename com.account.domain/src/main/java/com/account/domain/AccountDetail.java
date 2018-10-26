@@ -78,14 +78,6 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
      */
     private Integer test;
 
-    /**
-     * 查询起始时间
-     */
-    private Date queryStartTime;
-    /**
-     * 查询结束时间
-     */
-    private Date queryEndTime;
 
     public Integer getBizToken() {
         return bizToken;
@@ -95,21 +87,6 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
         this.bizToken = bizToken;
     }
 
-    public Date getQueryStartTime() {
-        return queryStartTime;
-    }
-
-    public void setQueryStartTime(Date queryStartTime) {
-        this.queryStartTime = queryStartTime;
-    }
-
-    public Date getQueryEndTime() {
-        return queryEndTime;
-    }
-
-    public void setQueryEndTime(Date queryEndTime) {
-        this.queryEndTime = queryEndTime;
-    }
 
     public Integer getChargeType() {
         return chargeType;
