@@ -23,9 +23,13 @@ public class AccountDetailDto extends AbstractDTO implements Serializable {
      */
     private String tokenName;
     /**
-     * 业务类型 1 充值 2 体现 3 棋牌 4 彩票 5小游戏 6 赠送金币
+     * 系统类型 3 棋牌 4 彩票 5小游戏 6 赠送金币
      */
     private Integer bizType;
+    /**
+     * 业务类型 充值 1 提款 2 赠送 3
+     */
+    private Integer bizToken;
     /**
      * 业务标识（外键流水号）
      */
@@ -94,6 +98,14 @@ public class AccountDetailDto extends AbstractDTO implements Serializable {
      * 查询结束时间
      */
     private String queryEndTime;
+
+    public Integer getBizToken() {
+        return bizToken;
+    }
+
+    public void setBizToken(Integer bizToken) {
+        this.bizToken = bizToken;
+    }
 
     public String getChargeTypeName() {
         return chargeTypeName;

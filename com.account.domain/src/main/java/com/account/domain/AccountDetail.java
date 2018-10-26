@@ -21,10 +21,13 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
     private Long proxyId;
 
     /**
-     * 业务类型 1 棋牌 2 彩票 3小游戏
+     * 系统类型 3 棋牌 4 彩票 5小游戏
      */
     private Integer bizType;
-
+    /**
+     * 业务类型 充值 1 提款 2 赠送 3
+     */
+    private Integer bizToken;
     /**
      * 业务标识（外键流水号）
      */
@@ -83,6 +86,14 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
      * 查询结束时间
      */
     private Date queryEndTime;
+
+    public Integer getBizToken() {
+        return bizToken;
+    }
+
+    public void setBizToken(Integer bizToken) {
+        this.bizToken = bizToken;
+    }
 
     public Date getQueryStartTime() {
         return queryStartTime;

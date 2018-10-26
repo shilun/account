@@ -3,6 +3,7 @@ package com.account.service.impl;
 import com.account.dao.AccountDao;
 import com.account.domain.Account;
 import com.account.domain.AccountDetail;
+import com.account.domain.module.BizTokenEnum;
 import com.account.domain.module.BizTypeEnum;
 import com.account.domain.module.DetailStatusEnum;
 import com.account.rpc.dto.InvertBizDto;
@@ -90,6 +91,7 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
             AccountDetail findDetail = new AccountDetail();
 
             findDetail.setBizType(dto.getBizType());
+            findDetail.setBizToken(dto.getBizToken());
             findDetail.setProxyId(dto.getProxyId());
             findDetail.setBizId(dto.getBizId());
             findDetail.setChargeType(dto.getChargeType());
@@ -103,6 +105,10 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
             query.setPin(dto.getPin());
             query.setTest(dto.getTest());
             BizTypeEnum bizTypeEnum = GlosseryEnumUtils.getItem(BizTypeEnum.class, dto.getBizType());
+            BizTokenEnum bizTokenEnum = BizTokenEnum.consume;
+            if(dto.getBizToken() != null){
+                bizTokenEnum = GlosseryEnumUtils.getItem(BizTokenEnum.class, dto.getBizToken());
+            }
             query.setTokenType(dto.getTokenType());
             Account account = findByOne(query);
             if (account == null) {
@@ -121,6 +127,7 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
             detail.setTokenType(dto.getTokenType());
             detail.setStatus(YesOrNoEnum.YES.getValue());
             detail.setBizType(bizTypeEnum.getValue());
+            detail.setBizToken(bizTokenEnum.getValue());
             detail.setBizId(dto.getBizId());
             detail.setTest(dto.getTest());
             if(dto.getChargeType()!=null){

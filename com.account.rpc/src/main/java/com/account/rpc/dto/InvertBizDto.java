@@ -20,9 +20,14 @@ public class InvertBizDto implements Serializable {
      */
     private Integer tokenType;
     /**
-     * 业务类型 充值 1 提款 2  棋牌 3  彩票 4  小游戏 5
+     * 系统类型 棋牌 3  彩票 4  小游戏 5
     */
     private Integer bizType;
+    /**
+     * 业务类型 充值 1 提款 2 赠送 3
+     */
+    private Integer bizToken;
+
     /**
      * 业务标识（外键流水号）
      */
@@ -44,6 +49,14 @@ public class InvertBizDto implements Serializable {
      * 是否为测试
      */
     private Integer test;
+
+    public Integer getBizToken() {
+        return bizToken;
+    }
+
+    public void setBizToken(Integer bizToken) {
+        this.bizToken = bizToken;
+    }
 
     public Integer getChargeType() {
         return chargeType;

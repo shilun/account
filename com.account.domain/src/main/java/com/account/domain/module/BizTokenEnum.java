@@ -2,32 +2,33 @@ package com.account.domain.module;
 
 import com.common.util.IGlossary;
 
-/**
- * 业务类型
- */
-public enum BizTypeEnum implements IGlossary {
-
+public enum BizTokenEnum implements IGlossary {
     /**
-     * 棋牌
+     * 充值
      */
-    qipai("棋牌",3),
+    recharge("充值",1),
     /**
-     * 彩票
+     * 提款
      */
-    caipiao("彩票",4),
+    drawing("提款",2),
     /**
-     * 小游戏
+     * 赠送金币
      */
-    smallgame("小游戏",5)
+    givecoin("赠送金币",3),
+    /**
+     * 消费
+     */
+    consume("消费",4)
     ;
 
-    BizTypeEnum(String name, Integer value) {
+    BizTokenEnum(String name, Integer value) {
         this.name = name;
         this.value = value;
     }
 
     private String name;
     private Integer value;
+
     @Override
     public String getName() {
         return name;
