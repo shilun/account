@@ -6,7 +6,14 @@ import com.common.util.IGlossary;
  * 业务类型
  */
 public enum BizTypeEnum implements IGlossary {
-
+    /**
+     * 充值
+     */
+    recharge("充值",1),
+    /**
+     * 提款
+     */
+    drawing("提款",2),
     /**
      * 棋牌
      */
