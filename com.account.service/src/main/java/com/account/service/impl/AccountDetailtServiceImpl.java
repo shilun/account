@@ -158,9 +158,15 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
             for (AccountDetail detail : accountDetails) {
                 AccountDetailDto accountDetailDto = new AccountDetailDto();
                 BeanCoper.copyProperties(accountDetailDto, detail);
-                accountDetailDto.setBizTypeName(GlosseryEnumUtils.getItem(BizTypeEnum.class,accountDetailDto.getBizType()).getName());
-                accountDetailDto.setTokenName(GlosseryEnumUtils.getItem(TokenTypeEnum.class,accountDetailDto.getTokenType()).getName());
-                accountDetailDto.setChargeTypeName(GlosseryEnumUtils.getItem(ChargeTypeEnum.class,accountDetailDto.getChargeType()).getName());
+                if(accountDetailDto.getBizType() != null){
+                    accountDetailDto.setBizTypeName(GlosseryEnumUtils.getItem(BizTypeEnum.class,accountDetailDto.getBizType()).getName());
+                }
+                if(accountDetailDto.getTokenType() != null){
+                    accountDetailDto.setTokenName(GlosseryEnumUtils.getItem(TokenTypeEnum.class,accountDetailDto.getTokenType()).getName());
+                }
+                if(accountDetailDto.getChargeType() != null){
+                    accountDetailDto.setChargeTypeName(GlosseryEnumUtils.getItem(ChargeTypeEnum.class,accountDetailDto.getChargeType()).getName());
+                }
                 accountDetailDtos.add(accountDetailDto);
             }
         }
