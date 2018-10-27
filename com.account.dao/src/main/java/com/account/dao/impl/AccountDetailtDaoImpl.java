@@ -20,5 +20,10 @@ public class AccountDetailtDaoImpl extends DefaultBaseDao<AccountDetail> impleme
 	public String getNameSpace(String statement) {		
 		return NAMESPACE+statement;
 	}
-	
+
+	@Override
+	public Double querySum(AccountDetail detail) {
+		Double allAmount = this.querySum(detail);
+		return allAmount;
+	}
 }

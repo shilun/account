@@ -8,7 +8,7 @@ import com.common.util.AbstractBaseDao;
  */
 public interface AccountDetailtDao extends AbstractBaseDao<AccountDetail>{
 	
-	
+	Double querySum(AccountDetail detail);
 	
 	
 }

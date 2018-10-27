@@ -378,6 +378,24 @@ public class AccountRPCServiceImpl implements AccountRPCService {
     }
 
     @Override
+    public RPCResult<BigDecimal> userChargeAvrge(AccountDetailDto accountDetailDto) {
+        RPCResult<BigDecimal> rpcResult = null;
+        try {
+            rpcResult = new RPCResult<>();
+            BigDecimal avrg = accountDetailtService.avargCharge(accountDetailDto);
+            rpcResult.setData(avrg);
+            rpcResult.setSuccess(true);
+            return rpcResult;
+        }catch (Exception e){
+            logger.error("查询用户平均充值量失败", e);
+            rpcResult.setSuccess(false);
+            rpcResult.setMessage("查询用户平均充值量失败");
+            rpcResult.setCode("account.userChargeAvrge.error");
+        }
+        return rpcResult;
+    }
+
+    @Override
     public RPCResult<AccountDto> findAccount(Long proxyId, String pin, Integer tokenType, Integer testStatus) {
         RPCResult<AccountDto> result = null;
         try {

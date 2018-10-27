@@ -123,4 +123,11 @@ public interface AccountRPCService {
      */
     public RPCResult<List<AccountDto>>  freezeAll(Long proxyId,String pin,Integer tokenType,Integer testStatus);
 
+    /**
+     * 用户平均充值量
+     * @param accountDetailDto
+     * @return
+     */
+    RPCResult<BigDecimal> userChargeAvrge(AccountDetailDto accountDetailDto);
+
 }

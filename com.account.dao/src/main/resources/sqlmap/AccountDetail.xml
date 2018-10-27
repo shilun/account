@@ -57,7 +57,7 @@
             <if test="test != null "><![CDATA[ test =#{test},]]></if>
             <if test="tokenType != null "><![CDATA[ token_type =#{tokenType},]]></if>
             <if test="bizType != null "><![CDATA[ biz_type =#{bizType},]]></if>
-            <if test="bizToken != null "><![CDATA[biz_token =#{bizToken}]]></if>
+            <if test="bizToken != null "><![CDATA[biz_token =#{bizToken},]]></if>
             <if test="bizId != null "><![CDATA[ biz_id =#{bizId},]]></if>
             <if test="chargeType != null "><![CDATA[ charge_type =#{chargeType},]]></if>
             <if test="beforeAmount != null "><![CDATA[ before_amount =#{beforeAmount},]]></if>
@@ -84,5 +84,12 @@
         <include refid="Condition"/>
         <include refid="orderCondition"/>
         <include refid="limit"/>
+    </select>
+    <select id="querySum" parameterType="accountDetail" resultType="double">
+      SELECT sum(change_amount) FROM account_detail
+      <where>
+          <if test="bizType != null "><![CDATA[biz_type =#{bizType}]]></if>
+          <if test="bizToken != null "><![CDATA[OR biz_token =#{bizToken}]]></if>
+      </where>
     </select>
 </mapper>

@@ -39,4 +39,10 @@ public interface AccountDetailtService extends AbstractBaseService<AccountDetail
      * @return
      */
     public Page<AccountDetailDto> queryDetailList(AccountDetailDto dto);
+
+    /**
+     * 平台平均充值量
+     * @return
+     */
+    public BigDecimal avargCharge(AccountDetailDto dto);
 }

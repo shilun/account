@@ -11,9 +11,12 @@ import com.account.service.AccountDetailtService;
 import com.account.service.AccountService;
 import com.account.service.ConfigService;
 import com.account.service.utils.TimeUtils;
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.common.exception.BizException;
 import com.common.util.*;
 import com.common.util.model.YesOrNoEnum;
+import com.passport.rpc.UserRPCService;
+import com.passport.rpc.dto.UserDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
@@ -40,6 +43,9 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
 
     @Resource
     private ConfigService configService;
+
+    @Reference
+    private UserRPCService userRPCService;
 
     @Override
     public AbstractBaseDao<AccountDetail> getBaseDao() {
@@ -172,6 +178,20 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
         }
         Page<AccountDetailDto> detailDtoPage = new PageImpl<>(accountDetailDtos,dto.getPageinfo().getPage(),total.longValue());
         return detailDtoPage;
+    }
+
+    @Override
+    public BigDecimal avargCharge(AccountDetailDto dto) {
+        AccountDetail detail = BeanCoper.copyProperties(AccountDetail.class,dto);
+        Double amount = accountDetailtDao.querySum(detail);
+        BigDecimal all = BigDecimal.valueOf(amount);
+        UserDTO userDTO = new UserDTO();
+        if(dto.getProxyId()!=null){
+            userDTO.setProxyId(dto.getProxyId());
+        }
+        RPCResult<Long> longRPCResult = userRPCService.queryUsersCount(userDTO);
+        BigDecimal count = BigDecimal.valueOf(longRPCResult.getData());
+        return all.divide(count);
     }
 
 
