@@ -6,7 +6,7 @@
         <if test="startRow != null and endRow !=null">limit #{startRow},#{endRow}</if>
     </sql>
     <sql id="orderCondition">
-        <if test="orderColumn != null and orderColumn != ''">ORDER BY ${orderColumn}</if>
+        <if test="orderColumn != null and orderColumn != ''">ORDER BY ${orderColumn} DESC</if>
     </sql>
 
     <sql id="Condition">
