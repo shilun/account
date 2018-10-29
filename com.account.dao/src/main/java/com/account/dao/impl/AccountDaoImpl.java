@@ -1,5 +1,6 @@
 package com.account.dao.impl; 
 import java.util.List;
+import java.util.Map;
 
 import com.account.dao.AccountDao;
 import com.common.util.DefaultBaseDao;
@@ -21,5 +22,9 @@ public class AccountDaoImpl extends DefaultBaseDao<Account> implements AccountDa
 	public String getNameSpace(String statement) {		
 		return NAMESPACE+statement;
 	}
-	
+
+	@Override
+	public Double queryAmount(Account account) {
+		return this.select(this.getNameSpace("queryAmount"), account);
+	}
 }

@@ -1,8 +1,10 @@
 package com.account.service.impl;
 
+import com.account.dao.AccountDao;
 import com.account.dao.AccountDetailtDao;
 import com.account.domain.Account;
 import com.account.domain.AccountDetail;
+import com.account.domain.module.BizTokenEnum;
 import com.account.domain.module.BizTypeEnum;
 import com.account.domain.module.ChargeTypeEnum;
 import com.account.rpc.dto.AccountDetailDto;
@@ -24,9 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -46,6 +46,9 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
 
     @Reference
     private UserRPCService userRPCService;
+
+    @Resource
+    private AccountDao accountDao;
 
     @Override
     public AbstractBaseDao<AccountDetail> getBaseDao() {
@@ -181,17 +184,36 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
     }
 
     @Override
-    public BigDecimal avargCharge(AccountDetailDto dto) {
-        AccountDetail detail = BeanCoper.copyProperties(AccountDetail.class,dto);
-        Double amount = accountDetailtDao.querySum(detail);
-        BigDecimal all = BigDecimal.valueOf(amount);
+    public Map<String,Object> avargCharge(AccountDetailDto dto) {
+        Map<String,Object> map = new HashMap<>();
         UserDTO userDTO = new UserDTO();
         if(dto.getProxyId()!=null){
             userDTO.setProxyId(dto.getProxyId());
         }
+//        RPCResult<List<UserDTO>> rpcResult = userRPCService.query(userDTO);
+//        List<String> pins = new ArrayList<>();
+//        if(rpcResult.getSuccess()){
+//            for(UserDTO dd : rpcResult.getData()){
+//                pins.add(dd.getPin());
+//            }
+//        }
+
+        Account account = new Account();
+        account.setProxyId(dto.getProxyId());
+        account.setIsRobot(YesOrNoEnum.NO.getValue());
+        Double aDouble = accountDao.queryAmount(account);
+        map.put("all",BigDecimal.valueOf(aDouble));
+
+
+        AccountDetail accountDetail = BeanCoper.copyProperties(AccountDetail.class,dto);
+        accountDetail.setIsRobot(YesOrNoEnum.NO.getValue());
+        accountDetail.setBizToken(BizTokenEnum.recharge.getValue());
+        Double amount = accountDetailtDao.querySum(accountDetail);
+        BigDecimal all = BigDecimal.valueOf(amount);
         RPCResult<Long> longRPCResult = userRPCService.queryUsersCount(userDTO);
         BigDecimal count = BigDecimal.valueOf(longRPCResult.getData());
-        return all.divide(count);
+        map.put("avargCharge",all.divide(count,2, BigDecimal.ROUND_HALF_UP));
+        return map;
     }
 
 

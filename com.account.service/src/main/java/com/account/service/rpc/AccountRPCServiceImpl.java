@@ -27,6 +27,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @com.alibaba.dubbo.config.annotation.Service
@@ -378,12 +379,12 @@ public class AccountRPCServiceImpl implements AccountRPCService {
     }
 
     @Override
-    public RPCResult<BigDecimal> userChargeAvrge(AccountDetailDto accountDetailDto) {
-        RPCResult<BigDecimal> rpcResult = null;
+    public RPCResult<Map<String,Object>> userChargeAvrge(AccountDetailDto accountDetailDto) {
+        RPCResult<Map<String,Object>> rpcResult = null;
         try {
             rpcResult = new RPCResult<>();
-            BigDecimal avrg = accountDetailtService.avargCharge(accountDetailDto);
-            rpcResult.setData(avrg);
+            Map<String,Object> map = accountDetailtService.avargCharge(accountDetailDto);
+            rpcResult.setData(map);
             rpcResult.setSuccess(true);
             return rpcResult;
         }catch (Exception e){

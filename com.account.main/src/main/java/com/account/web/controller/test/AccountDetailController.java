@@ -1,6 +1,7 @@
 package com.account.web.controller.test;
 
 import com.account.domain.Account;
+import com.account.rpc.AccountRPCService;
 import com.account.rpc.dto.AccountDetailDto;
 import com.account.service.AccountDetailtService;
 import com.account.web.AbstractClientController;
@@ -21,6 +22,8 @@ public class AccountDetailController extends AbstractClientController {
 
     @Resource
     private AccountDetailtService accountDetailtService;
+    @Resource
+    private AccountRPCService accountRPCService;
 
     /**
      * 查询
@@ -36,4 +39,20 @@ public class AccountDetailController extends AbstractClientController {
         });
     }
 
+    /**
+     * 查询
+     *
+     * @param
+     * @return
+     */
+    @RoleResource(resource = "account")
+    @RequestMapping("/account/cco")
+    public Map<String, Object> view() {
+        return buildMessage(() ->{
+                    AccountDetailDto accountDetailDto = new AccountDetailDto();
+                    accountDetailDto.setProxyId(1l);
+                    return accountRPCService.userChargeAvrge(accountDetailDto);
+                }
+        );
+    }
 }

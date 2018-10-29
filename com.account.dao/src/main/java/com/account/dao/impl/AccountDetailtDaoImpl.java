@@ -6,6 +6,8 @@ import com.account.dao.AccountDetailtDao;
 import com.account.domain.AccountDetail;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 /**
  * 
  * @desc 账本流水账 
@@ -23,7 +25,7 @@ public class AccountDetailtDaoImpl extends DefaultBaseDao<AccountDetail> impleme
 
 	@Override
 	public Double querySum(AccountDetail detail) {
-		Double allAmount = this.querySum(detail);
-		return allAmount;
+		Double querySum =  this.select(this.getNameSpace("querySum"), detail);
+		return querySum;
 	}
 }

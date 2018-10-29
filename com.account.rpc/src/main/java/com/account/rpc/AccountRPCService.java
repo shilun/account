@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 账户服务接口
@@ -124,10 +125,10 @@ public interface AccountRPCService {
     public RPCResult<List<AccountDto>>  freezeAll(Long proxyId,String pin,Integer tokenType,Integer testStatus);
 
     /**
-     * 用户平均充值量
+     * 用户平均充值量 及平台所有游戏币
      * @param accountDetailDto
      * @return
      */
-    RPCResult<BigDecimal> userChargeAvrge(AccountDetailDto accountDetailDto);
+    RPCResult<Map<String,Object>> userChargeAvrge(AccountDetailDto accountDetailDto);
 
 }

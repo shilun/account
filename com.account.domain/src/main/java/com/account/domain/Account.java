@@ -32,6 +32,19 @@ public class Account extends AbstractBaseEntity implements java.io.Serializable 
 	 */
 	private Integer test;
 
+	/**
+	 * 是否机器人 1 是 2不是
+	 */
+	private Integer isRobot;
+
+	public Integer getIsRobot() {
+		return isRobot;
+	}
+
+	public void setIsRobot(Integer isRobot) {
+		this.isRobot = isRobot;
+	}
+
 	public Integer getTest() {
 		return test;
 	}

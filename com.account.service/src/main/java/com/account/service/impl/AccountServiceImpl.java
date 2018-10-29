@@ -92,6 +92,11 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
 
             findDetail.setBizType(dto.getBizType());
             findDetail.setBizToken(dto.getBizToken());
+            if(dto.getIsRobot()!=null){
+                findDetail.setIsRobot(dto.getIsRobot());
+            }else {
+                findDetail.setIsRobot(YesOrNoEnum.NO.getValue());
+            }
             findDetail.setProxyId(dto.getProxyId());
             findDetail.setBizId(dto.getBizId());
             findDetail.setChargeType(dto.getChargeType());
@@ -113,6 +118,11 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
             Account account = findByOne(query);
             if (account == null) {
                 account = new Account();
+                if(dto.getIsRobot()!=null){
+                    account.setIsRobot(dto.getIsRobot());
+                }else {
+                    account.setIsRobot(YesOrNoEnum.NO.getValue());
+                }
                 account.setTokenType(dto.getTokenType());
                 account.setFreeze(BigDecimal.ZERO);
                 account.setAmount(BigDecimal.ZERO);
@@ -121,6 +131,11 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
                 account.setPin(dto.getPin());
             }
             AccountDetail detail = new AccountDetail();
+            if(dto.getIsRobot()!=null){
+                detail.setIsRobot(dto.getIsRobot());
+            }else {
+                detail.setIsRobot(YesOrNoEnum.NO.getValue());
+            }
             detail.setPin(dto.getPin());
             detail.setTest(dto.getTest());
             detail.setProxyId(dto.getProxyId());
@@ -156,6 +171,11 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
                 save(account);
             } else {
                 Account upEntity = new Account();
+                if(dto.getIsRobot()!=null){
+                    upEntity.setIsRobot(dto.getIsRobot());
+                }else {
+                    upEntity.setIsRobot(YesOrNoEnum.NO.getValue());
+                }
                 upEntity.setId(account.getId());
                 upEntity.setAmount(account.getAmount());
                 upEntity.setFreeze(account.getFreeze());

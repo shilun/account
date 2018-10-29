@@ -19,6 +19,8 @@
             <if test="bizType != null "><![CDATA[AND biz_type =#{bizType}]]></if>
             <if test="bizToken != null "><![CDATA[AND biz_token =#{bizToken}]]></if>
             <if test="bizId != null "><![CDATA[AND biz_id =#{bizId}]]></if>
+            <if test="isRobot != null "><![CDATA[AND is_robot =#{isRobot}]]></if>
+            <if test="chargeType != null "><![CDATA[AND charge_type =#{chargeType}]]></if>
             <if test="beforeAmount != null "><![CDATA[AND before_amount =#{beforeAmount}]]></if>
             <if test="beforeFreeze != null "><![CDATA[AND before_freeze =#{beforeFreeze}]]></if>
             <if test="changeAmount != null "><![CDATA[AND change_amount =#{changeAmount}]]></if>
@@ -33,13 +35,13 @@
         </where>
     </sql>
     <sql id="columns">
-	id as id ,pin as pin,test ,proxy_id as proxyId ,token_type as tokenType ,biz_type as bizType ,biz_token as bizToken, biz_id as bizId ,charge_type as chargeType,before_amount as beforeAmount ,before_freeze as beforeFreeze ,change_amount as changeAmount ,change_freeze as changeFreeze ,after_amount as afterAmount ,after_freeze as afterFreeze ,status as status ,del_status as delStatus ,create_time as createTime ,update_time as updateTime
+	id as id ,pin as pin,test ,proxy_id as proxyId ,token_type as tokenType ,biz_type as bizType ,biz_token as bizToken, biz_id as bizId ,is_robot as isRobot,charge_type as chargeType,before_amount as beforeAmount ,before_freeze as beforeFreeze ,change_amount as changeAmount ,change_freeze as changeFreeze ,after_amount as afterAmount ,after_freeze as afterFreeze ,status as status ,del_status as delStatus ,create_time as createTime ,update_time as updateTime
 </sql>
     <insert id="insert" parameterType="accountDetail">
         insert into account_detail
-        (id,pin,test,proxy_id,token_type,biz_type,biz_token,biz_id,charge_type,before_amount,before_freeze,change_amount,change_freeze,after_amount,after_freeze,status,del_status,create_time,update_time)
+        (id,pin,test,proxy_id,token_type,biz_type,biz_token,biz_id,is_robot,charge_type,before_amount,before_freeze,change_amount,change_freeze,after_amount,after_freeze,status,del_status,create_time,update_time)
         values
-        (#{id},#{pin},#{test},#{proxyId},#{tokenType},#{bizType},#{bizToken},#{bizId},#{chargeType},#{beforeAmount},#{beforeFreeze},#{changeAmount},#{changeFreeze},#{afterAmount},#{afterFreeze},#{status},#{delStatus},#{createTime},#{updateTime})
+        (#{id},#{pin},#{test},#{proxyId},#{tokenType},#{bizType},#{bizToken},#{bizId},#{isRobot},#{chargeType},#{beforeAmount},#{beforeFreeze},#{changeAmount},#{changeFreeze},#{afterAmount},#{afterFreeze},#{status},#{delStatus},#{createTime},#{updateTime})
         <selectKey keyProperty="id" resultType="long" order="AFTER">
             select last_insert_id()
         </selectKey>
@@ -59,6 +61,7 @@
             <if test="bizType != null "><![CDATA[ biz_type =#{bizType},]]></if>
             <if test="bizToken != null "><![CDATA[biz_token =#{bizToken},]]></if>
             <if test="bizId != null "><![CDATA[ biz_id =#{bizId},]]></if>
+            <if test="isRobot != null "><![CDATA[ is_robot =#{isRobot},]]></if>
             <if test="chargeType != null "><![CDATA[ charge_type =#{chargeType},]]></if>
             <if test="beforeAmount != null "><![CDATA[ before_amount =#{beforeAmount},]]></if>
             <if test="beforeFreeze != null "><![CDATA[ before_freeze =#{beforeFreeze},]]></if>
@@ -88,8 +91,9 @@
     <select id="querySum" parameterType="accountDetail" resultType="double">
       SELECT sum(change_amount) FROM account_detail
       <where>
-          <if test="bizType != null "><![CDATA[biz_type =#{bizType}]]></if>
-          <if test="bizToken != null "><![CDATA[OR biz_token =#{bizToken}]]></if>
+          <if test="isRobot != null "><![CDATA[is_robot =#{isRobot}]]></if>
+          <if test="proxyId != null "><![CDATA[AND proxy_id =#{proxyId}]]></if>
+          <if test="bizToken != null "><![CDATA[AND biz_token =#{bizToken}]]></if>
       </where>
     </select>
 </mapper>

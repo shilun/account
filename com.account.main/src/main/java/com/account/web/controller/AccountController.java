@@ -1,6 +1,8 @@
 package com.account.web.controller;
 
 import com.account.domain.Account;
+import com.account.rpc.AccountRPCService;
+import com.account.rpc.dto.AccountDetailDto;
 import com.account.service.AccountService;
 import com.account.web.AbstractClientController;
 import com.account.web.controller.dto.AccountDto;
@@ -17,6 +19,7 @@ public class AccountController extends AbstractClientController {
 
     @Resource
     private AccountService accountService;
+
 
     /**
      * 查询
@@ -46,6 +49,5 @@ public class AccountController extends AbstractClientController {
         return buildMessage(() ->
                 accountService.findById(getIdByJson(content)));
     }
-
 
 }

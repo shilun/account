@@ -78,6 +78,18 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
      */
     private Integer test;
 
+    /**
+     * 是否机器人 1 是 2不是
+     */
+    private Integer isRobot;
+
+    public Integer getIsRobot() {
+        return isRobot;
+    }
+
+    public void setIsRobot(Integer isRobot) {
+        this.isRobot = isRobot;
+    }
 
     public Integer getBizToken() {
         return bizToken;

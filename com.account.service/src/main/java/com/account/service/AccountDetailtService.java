@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -44,5 +45,5 @@ public interface AccountDetailtService extends AbstractBaseService<AccountDetail
      * 平台平均充值量
      * @return
      */
-    public BigDecimal avargCharge(AccountDetailDto dto);
+    public Map<String,Object> avargCharge(AccountDetailDto dto);
 }

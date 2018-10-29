@@ -1,6 +1,9 @@
 package com.account.dao; 
 import com.account.domain.AccountDetail;
 import com.common.util.AbstractBaseDao;
+
+import java.util.Map;
+
 /**
  * 
  * @desc 账本流水账 
