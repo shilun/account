@@ -2,16 +2,15 @@ package com.account.service.rpc;
 
 import com.account.domain.Account;
 import com.account.domain.AccountDetail;
+import com.account.domain.UserBank;
+import com.account.domain.UserDrawalLog;
 import com.account.domain.module.BizTypeEnum;
 import com.account.domain.module.DetailStatusEnum;
 import com.account.domain.module.TokenTypeEnum;
 import com.account.rpc.AccountRPCService;
-import com.account.rpc.dto.AccountDetailDto;
-import com.account.rpc.dto.AccountDto;
-import com.account.rpc.dto.InvertBizDto;
-import com.account.service.AccountDetailtService;
-import com.account.service.AccountService;
-import com.account.service.ConfigService;
+import com.account.rpc.dto.*;
+import com.account.service.*;
+import com.account.service.utils.RPCBeanService;
 import com.common.exception.BizException;
 import com.common.util.BeanCoper;
 import com.common.util.RPCResult;
@@ -43,6 +42,15 @@ public class AccountRPCServiceImpl implements AccountRPCService {
 
     @Resource
     private ConfigService configService;
+
+    @Resource
+    private UserDrawalLogService userDrawalLogService;
+
+    @Resource
+    private UserDrawalPassService userDrawalPassService;
+
+    @Resource
+    private UserBankService userBankService;
 
 
     @Override
@@ -424,6 +432,143 @@ public class AccountRPCServiceImpl implements AccountRPCService {
             result.setMessage("查询账户失败");
             result.setCode("account.findAccount.error");
         }
+        return result;
+    }
+
+    @Override
+    public RPCResult proxyDrawalSure(Long proxyId, Long userDrawalId) {
+        RPCResult result = new RPCResult();
+        try {
+            UserDrawalLog query = new UserDrawalLog();
+            query.setProxyId(proxyId);
+            query.setId(userDrawalId);
+            UserDrawalLog log = userDrawalLogService.findByOne(query);
+            if (log == null) {
+                result.setCode("drawalSure.error");
+                result.setMessage("支付确认失败,数据不存在");
+                return result;
+            }
+            if (log.getAudiStatus() == null) {
+                query.setAudiStatus(YesOrNoEnum.YES.getValue());
+                query.setId(log.getId());
+                userDrawalLogService.save(query);
+                result.setSuccess(true);
+                return result;
+            }
+            result.setCode("drawalSure.error");
+            result.setMessage("支付确认失败");
+            return result;
+        } catch (Exception e) {
+            logger.error("drawalSure.error", e);
+        }
+        result.setCode("drawalSure.error");
+        result.setMessage("支付确认失败");
+        return result;
+    }
+
+    @Override
+    public RPCResult proxyDrawalCancle(Long proxyId, Long userDrawalId) {
+        RPCResult result = new RPCResult();
+        try {
+            UserDrawalLog query = new UserDrawalLog();
+            query.setProxyId(proxyId);
+            query.setId(userDrawalId);
+            UserDrawalLog log = userDrawalLogService.findByOne(query);
+            if (log == null) {
+                result.setCode("drawalCancle.error");
+                result.setMessage("支付确认失败,数据不存在");
+                return result;
+            }
+            if (log.getAudiStatus() == null) {
+                query.setAudiStatus(YesOrNoEnum.NO.getValue());
+                query.setId(log.getId());
+                userDrawalLogService.save(query);
+                result.setSuccess(true);
+                return result;
+            }
+        } catch (Exception e) {
+            logger.error("drawalSure.error", e);
+        }
+        result.setCode("drawalCancle.error");
+        result.setMessage("支付确认失败");
+        return result;
+    }
+
+
+    @Override
+    public RPCResult<UserBankDto> queryUserBank(Long proxyId, String pin) {
+        RPCResult<UserBankDto> result = new RPCResult<>();
+        try {
+            UserBankDto dto = new UserBankDto();
+            UserBank userBank = new UserBank();
+            userBank.setProxyId(proxyId);
+            userBank.setPin(pin);
+            UserBank byOne = userBankService.findByOne(userBank);
+            BeanCoper.copyProperties(dto, byOne);
+            result.setData(dto);
+            result.setSuccess(true);
+            return result;
+        } catch (Exception e) {
+            logger.error("queryUserBank.error", e);
+        }
+        result.setCode("queryUserBank.error");
+        result.setMessage("查询用户银行卡失败");
+        return result;
+    }
+
+
+    @Override
+    public RPCResult<List<UserDrawalDto>> queryUserDrawal(Long proxyId, String pin, Integer page, Integer pageSize) {
+        RPCResult<List<UserDrawalDto>> result = new RPCResult<>();
+        try {
+            UserDrawalLog query = new UserDrawalLog();
+            query.setProxyId(proxyId);
+            query.setPin(pin);
+            if(pageSize==null){
+                pageSize=10;
+            }
+            if(page==null){
+                page=0;
+            }
+            Page<UserDrawalLog> pages = userDrawalLogService.queryByPage(query, new PageRequest(page, pageSize));
+            List<UserDrawalLog> list = pages.getContent();
+            result.setTotalPage(pages.getTotalPages());
+            result.setPageSize(pageSize);
+            result.setPageIndex(page);
+            result.setTotalCount((int) pages.getTotalElements());
+            List<UserDrawalDto> listResult = new ArrayList<>();
+            for (UserDrawalLog item : list) {
+                UserDrawalDto dto = new UserDrawalDto();
+                BeanCoper.copyProperties(dto, item);
+                listResult.add(dto);
+            }
+            result.setData(listResult);
+            result.setSuccess(true);
+            return result;
+        } catch (Exception e) {
+            logger.error("queryUserDrawal.error", e);
+        }
+        result.setCode("queryUserDrawal.error");
+        result.setMessage("查询支付信息失败");
+        return result;
+    }
+
+    @Override
+    public RPCResult verfiyPass(Long proxyId, String pin, String pass) {
+        RPCResult result = new RPCResult();
+        try {
+            userDrawalPassService.verfiyPass(proxyId, pin, pass);
+            result.setSuccess(true);
+            return result;
+        } catch (BizException biz) {
+            result.setCode(biz.getCode());
+            result.setMessage(biz.getMessage());
+            return result;
+        } catch (Exception e) {
+            logger.error("verfiyPass.error", e);
+        }
+        result.setCode("verfiyPass.error");
+        result.setMessage("验证保险柜密码失败");
         return result;
     }
 }

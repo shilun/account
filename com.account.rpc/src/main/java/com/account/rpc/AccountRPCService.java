@@ -131,4 +131,51 @@ public interface AccountRPCService {
      */
     RPCResult<Map<String,Object>> userChargeAvrge(AccountDetailDto accountDetailDto);
 
+    /**
+     * 代理商确认用户提款
+     *
+     * @param proxyId      代理商id
+     * @param userDrawalId 用户提款标识
+     * @return
+     */
+    RPCResult proxyDrawalSure(Long proxyId, Long userDrawalId);
+
+    /**
+     * 代理商确认用户取消提款
+     *
+     * @param proxyId      代理商id
+     * @param userDrawalId 用户提款标识
+     * @return
+     */
+    RPCResult proxyDrawalCancle(Long proxyId, Long userDrawalId);
+
+    /**
+     * 查询玩家用户银行卡
+     *
+     * @param proxyId
+     * @param pin
+     * @return
+     */
+    RPCResult<UserBankDto> queryUserBank(Long proxyId, String pin);
+
+
+    /**
+     * 用户提款查询
+     *
+     * @param proxyId
+     * @param pin
+     * @param page
+     * @return
+     */
+    RPCResult<List<UserDrawalDto>> queryUserDrawal(Long proxyId, String pin, Integer page, Integer pageSize);
+
+    /**
+     * 验证保险柜密码
+     * @param proxyId
+     * @param pin
+     * @param pass
+     * @return
+     */
+    RPCResult verfiyPass(Long proxyId, String pin, String pass);
+
 }
