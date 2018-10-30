@@ -86,9 +86,9 @@
                    <if test="isRobot != null "><![CDATA[is_robot =#{isRobot}]]></if>
                    <if test="proxyId != null "><![CDATA[AND proxy_id =#{proxyId}]]></if>
                    <if test="bizToken != null "><![CDATA[AND biz_token =#{bizToken}]]></if>
-                   <if test="dayStatus == 1 "><![CDATA[AND to_days(create_time) = to_days(now())]]></if>
-                   <if test="dayStatus == 2 "><![CDATA[AND YEARWEEK(date_format(create_time,'%Y-%m-%d')) = YEARWEEK(now())]]></if>
-                   <if test="dayStatus == 3 "><![CDATA[AND DATE_FORMAT( create_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )]]></if>
+                   <if test="dayStatus == 2 "><![CDATA[AND to_days(create_time) = to_days(now())]]></if>
+                   <if test="dayStatus == 3 "><![CDATA[AND YEARWEEK(date_format(create_time,'%Y-%m-%d')) = YEARWEEK(now())]]></if>
+                   <if test="dayStatus == 4 "><![CDATA[AND DATE_FORMAT( create_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )]]></if>
                </where>
                 ) s
            </when>
@@ -113,9 +113,9 @@
           <if test="isRobot != null "><![CDATA[is_robot =#{isRobot}]]></if>
           <if test="proxyId != null "><![CDATA[AND proxy_id =#{proxyId}]]></if>
           <if test="bizToken != null "><![CDATA[AND biz_token =#{bizToken}]]></if>
-          <if test="dayStatus == 1 "><![CDATA[AND to_days(create_time) = to_days(now())]]></if>
-          <if test="dayStatus == 2 "><![CDATA[AND YEARWEEK(date_format(create_time,'%Y-%m-%d')) = YEARWEEK(now())]]></if>
-          <if test="dayStatus == 3 "><![CDATA[AND DATE_FORMAT( create_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )]]></if>
+          <if test="dayStatus == 2 "><![CDATA[AND to_days(create_time) = to_days(now())]]></if>
+          <if test="dayStatus == 3 "><![CDATA[AND YEARWEEK(date_format(create_time,'%Y-%m-%d')) = YEARWEEK(now())]]></if>
+          <if test="dayStatus == 4 "><![CDATA[AND DATE_FORMAT( create_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )]]></if>
       </where>
     </select>
 

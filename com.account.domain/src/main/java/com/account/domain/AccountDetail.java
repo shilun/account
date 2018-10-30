@@ -83,7 +83,7 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
      */
     private Integer isRobot;
     /**
-     * 时间筛选查询  1 当天  2 本周 3 本月
+     * 时间筛选查询  1 全部 2 当天  3 本周 4 本月
      */
     private Integer dayStatus;
 
