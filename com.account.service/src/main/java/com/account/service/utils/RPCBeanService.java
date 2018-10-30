@@ -1,6 +1,5 @@
 package com.account.service.utils;
 
-import com.account.rpc.AccountRPCService;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.passport.rpc.AdminRPCService;
 import com.passport.rpc.ProxyRpcService;
@@ -15,8 +14,6 @@ public class RPCBeanService {
 
     @Reference
     private SMSInfoRPCService smsInfoRPCService;
-    @Reference
-    private AccountRPCService accountRPCService;
 
     @Reference
     private ProxyRpcService proxyRpcService;
@@ -27,9 +24,6 @@ public class RPCBeanService {
     @Reference
     private UserRPCService loginRPCServeice;
 
-    public AccountRPCService getAccountRPCService() {
-        return accountRPCService;
-    }
 
     public SMSInfoRPCService getSmsInfoRPCService() {
         return smsInfoRPCService;

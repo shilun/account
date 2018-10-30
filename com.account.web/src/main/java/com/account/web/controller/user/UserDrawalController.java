@@ -82,7 +82,7 @@ public class UserDrawalController extends AbstractClientController {
             UserDTO userDTO = getUserDto();
             query.setProxyId(userDTO.getProxyId());
             query.setPin(userDTO.getPin());
-            RPCResult<List<AccountDto>> listRPCResult = rpcBeanService.getAccountRPCService().queryAccountWithRate(userDTO.getPin(), userDTO.getProxyId());
+            RPCResult<List<AccountDto>> listRPCResult = accountRPCService.queryAccountWithRate(userDTO.getPin(), userDTO.getProxyId());
             if (listRPCResult.getSuccess()) {
                 return listRPCResult.getData();
             }
