@@ -132,6 +132,19 @@ public interface AccountRPCService {
     RPCResult<Map<String,Object>> userChargeAvrge(AccountDetailDto accountDetailDto);
 
     /**
+     * 根据时间查询充值人数 dayStatus 1 当天  2 本周 3 本月
+     * @param accountDetailDto
+     * @return
+     */
+    RPCResult<BigDecimal> queryChargeUsersByDay(AccountDetailDto accountDetailDto);
+    /**
+     * 根据时间查询充值总额 dayStatus 1 当天  2 本周 3 本月
+     * @param accountDetailDto
+     * @return
+     */
+    RPCResult<BigDecimal> queryChargeAmountByDay(AccountDetailDto accountDetailDto);
+
+    /**
      * 代理商确认用户提款
      *
      * @param proxyId      代理商id

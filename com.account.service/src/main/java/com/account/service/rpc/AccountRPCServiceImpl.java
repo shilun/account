@@ -405,6 +405,42 @@ public class AccountRPCServiceImpl implements AccountRPCService {
     }
 
     @Override
+    public RPCResult<BigDecimal> queryChargeUsersByDay(AccountDetailDto accountDetailDto) {
+        RPCResult<BigDecimal> rpcResult = null;
+        try {
+            rpcResult = new RPCResult<>();
+            BigDecimal bigDecimal = accountDetailtService.queryChargeUsers(accountDetailDto);
+            rpcResult.setData(bigDecimal);
+            rpcResult.setSuccess(true);
+            return rpcResult;
+        }catch (Exception e){
+            logger.error("查询用户充值人数失败", e);
+            rpcResult.setSuccess(false);
+            rpcResult.setMessage("查询用户充值人数失败");
+            rpcResult.setCode("account.queryChargeUsersByDay.error");
+        }
+        return rpcResult;
+    }
+
+    @Override
+    public RPCResult<BigDecimal> queryChargeAmountByDay(AccountDetailDto accountDetailDto) {
+        RPCResult<BigDecimal> rpcResult = null;
+        try {
+            rpcResult = new RPCResult<>();
+            BigDecimal bigDecimal = accountDetailtService.queryChargeAmount(accountDetailDto);
+            rpcResult.setData(bigDecimal);
+            rpcResult.setSuccess(true);
+            return rpcResult;
+        }catch (Exception e){
+            logger.error("查询充值总额失败", e);
+            rpcResult.setSuccess(false);
+            rpcResult.setMessage("查询充值总额失败");
+            rpcResult.setCode("account.queryChargeAmountByDay.error");
+        }
+        return rpcResult;
+    }
+
+    @Override
     public RPCResult<AccountDto> findAccount(Long proxyId, String pin, Integer tokenType, Integer testStatus) {
         RPCResult<AccountDto> result = null;
         try {

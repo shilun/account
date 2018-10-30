@@ -1,6 +1,8 @@
 package com.account.web.controller.user;
 
 import com.account.domain.UserDrawalLog;
+import com.account.rpc.AccountRPCService;
+import com.account.rpc.dto.AccountDetailDto;
 import com.account.rpc.dto.AccountDto;
 import com.account.service.UserDrawalLogService;
 import com.account.service.UserDrawalPassService;
@@ -39,6 +41,34 @@ public class UserDrawalController extends AbstractClientController {
     @Resource
     private RPCBeanService rpcBeanService;
 
+    @Resource
+    private AccountRPCService accountRPCService;
+
+    /**
+     * 查询现金
+     *
+     * @return
+     */
+    @ApiOperation("查询充值总额")
+    @RequestMapping("account/charge")
+    public Map<String, Object> accountCharge(@RequestBody AccountDetailDto detailDto) {
+        return buildMessage(() -> {
+            return accountRPCService.queryChargeUsersByDay(detailDto);
+        });
+    }
+
+    /**
+     * 查询现金
+     *
+     * @return
+     */
+    @ApiOperation("查询保险箱金币")
+    @RequestMapping("user/ver")
+    public Map<String, Object> ver(Long proxyId,String pin,String pass ) {
+        return buildMessage(() -> {
+            return accountRPCService.verfiyPass(proxyId,pin,pass);
+        });
+    }
     /**
      * 查询现金
      *

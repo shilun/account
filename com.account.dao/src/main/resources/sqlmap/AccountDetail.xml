@@ -77,8 +77,27 @@
         where id=#{id}
     </update>
     <select id="queryCount" parameterType="accountDetail" resultType="int">
-        select count(1) from account_detail
-        <include refid="Condition"/>
+        select count(1) from
+       <choose>
+           <when test="dayStatus != null">
+              (
+               SELECT DISTINCT(pin) FROM account_detail
+               <where>
+                   <if test="isRobot != null "><![CDATA[is_robot =#{isRobot}]]></if>
+                   <if test="proxyId != null "><![CDATA[AND proxy_id =#{proxyId}]]></if>
+                   <if test="bizToken != null "><![CDATA[AND biz_token =#{bizToken}]]></if>
+                   <if test="dayStatus == 1 "><![CDATA[AND to_days(create_time) = to_days(now())]]></if>
+                   <if test="dayStatus == 2 "><![CDATA[AND YEARWEEK(date_format(create_time,'%Y-%m-%d')) = YEARWEEK(now())]]></if>
+                   <if test="dayStatus == 3 "><![CDATA[AND DATE_FORMAT( create_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )]]></if>
+               </where>
+                ) s
+           </when>
+           <otherwise>
+               account_detail
+               <include refid="Condition"/>
+           </otherwise>
+       </choose>
+
     </select>
     <select id="query" parameterType="accountDetail" resultType="accountDetail">
         select
@@ -89,11 +108,15 @@
         <include refid="limit"/>
     </select>
     <select id="querySum" parameterType="accountDetail" resultType="double">
-      SELECT sum(change_amount) FROM account_detail
+      SELECT IFNULL(SUM(change_amount),0) FROM account_detail
       <where>
           <if test="isRobot != null "><![CDATA[is_robot =#{isRobot}]]></if>
           <if test="proxyId != null "><![CDATA[AND proxy_id =#{proxyId}]]></if>
           <if test="bizToken != null "><![CDATA[AND biz_token =#{bizToken}]]></if>
+          <if test="dayStatus == 1 "><![CDATA[AND to_days(create_time) = to_days(now())]]></if>
+          <if test="dayStatus == 2 "><![CDATA[AND YEARWEEK(date_format(create_time,'%Y-%m-%d')) = YEARWEEK(now())]]></if>
+          <if test="dayStatus == 3 "><![CDATA[AND DATE_FORMAT( create_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )]]></if>
       </where>
     </select>
+
 </mapper>

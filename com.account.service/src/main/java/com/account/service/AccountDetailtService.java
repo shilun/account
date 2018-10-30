@@ -46,4 +46,8 @@ public interface AccountDetailtService extends AbstractBaseService<AccountDetail
      * @return
      */
     public Map<String,Object> avargCharge(AccountDetailDto dto);
+
+    public BigDecimal queryChargeUsers(AccountDetailDto dto);
+
+    public BigDecimal queryChargeAmount(AccountDetailDto dto);
 }
