@@ -21,7 +21,7 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
     private Long proxyId;
 
     /**
-     * 系统类型 3 棋牌 4 彩票 5小游戏
+     * 系统类型 1 订单 3 棋牌 4 彩票 5小游戏
      */
     private Integer bizType;
     /**

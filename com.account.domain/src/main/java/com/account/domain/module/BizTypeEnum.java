@@ -3,13 +3,13 @@ package com.account.domain.module;
 import com.common.util.IGlossary;
 
 /**
- * 业务类型
+ * 系统类型
  */
 public enum BizTypeEnum implements IGlossary {
     /**
      * 充值
      */
-    recharge("充值",1),
+    order("订单系统",1),
     /**
      * 提款
      */

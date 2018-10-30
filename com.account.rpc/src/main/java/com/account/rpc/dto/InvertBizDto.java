@@ -20,7 +20,7 @@ public class InvertBizDto implements Serializable {
      */
     private Integer tokenType;
     /**
-     * 系统类型 棋牌 3  彩票 4  小游戏 5
+     * 系统类型 1 订单 3 棋牌 4 彩票 5小游戏
     */
     private Integer bizType;
     /**
