@@ -209,12 +209,13 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
             }
             detail.setStatus(DetailStatusEnum.Normal.getValue());
             accountDetailtService.add(detail);
-            if(dto.getBizType()==BizTypeEnum.qipai.getValue()){
-                JSONObject data = new JSONObject();
-                data.put("pin",dto.getPin());
-                data.put("proxyId",dto.getProxyId());
-                iMqService.pushToMq(prefix+"qipai",data.toString());
-                System.out.println("mq消息");
+            if(dto.getBizToken()==BizTokenEnum.recharge.getValue()){
+                if(dto.getBizType()==BizTypeEnum.qipai.getValue()){
+                    JSONObject data = new JSONObject();
+                    data.put("pin",dto.getPin());
+                    data.put("proxyId",dto.getProxyId());
+                    iMqService.pushToMq(prefix+"qipai",data.toString());
+                }
             }
         } catch (BizException biz) {
             throw biz;
