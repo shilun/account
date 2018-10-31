@@ -240,5 +240,17 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
         return BigDecimal.valueOf(aDouble);
     }
 
+    @Override
+    public BigDecimal queryChargeNewUsers(AccountDetailDto dto) {
+        AccountDetail accountDetail = BeanCoper.copyProperties(AccountDetail.class,dto);
+        accountDetail.setIsRobot(YesOrNoEnum.NO.getValue());
+        accountDetail.setBizToken(BizTokenEnum.recharge.getValue());
+        if(dto.getDayStatus()==null){
+            accountDetail.setDayStatus(1);
+        }
+        Integer integer = accountDetailtDao.queryNewCount(accountDetail);
+        return BigDecimal.valueOf(integer);
+    }
+
 
 }

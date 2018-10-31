@@ -46,8 +46,22 @@ public interface AccountDetailtService extends AbstractBaseService<AccountDetail
      * @return
      */
     public Map<String,Object> avargCharge(AccountDetailDto dto);
-
+    /**
+     * 根据时间查询充值人数 dayStatus 1 全部 2 当天  3 本周 4 本月
+     * @param dto
+     * @return
+     */
     public BigDecimal queryChargeUsers(AccountDetailDto dto);
-
+    /**
+     * 根据时间查询充值总额 dayStatus1 全部 2 当天  3 本周 4 本月
+     * @param dto
+     * @return
+     */
     public BigDecimal queryChargeAmount(AccountDetailDto dto);
+    /**
+     * 根据时间查询新增充值人数 dayStatus 1 全部 2 当天  3 本周 4 本月
+     * @param dto
+     * @return
+     */
+    public BigDecimal queryChargeNewUsers(AccountDetailDto dto);
 }

@@ -28,4 +28,10 @@ public class AccountDetailtDaoImpl extends DefaultBaseDao<AccountDetail> impleme
 		Double querySum =  this.select(this.getNameSpace("querySum"), detail);
 		return querySum;
 	}
+
+	@Override
+	public Integer queryNewCount(AccountDetail detail) {
+		Integer queryNewCount = this.select(this.getNameSpace("queryNewCount"), detail);
+		return queryNewCount;
+	}
 }

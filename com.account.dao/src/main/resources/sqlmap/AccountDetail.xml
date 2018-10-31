@@ -119,4 +119,44 @@
       </where>
     </select>
 
+    <select id="queryNewCount" parameterType="accountDetail" resultType="int">
+        <choose>
+            <when test="dayStatus == 1">
+                <include refid="allDistinicCount"></include>
+            </when>
+            <otherwise>
+                select @a:=b.cc-a.cc AS a FROM
+                (SELECT COUNT(1) as cc FROM (
+                SELECT DISTINCT(pin) FROM account_detail
+                <where>
+                    <if test="isRobot != null "><![CDATA[is_robot =#{isRobot}]]></if>
+                    <if test="proxyId != null "><![CDATA[AND proxy_id =#{proxyId}]]></if>
+                    <if test="bizToken != null "><![CDATA[AND biz_token =#{bizToken}]]></if>
+                    <if test="dayStatus == 2 "><![CDATA[AND to_days(create_time) < to_days(now())]]></if>
+                    <if test="dayStatus == 3 "><![CDATA[AND YEARWEEK(date_format(create_time,'%Y-%m-%d')) < YEARWEEK(now())]]></if>
+                    <if test="dayStatus == 4 "><![CDATA[AND DATE_FORMAT( create_time, '%Y%m' ) < DATE_FORMAT( CURDATE( ) , '%Y%m' )]]></if>
+                </where>
+                ) cdi ) a,
+                ( SELECT COUNT(1) as cc FROM (
+                SELECT DISTINCT(pin) FROM account_detail
+                <where>
+                    <if test="isRobot != null "><![CDATA[is_robot =#{isRobot}]]></if>
+                    <if test="proxyId != null "><![CDATA[AND proxy_id =#{proxyId}]]></if>
+                    <if test="bizToken != null "><![CDATA[AND biz_token =#{bizToken}]]></if>
+                </where>
+                ) dis) b
+            </otherwise>
+        </choose>
+    </select>
+
+    <sql id="allDistinicCount">
+      SELECT COUNT(1) as cc FROM (
+        SELECT DISTINCT(pin) FROM account_detail
+        <where>
+            <if test="isRobot != null "><![CDATA[is_robot =#{isRobot}]]></if>
+            <if test="proxyId != null "><![CDATA[AND proxy_id =#{proxyId}]]></if>
+            <if test="bizToken != null "><![CDATA[AND biz_token =#{bizToken}]]></if>
+        </where>
+	    ) dis
+    </sql>
 </mapper>

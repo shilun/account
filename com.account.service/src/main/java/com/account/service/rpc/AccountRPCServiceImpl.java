@@ -441,6 +441,24 @@ public class AccountRPCServiceImpl implements AccountRPCService {
     }
 
     @Override
+    public RPCResult<BigDecimal> queryChargeNewUsersByDay(AccountDetailDto accountDetailDto) {
+        RPCResult<BigDecimal> rpcResult = null;
+        try {
+            rpcResult = new RPCResult<>();
+            BigDecimal bigDecimal = accountDetailtService.queryChargeNewUsers(accountDetailDto);
+            rpcResult.setData(bigDecimal);
+            rpcResult.setSuccess(true);
+            return rpcResult;
+        }catch (Exception e){
+            logger.error("查询新增付费人数失败", e);
+            rpcResult.setSuccess(false);
+            rpcResult.setMessage("查询新增付费人数失败");
+            rpcResult.setCode("account.queryChargeNewUsersByDay.error");
+        }
+        return rpcResult;
+    }
+
+    @Override
     public RPCResult<AccountDto> findAccount(Long proxyId, String pin, Integer tokenType, Integer testStatus) {
         RPCResult<AccountDto> result = null;
         try {

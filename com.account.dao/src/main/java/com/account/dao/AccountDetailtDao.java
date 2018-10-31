@@ -13,5 +13,5 @@ public interface AccountDetailtDao extends AbstractBaseDao<AccountDetail>{
 	
 	Double querySum(AccountDetail detail);
 	
-	
+	Integer queryNewCount(AccountDetail detail);
 }

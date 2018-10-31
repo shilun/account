@@ -44,6 +44,14 @@ public class UserDrawalController extends AbstractClientController {
     @Resource
     private AccountRPCService accountRPCService;
 
+    @ApiOperation("查询新增付费")
+    @RequestMapping("account/newCharge")
+    public Map<String, Object> newCharge(@RequestBody AccountDetailDto detailDto) {
+        return buildMessage(() -> {
+            return accountRPCService.queryChargeNewUsersByDay(detailDto);
+        });
+    }
+
     /**
      * 查询现金
      *
