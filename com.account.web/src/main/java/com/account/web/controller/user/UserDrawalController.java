@@ -44,39 +44,7 @@ public class UserDrawalController extends AbstractClientController {
     @Resource
     private AccountRPCService accountRPCService;
 
-    @ApiOperation("查询新增付费")
-    @RequestMapping("account/newCharge")
-    public Map<String, Object> newCharge(@RequestBody AccountDetailDto detailDto) {
-        return buildMessage(() -> {
-            return accountRPCService.queryChargeNewUsersByDay(detailDto);
-        });
-    }
 
-    /**
-     * 查询现金
-     *
-     * @return
-     */
-    @ApiOperation("查询充值总额")
-    @RequestMapping("account/charge")
-    public Map<String, Object> accountCharge(@RequestBody AccountDetailDto detailDto) {
-        return buildMessage(() -> {
-            return accountRPCService.queryChargeUsersByDay(detailDto);
-        });
-    }
-
-    /**
-     * 查询现金
-     *
-     * @return
-     */
-    @ApiOperation("查询保险箱金币")
-    @RequestMapping("user/ver")
-    public Map<String, Object> ver(Long proxyId,String pin,String pass ) {
-        return buildMessage(() -> {
-            return accountRPCService.verfiyPass(proxyId,pin,pass);
-        });
-    }
     /**
      * 查询现金
      *
