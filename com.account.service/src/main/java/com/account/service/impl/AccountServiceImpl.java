@@ -3,12 +3,14 @@ package com.account.service.impl;
 import com.account.dao.AccountDao;
 import com.account.domain.Account;
 import com.account.domain.AccountDetail;
+import com.account.domain.WithdrawCfgInfo;
 import com.account.domain.module.BizTokenEnum;
 import com.account.domain.module.BizTypeEnum;
 import com.account.domain.module.DetailStatusEnum;
 import com.account.rpc.dto.InvertBizDto;
 import com.account.service.AccountDetailtService;
 import com.account.service.AccountService;
+import com.account.service.WithdrawCfgInfoService;
 import com.common.exception.ApplicationException;
 import com.common.exception.BizException;
 import com.common.redis.DistributedLock;
@@ -47,6 +49,8 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
     private AccountDetailtService accountDetailtService;
     @Resource
     private IMqService iMqService;
+    @Resource
+    private WithdrawCfgInfoService withdrawCfgInfoService;
     @Value("${daishan.rocketmq.topic.prefix}")
     private String prefix;
 
@@ -87,6 +91,21 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
         }
         if (dto.getAmount() == null) {
             dto.setAmount(BigDecimal.ZERO);
+        }
+        //提现判断
+        if(dto.getBizToken()==BizTokenEnum.drawing.getValue()){
+            WithdrawCfgInfo withdrawCfgInfo = new WithdrawCfgInfo();
+            withdrawCfgInfo.setProxyId(dto.getProxyId());
+            withdrawCfgInfo = withdrawCfgInfoService.findByOne(withdrawCfgInfo);
+            if(withdrawCfgInfo.getStatus()==YesOrNoEnum.NO.getValue()){
+                throw new BizException("dto.error.status", "不允许提现");
+            }
+            if(withdrawCfgInfo.getMaxMoney().compareTo(dto.getAmount()) < 0){
+                throw new BizException("dto.error.maxMoney", "超出最大提现金额");
+            }
+            if(withdrawCfgInfo.getMinMoney().compareTo(dto.getAmount()) >0){
+                throw new BizException("dto.error.minMoney", "小于最小提现金额");
+            }
         }
         String lock_key = MessageFormat.format(user_login_key, dto.getPin());
         DistributedLock distributedLock = distributedLockUtil.getDistributedLock(lock_key, 30 * 1000);
