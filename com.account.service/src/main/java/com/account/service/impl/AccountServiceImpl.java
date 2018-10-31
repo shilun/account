@@ -18,7 +18,10 @@ import com.common.util.DefaultBaseService;
 import com.common.util.GlosseryEnumUtils;
 import com.common.util.StringUtils;
 import com.common.util.model.YesOrNoEnum;
+import com.version.mq.service.api.IMqService;
+import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +45,10 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
     private String user_login_key = "account.newBiz.pin.{0}";
     @Resource
     private AccountDetailtService accountDetailtService;
+    @Resource
+    private IMqService iMqService;
+    @Value("${daishan.rocketmq.topic.prefix}")
+    private String prefix;
 
     @Override
     public AbstractBaseDao<Account> getBaseDao() {
@@ -183,6 +190,13 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
             }
             detail.setStatus(DetailStatusEnum.Normal.getValue());
             accountDetailtService.add(detail);
+            if(dto.getBizType()==BizTypeEnum.qipai.getValue()){
+                JSONObject data = new JSONObject();
+                data.put("pin",dto.getPin());
+                data.put("proxyId",dto.getProxyId());
+                iMqService.pushToMq(prefix+"qipai",data.toString());
+                System.out.println("mq消息");
+            }
         } catch (BizException biz) {
             throw biz;
         } catch (Exception e) {

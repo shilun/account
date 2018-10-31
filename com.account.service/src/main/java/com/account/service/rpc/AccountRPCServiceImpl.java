@@ -1,9 +1,6 @@
 package com.account.service.rpc;
 
-import com.account.domain.Account;
-import com.account.domain.AccountDetail;
-import com.account.domain.UserBank;
-import com.account.domain.UserDrawalLog;
+import com.account.domain.*;
 import com.account.domain.module.BizTypeEnum;
 import com.account.domain.module.DetailStatusEnum;
 import com.account.domain.module.TokenTypeEnum;
@@ -51,6 +48,9 @@ public class AccountRPCServiceImpl implements AccountRPCService {
 
     @Resource
     private UserBankService userBankService;
+
+    @Resource
+    private WithdrawCfgInfoService  withdrawCfgInfoService;
 
 
     @Override
@@ -624,5 +624,43 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         result.setCode("verfiyPass.error");
         result.setMessage("验证保险柜密码失败");
         return result;
+    }
+
+    @Override
+    public RPCResult<WithdrawCfgDTO> viewWithdrawCfg(WithdrawCfgDTO dto) {
+        RPCResult<WithdrawCfgDTO> rpcResult = null;
+        try {
+            rpcResult = new RPCResult<>();
+            WithdrawCfgInfo entity = BeanCoper.copyProperties(WithdrawCfgInfo.class,dto);
+            WithdrawCfgInfo byOne = withdrawCfgInfoService.findByOne(entity);
+            WithdrawCfgDTO data = BeanCoper.copyProperties(WithdrawCfgDTO.class,byOne);
+            rpcResult.setSuccess(true);
+            rpcResult.setData(data);
+            return rpcResult;
+        }catch (Exception e){
+            logger.error("查看提现配置失败", e);
+            rpcResult.setSuccess(false);
+            rpcResult.setMessage("查看提现配置失败");
+            rpcResult.setCode("account.viewWithdrawCfg.error");
+        }
+        return rpcResult;
+    }
+
+    @Override
+    public RPCResult saveWithdrawCfg(WithdrawCfgDTO dto) {
+        RPCResult rpcResult = null;
+        try {
+            rpcResult = new RPCResult<>();
+            WithdrawCfgInfo entity = BeanCoper.copyProperties(WithdrawCfgInfo.class,dto);
+            withdrawCfgInfoService.save(entity);
+            rpcResult.setSuccess(true);
+            return rpcResult;
+        }catch (Exception e){
+            logger.error("保存提现配置失败", e);
+            rpcResult.setSuccess(false);
+            rpcResult.setMessage("保存提现配置失败");
+            rpcResult.setCode("account.saveWithdrawCfg.error");
+        }
+        return rpcResult;
     }
 }

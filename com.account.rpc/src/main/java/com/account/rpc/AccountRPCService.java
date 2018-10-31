@@ -197,4 +197,18 @@ public interface AccountRPCService {
      */
     RPCResult verfiyPass(Long proxyId, String pin, String pass);
 
+    /**
+     * 查看提现配置
+     * @param dto
+     * @return
+     */
+    RPCResult<WithdrawCfgDTO> viewWithdrawCfg(WithdrawCfgDTO dto);
+
+    /**
+     * 保存提现配置
+     * @param dto
+     * @return
+     */
+    RPCResult saveWithdrawCfg(WithdrawCfgDTO dto);
+
 }
