@@ -8,6 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
 
+@Import({MqConfiguration.class})
 @SpringBootApplication
 @EnableDubboConfiguration
 @ComponentScan(basePackages = {"com.account", "com.common.config","com.version"})
