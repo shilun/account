@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication(exclude = {MongoDataAutoConfiguration.class})
 @EnableDubboConfiguration
 @EnableTransactionManagement
-@ComponentScan(basePackages = {"com.account", "com.common.config"})
+@ComponentScan(basePackages = {"com.account","com.version", "com.common.config"})
 @ImportResource(locations={"classpath:spring-config.xml"})
 public class MainApplication {
     public static void main(String[] args) {
