@@ -220,7 +220,9 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
     public BigDecimal queryChargeUsers(AccountDetailDto dto) {
         AccountDetail accountDetail = BeanCoper.copyProperties(AccountDetail.class,dto);
         accountDetail.setIsRobot(YesOrNoEnum.NO.getValue());
-        accountDetail.setBizToken(BizTokenEnum.recharge.getValue());
+        if(dto.getBizToken()==null){
+            accountDetail.setBizToken(BizTokenEnum.recharge.getValue());
+        }
         if(dto.getDayStatus()==null){
             accountDetail.setDayStatus(1);
         }
@@ -232,7 +234,9 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
     public BigDecimal queryChargeAmount(AccountDetailDto dto) {
         AccountDetail accountDetail = BeanCoper.copyProperties(AccountDetail.class,dto);
         accountDetail.setIsRobot(YesOrNoEnum.NO.getValue());
-        accountDetail.setBizToken(BizTokenEnum.recharge.getValue());
+        if(dto.getBizToken()==null){
+            accountDetail.setBizToken(BizTokenEnum.recharge.getValue());
+        }
         if(dto.getDayStatus()==null){
             accountDetail.setDayStatus(1);
         }
@@ -244,7 +248,9 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
     public BigDecimal queryChargeNewUsers(AccountDetailDto dto) {
         AccountDetail accountDetail = BeanCoper.copyProperties(AccountDetail.class,dto);
         accountDetail.setIsRobot(YesOrNoEnum.NO.getValue());
-        accountDetail.setBizToken(BizTokenEnum.recharge.getValue());
+        if(dto.getBizToken()==null){
+            accountDetail.setBizToken(BizTokenEnum.recharge.getValue());
+        }
         if(dto.getDayStatus()==null){
             accountDetail.setDayStatus(1);
         }
