@@ -18,7 +18,7 @@ public interface AccountRPCService {
      * 查询账本信息
      * @param proxyId
      * @param pin
-     * @param tokenType   * 人民币 1   金币 2
+     * @param tokenType   * 保险柜 1   现金 2
      * @param testStatus  * 是否为测试 1 否 2 是
      * @return
      */
@@ -118,7 +118,7 @@ public interface AccountRPCService {
      * 冻结并查询币种
      * @param proxyId 代理商
      * @param pin 用户pin
-     * @param tokenType 1 人民币 2 金币
+     * @param tokenType 保险柜 1   现金 2
      * @param testStatus 1 测试 2正试
      * @return
      */

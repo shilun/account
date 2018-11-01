@@ -111,6 +111,7 @@
       SELECT IFNULL(SUM(change_amount),0) FROM account_detail
       <where>
           <if test="isRobot != null "><![CDATA[is_robot =#{isRobot}]]></if>
+          <if test="pin != null "><![CDATA[AND pin =#{pin},]]></if>
           <if test="proxyId != null "><![CDATA[AND proxy_id =#{proxyId}]]></if>
           <if test="bizToken != null "><![CDATA[AND biz_token =#{bizToken}]]></if>
           <if test="dayStatus == 2 "><![CDATA[AND to_days(create_time) = to_days(now())]]></if>
