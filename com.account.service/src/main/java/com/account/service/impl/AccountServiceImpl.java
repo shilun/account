@@ -217,6 +217,7 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
                 data.put("bizType",dto.getBizType());
                 data.put(MqKey.COM_VERSION_MQ_KEY,"recharge");
                 iMqService.pushToMq(prefix+"account",data.toString());
+
             }
         } catch (BizException biz) {
             throw biz;
