@@ -11,24 +11,30 @@ import com.account.rpc.dto.InvertBizDto;
 import com.account.service.AccountDetailtService;
 import com.account.service.AccountService;
 import com.account.service.WithdrawCfgInfoService;
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.common.exception.ApplicationException;
 import com.common.exception.BizException;
 import com.common.redis.DistributedLock;
 import com.common.redis.DistributedLockUtil;
-import com.common.util.AbstractBaseDao;
-import com.common.util.DefaultBaseService;
-import com.common.util.GlosseryEnumUtils;
-import com.common.util.StringUtils;
+import com.common.util.*;
 import com.common.util.model.YesOrNoEnum;
+import com.passport.rpc.UserRPCService;
+import com.passport.rpc.dto.UserDTO;
 import com.version.MqKey;
 import com.version.mq.service.api.IMqService;
 import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
+import org.apache.rocketmq.client.exception.MQBrokerException;
+import org.apache.rocketmq.client.exception.MQClientException;
+import org.apache.rocketmq.client.producer.DefaultMQProducer;
+import org.apache.rocketmq.common.message.Message;
+import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.List;
@@ -48,6 +54,8 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
     private String user_login_key = "account.newBiz.pin.{0}";
     @Resource
     private AccountDetailtService accountDetailtService;
+    @Reference
+    private UserRPCService userRPCService;
     @Resource
     private IMqService iMqService;
     @Resource
@@ -119,11 +127,14 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
 
             findDetail.setBizType(dto.getBizType());
             findDetail.setBizToken(dto.getBizToken());
-            if(dto.getIsRobot()!=null){
-                findDetail.setIsRobot(dto.getIsRobot());
+            RPCResult<UserDTO> byPin = userRPCService.findByPin(dto.getProxyId(), dto.getPin());
+            int isRobot = 2;
+            if(byPin.getSuccess() && byPin.getData()!=null){
+                isRobot = YesOrNoEnum.NO.getValue();
             }else {
-                findDetail.setIsRobot(YesOrNoEnum.NO.getValue());
+                isRobot = YesOrNoEnum.YES.getValue();
             }
+            findDetail.setIsRobot(isRobot);
             findDetail.setProxyId(dto.getProxyId());
             findDetail.setBizId(dto.getBizId());
             findDetail.setChargeType(dto.getChargeType());
@@ -145,11 +156,7 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
             Account account = findByOne(query);
             if (account == null) {
                 account = new Account();
-                if(dto.getIsRobot()!=null){
-                    account.setIsRobot(dto.getIsRobot());
-                }else {
-                    account.setIsRobot(YesOrNoEnum.NO.getValue());
-                }
+                account.setIsRobot(isRobot);
                 account.setTokenType(dto.getTokenType());
                 account.setFreeze(BigDecimal.ZERO);
                 account.setAmount(BigDecimal.ZERO);
@@ -158,11 +165,7 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
                 account.setPin(dto.getPin());
             }
             AccountDetail detail = new AccountDetail();
-            if(dto.getIsRobot()!=null){
-                detail.setIsRobot(dto.getIsRobot());
-            }else {
-                detail.setIsRobot(YesOrNoEnum.NO.getValue());
-            }
+            detail.setIsRobot(isRobot);
             detail.setPin(dto.getPin());
             detail.setTest(dto.getTest());
             detail.setProxyId(dto.getProxyId());
@@ -198,11 +201,7 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
                 save(account);
             } else {
                 Account upEntity = new Account();
-                if(dto.getIsRobot()!=null){
-                    upEntity.setIsRobot(dto.getIsRobot());
-                }else {
-                    upEntity.setIsRobot(YesOrNoEnum.NO.getValue());
-                }
+                upEntity.setIsRobot(isRobot);
                 upEntity.setId(account.getId());
                 upEntity.setAmount(account.getAmount());
                 upEntity.setFreeze(account.getFreeze());
@@ -228,7 +227,6 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
             distributedLock.release();
         }
     }
-
     /**
      * 锁定用户所有币key
      */

@@ -160,11 +160,12 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
         query.setOrderTpe(2);
         query.setStartRow(page * size);
         query.setEndRow(size);
-        List<AccountDetail> accountDetails = getBaseDao().query(query);
+        Page<AccountDetail> accountDetails = queryByPage(query, dto.getPageinfo().getPage());
+//        List<AccountDetail> accountDetails = getBaseDao().query(query);
         Integer total = getBaseDao().queryCount(query);
 //        int totalPage = total % size >0 ? total/size+1: total/size;
-        if (!accountDetails.isEmpty()) {
-            for (AccountDetail detail : accountDetails) {
+        if (accountDetails.hasContent()) {
+            for (AccountDetail detail : accountDetails.getContent()) {
                 AccountDetailDto accountDetailDto = new AccountDetailDto();
                 BeanCoper.copyProperties(accountDetailDto, detail);
                 if(accountDetailDto.getBizType() != null){
