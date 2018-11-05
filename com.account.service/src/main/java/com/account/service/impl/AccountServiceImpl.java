@@ -20,6 +20,7 @@ import com.common.util.DefaultBaseService;
 import com.common.util.GlosseryEnumUtils;
 import com.common.util.StringUtils;
 import com.common.util.model.YesOrNoEnum;
+import com.version.MqKey;
 import com.version.mq.service.api.IMqService;
 import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
@@ -214,7 +215,8 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
                 data.put("pin",dto.getPin());
                 data.put("proxyId",dto.getProxyId());
                 data.put("bizType",dto.getBizType());
-                iMqService.pushToMq(prefix+"recharge",data.toString());
+                data.put(MqKey.COM_VERSION_MQ_KEY,"recharge");
+                iMqService.pushToMq(prefix+"account",data.toString());
             }
         } catch (BizException biz) {
             throw biz;
