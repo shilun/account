@@ -210,12 +210,11 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
             detail.setStatus(DetailStatusEnum.Normal.getValue());
             accountDetailtService.add(detail);
             if(dto.getBizToken()==BizTokenEnum.recharge.getValue()){
-                if(dto.getBizType()==BizTypeEnum.qipai.getValue()){
-                    JSONObject data = new JSONObject();
-                    data.put("pin",dto.getPin());
-                    data.put("proxyId",dto.getProxyId());
-                    iMqService.pushToMq(prefix+"qipai",data.toString());
-                }
+                JSONObject data = new JSONObject();
+                data.put("pin",dto.getPin());
+                data.put("proxyId",dto.getProxyId());
+                data.put("bizType",dto.getBizType());
+                iMqService.pushToMq(prefix+"recharge",data.toString());
             }
         } catch (BizException biz) {
             throw biz;
