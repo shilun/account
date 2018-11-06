@@ -71,22 +71,22 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
     @Transactional
     public void newBiz(InvertBizDto dto) {
         if (dto.getAmount() == null && dto.getFreeze() == null) {
-            throw new BizException("dto.error", "数据验证失败");
+            throw new BizException("dto.error", "数据验证失败,acmount or freeze null");
         }
         if (dto.getProxyId() == null) {
-            throw new BizException("dto.error.BizId", "数据验证失败");
+            throw new BizException("dto.error.proxyId", "数据验证失败,proxyId null");
         }
         if (dto.getTokenType() == null) {
-            throw new BizException("dto.error.BizId", "数据验证失败");
+            throw new BizException("dto.error.tokenType", "数据验证失败,tokenType null");
         }
         if (StringUtils.isBlank(dto.getBizId())) {
-            throw new BizException("dto.error.BizId", "数据验证失败");
+            throw new BizException("dto.error.BizId", "数据验证失败, bizId null");
         }
         if (dto.getBizType() == null) {
-            throw new BizException("dto.error.BizId", "数据验证失败");
+            throw new BizException("dto.error.bizType", "数据验证失败 bizType null");
         }
         if (StringUtils.isBlank(dto.getPin())) {
-            throw new BizException("dto.error.pin", "数据验证失败");
+            throw new BizException("dto.error.pin", "数据验证失败 pin null");
         }
         //默认为正试账户
         if (dto.getTest() == null) {
