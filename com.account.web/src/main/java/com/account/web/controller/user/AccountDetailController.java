@@ -25,10 +25,9 @@ public class AccountDetailController extends AbstractClientController {
 
     @RequestMapping("user/accountDetail/list")
     @ApiOperation(value = "查询记录",notes = "bizToken: 1,充值;2,提款;3,赠送 {bizToken:1,pageInfo{page:0,size:30}}")
-    public Map<String, Object> addUserBank(@RequestBody AccountDetailDto detailDto) {
+    public Map<String, Object> list(@RequestBody AccountDetailDto detailDto) {
         return buildMessage(() -> {
             AccountDetail accountDetail = BeanCoper.copyProperties(AccountDetail.class,detailDto);
-
             return accountDetailtService.queryByPage(accountDetail,detailDto.getPageinfo().getPage());
         });
     }
