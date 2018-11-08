@@ -189,13 +189,19 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
             detail.setAfterAmount(account.getAmount());
             detail.setAfterFreeze(account.getFreeze());
             if (account.getAmount().compareTo(BigDecimal.ZERO) < 0) {
-                throw new BizException("account.error", "账户余额不足");
+                if(dto.getBizToken()!=BizTokenEnum.qipaiconsume.getValue()){
+                    throw new BizException("account.error", "账户余额不足");
+                }
             }
             if (account.getFreeze().compareTo(BigDecimal.ZERO) < 0) {
-                throw new BizException("account.error", "冻结金额不足");
+                if(dto.getBizToken()!=BizTokenEnum.qipaiconsume.getValue()){
+                    throw new BizException("account.error", "冻结金额不足");
+                }
             }
             if (account.getAmount().compareTo(account.getFreeze()) < 0) {
-                throw new BizException("account.error", "账户金额不足");
+                if(dto.getBizToken()!=BizTokenEnum.qipaiconsume.getValue()){
+                    throw new BizException("account.error", "账户金额不足");
+                }
             }
             if (account.getId() == null) {
                 save(account);

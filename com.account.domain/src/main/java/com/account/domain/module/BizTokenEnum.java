@@ -18,7 +18,9 @@ public enum BizTokenEnum implements IGlossary {
     /**
      * 消费
      */
-    consume("消费",4)
+    consume("消费",4),
+
+    qipaiconsume("棋牌扣费",5)
     ;
 
     BizTokenEnum(String name, Integer value) {
