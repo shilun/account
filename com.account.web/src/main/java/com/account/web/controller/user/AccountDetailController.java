@@ -2,6 +2,7 @@ package com.account.web.controller.user;
 
 import com.account.domain.AccountDetail;
 import com.account.domain.module.ChargeTypeEnum;
+import com.account.rpc.AccountRPCService;
 import com.account.rpc.dto.AccountDetailDto;
 import com.account.service.AccountDetailtService;
 import com.account.web.AbstractClientController;
@@ -29,6 +30,8 @@ public class AccountDetailController extends AbstractClientController {
 
     @Resource
     private AccountDetailtService accountDetailtService;
+    @Resource
+    private AccountRPCService accountRPCService;
 
     @RequestMapping("user/accountDetail/list")
     @ApiOperation(value = "查询记录",notes = "bizToken: 1,充值;2,提款;3,赠送 {bizToken:1,pageInfo{page:0,size:30}}")
@@ -46,6 +49,15 @@ public class AccountDetailController extends AbstractClientController {
             }
             Page<AccountDetailDto> page =  new PageImpl<>(list,detailDto.getPageinfo().getPage(),accountDetails.getTotalElements());
             return page;
+        });
+    }
+
+    @RequestMapping("accountDetail/list")
+    @ApiOperation(value = "查询记录",notes = "bizToken: 1,充值;2,提款;3,赠送 {bizToken:1,pageInfo{page:0,size:30}}")
+    public Map<String, Object> accountDetailList(@RequestBody AccountDetailDto detailDto) {
+        return buildMessage(() -> {
+
+            return accountRPCService.queryDetail(detailDto);
         });
     }
 }

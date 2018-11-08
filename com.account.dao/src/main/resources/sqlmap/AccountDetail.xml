@@ -30,7 +30,8 @@
             <if test="status != null "><![CDATA[AND status =#{status}]]></if>
             <if test="delStatus != null "><![CDATA[AND del_status =#{delStatus}]]></if>
             <if test="createTime != null "><![CDATA[AND create_time =#{createTime}]]></if>
-            <if test="startCreateTime != null and endCreateTime != null "><![CDATA[AND create_time BETWEEN #{startCreateTime} AND #{endCreateTime}]]></if>
+            <if test="startCreateTime != null "><![CDATA[AND create_time >= #{startCreateTime}]]></if>
+            <if test="endCreateTime != null "><![CDATA[AND create_time <= #{endCreateTime}]]></if>
             <if test="updateTime != null "><![CDATA[AND update_time =#{updateTime}]]></if>
         </where>
     </sql>

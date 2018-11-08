@@ -145,24 +145,22 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
     @Override
     public Page<AccountDetailDto> queryDetailList(AccountDetailDto dto) {
         List<AccountDetailDto> accountDetailDtos = new ArrayList<>();
-        int page = dto.getPageinfo().getPage().getPageNumber();
-        int size = dto.getPageinfo().getSize();
         AccountDetail query = BeanCoper.copyProperties(AccountDetail.class,dto);
-        if(StringUtils.isBlank(dto.getQueryStartTime()) && StringUtils.isBlank(dto.getQueryEndTime())){
-//           Date date = new Date();
+        if(StringUtils.isBlank(dto.getQueryStartTime())){
             query.setStartCreateTime(null);
-            query.setEndCreateTime(null);
         }else{
             query.setStartCreateTime(TimeUtils.getMinTime(DateUtil.StringToDate(dto.getQueryStartTime())));
+        }
+        if(StringUtils.isBlank(dto.getQueryEndTime())){
+            query.setEndCreateTime(null);
+        }else {
             query.setEndCreateTime(TimeUtils.getMaxTime(DateUtil.StringToDate(dto.getQueryEndTime())));
         }
         query.setOrderColumn("id");
         query.setOrderTpe(2);
-        query.setStartRow(page * size);
-        query.setEndRow(size);
         Page<AccountDetail> accountDetails = queryByPage(query, dto.getPageinfo().getPage());
 //        List<AccountDetail> accountDetails = getBaseDao().query(query);
-        Integer total = getBaseDao().queryCount(query);
+//        Integer total = getBaseDao().queryCount(query);
 //        int totalPage = total % size >0 ? total/size+1: total/size;
         if (accountDetails.hasContent()) {
             for (AccountDetail detail : accountDetails.getContent()) {
@@ -180,7 +178,7 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
                 accountDetailDtos.add(accountDetailDto);
             }
         }
-        Page<AccountDetailDto> detailDtoPage = new PageImpl<>(accountDetailDtos,dto.getPageinfo().getPage(),total.longValue());
+        Page<AccountDetailDto> detailDtoPage = new PageImpl<>(accountDetailDtos,dto.getPageinfo().getPage(),accountDetails.getTotalElements());
         return detailDtoPage;
     }
 
