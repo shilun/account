@@ -165,7 +165,6 @@ public class AccountRPCServiceImpl implements AccountRPCService {
     public RPCResult<Boolean> invertBiz(InvertBizDto dto) {
         RPCResult result = new RPCResult<>();
         try {
-
             accountService.newBiz(dto);
             result.setSuccess(true);
             return result;
