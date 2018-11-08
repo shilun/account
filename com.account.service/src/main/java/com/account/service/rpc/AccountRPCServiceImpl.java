@@ -8,9 +8,12 @@ import com.account.rpc.AccountRPCService;
 import com.account.rpc.dto.*;
 import com.account.service.*;
 import com.account.service.utils.RPCBeanService;
+import com.account.service.utils.TimeUtils;
 import com.common.exception.BizException;
 import com.common.util.BeanCoper;
+import com.common.util.DateUtil;
 import com.common.util.RPCResult;
+import com.common.util.StringUtils;
 import com.common.util.model.YesOrNoEnum;
 import org.apache.log4j.Logger;
 import org.springframework.data.domain.Page;
@@ -22,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -313,19 +317,11 @@ public class AccountRPCServiceImpl implements AccountRPCService {
     public RPCResult<List<AccountDetailDto>> queryDetail(AccountDetailDto dto) {
         RPCResult<List<AccountDetailDto>> rpcResult = new RPCResult<>();
         try {
+
             Page<AccountDetailDto> detailDtoPage = accountDetailtService.queryDetailList(dto);
-            if (detailDtoPage.hasContent()) {
-                rpcResult.setSuccess(true);
-                rpcResult.setData(detailDtoPage.getContent());
-                rpcResult.setTotalCount(Integer.valueOf((int) detailDtoPage.getTotalElements()));
-                rpcResult.setPageIndex(dto.getPageinfo().getPage().getPageNumber());
-                rpcResult.setTotalPage(detailDtoPage.getTotalPages());
-                rpcResult.setPageSize(detailDtoPage.getSize());
-            } else {
-                rpcResult.setSuccess(false);
-                rpcResult.setCode("AccountRPCServiceImpl.queryDetail.null");
-                rpcResult.setMessage("查询数据为空");
-            }
+
+            rpcResult=new RPCResult<>(detailDtoPage);
+            rpcResult.setSuccess(true);
         } catch (Exception e) {
             logger.error("AccountRPCServiceImpl.queryAccountDetail.error", e);
             rpcResult.setSuccess(false);
@@ -504,6 +500,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
             if (log.getAudiStatus() == null) {
                 query.setAudiStatus(YesOrNoEnum.YES.getValue());
                 query.setId(log.getId());
+                query.setAudiTime(new Date());
                 userDrawalLogService.save(query);
                 result.setSuccess(true);
                 return result;
@@ -571,29 +568,34 @@ public class AccountRPCServiceImpl implements AccountRPCService {
 
 
     @Override
-    public RPCResult<List<UserDrawalDto>> queryUserDrawal(Long proxyId, String pin, Integer page, Integer pageSize) {
+    public RPCResult<List<UserDrawalDto>> queryUserDrawal(UserDrawalDto dto) {
         RPCResult<List<UserDrawalDto>> result = new RPCResult<>();
         try {
-            UserDrawalLog query = new UserDrawalLog();
-            query.setProxyId(proxyId);
-            query.setPin(pin);
-            if(pageSize==null){
-                pageSize=10;
+            UserDrawalLog query = BeanCoper.copyProperties(UserDrawalLog.class,dto);
+            if(!StringUtils.isBlank(dto.getStartDrawingDate())){
+                query.setStartDrawingDate(TimeUtils.getMinTime(DateUtil.StringToDate(dto.getStartDrawingDate())));
             }
-            if(page==null){
-                page=0;
+            if(!StringUtils.isBlank(dto.getEndDrawingDate())){
+                query.setStartDrawingDate(TimeUtils.getMaxTime(DateUtil.StringToDate(dto.getStartDrawingDate())));
             }
-            Page<UserDrawalLog> pages = userDrawalLogService.queryByPage(query, new PageRequest(page, pageSize));
+            if(!StringUtils.isBlank(dto.getStartAudiTime())){
+                query.setStartDrawingDate(TimeUtils.getMinTime(DateUtil.StringToDate(dto.getStartAudiTime())));
+            }
+            if(!StringUtils.isBlank(dto.getEndAudiTime())){
+                query.setStartDrawingDate(TimeUtils.getMaxTime(DateUtil.StringToDate(dto.getEndAudiTime())));
+            }
+
+            Page<UserDrawalLog> pages = userDrawalLogService.queryByPage(query, dto.getPageinfo().getPage());
             List<UserDrawalLog> list = pages.getContent();
             result.setTotalPage(pages.getTotalPages());
-            result.setPageSize(pageSize);
-            result.setPageIndex(page);
+            result.setPageSize(dto.getPageinfo().getPage().getPageSize());
+            result.setPageIndex(dto.getPageinfo().getPage().getPageNumber());
             result.setTotalCount((int) pages.getTotalElements());
             List<UserDrawalDto> listResult = new ArrayList<>();
             for (UserDrawalLog item : list) {
-                UserDrawalDto dto = new UserDrawalDto();
-                BeanCoper.copyProperties(dto, item);
-                listResult.add(dto);
+                UserDrawalDto userDrawalDto = new UserDrawalDto();
+                BeanCoper.copyProperties(userDrawalDto, item);
+                listResult.add(userDrawalDto);
             }
             result.setData(listResult);
             result.setSuccess(true);

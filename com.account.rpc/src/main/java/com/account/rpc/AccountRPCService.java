@@ -181,12 +181,12 @@ public interface AccountRPCService {
     /**
      * 用户提款查询
      *
-     * @param proxyId
-     * @param pin
-     * @param page
+     * @param dto
      * @return
      */
-    RPCResult<List<UserDrawalDto>> queryUserDrawal(Long proxyId, String pin, Integer page, Integer pageSize);
+    RPCResult<List<UserDrawalDto>> queryUserDrawal(UserDrawalDto dto);
+
+
 
     /**
      * 验证保险柜密码

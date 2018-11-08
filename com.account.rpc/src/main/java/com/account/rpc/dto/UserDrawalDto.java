@@ -7,6 +7,11 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class UserDrawalDto  extends AbstractDTO implements Serializable {
+
+    /**
+     * 代理商id
+     */
+    private Long proxyId;
     /***
      * 审核状态 1通过 2不通过
      */
@@ -41,6 +46,62 @@ public class UserDrawalDto  extends AbstractDTO implements Serializable {
      * 扣款状态
      */
     private Integer detainStatus;
+    /**
+     * 起始提款时间
+     */
+    private String startDrawingDate;
+    /**
+     * 结束提款时间
+     */
+    private String endDrawingDate;
+    /**
+     * 起始审核时间
+     */
+    private String startAudiTime;
+    /**
+     * 结束审核时间
+     */
+    private String endAudiTime;
+
+    public String getStartDrawingDate() {
+        return startDrawingDate;
+    }
+
+    public void setStartDrawingDate(String startDrawingDate) {
+        this.startDrawingDate = startDrawingDate;
+    }
+
+    public String getEndDrawingDate() {
+        return endDrawingDate;
+    }
+
+    public void setEndDrawingDate(String endDrawingDate) {
+        this.endDrawingDate = endDrawingDate;
+    }
+
+    public String getStartAudiTime() {
+        return startAudiTime;
+    }
+
+    public void setStartAudiTime(String startAudiTime) {
+        this.startAudiTime = startAudiTime;
+    }
+
+    public String getEndAudiTime() {
+        return endAudiTime;
+    }
+
+    public void setEndAudiTime(String endAudiTime) {
+        this.endAudiTime = endAudiTime;
+    }
+
+    public Long getProxyId() {
+        return proxyId;
+    }
+
+    public void setProxyId(Long proxyId) {
+        this.proxyId = proxyId;
+    }
 
     public Integer getAudiStatus() {
         return audiStatus;

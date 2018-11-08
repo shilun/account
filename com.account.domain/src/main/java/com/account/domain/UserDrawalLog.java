@@ -1,6 +1,9 @@
 package com.account.domain;
 
+import com.common.annotation.QueryField;
+import com.common.mongo.QueryType;
 import com.common.util.AbstractBaseEntity;
+import org.springframework.data.annotation.Transient;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -49,6 +52,66 @@ public class UserDrawalLog extends AbstractBaseEntity {
      * 扣款状态
      */
     private Integer detainStatus;
+
+    /**
+     * 起始提款时间
+     */
+    @Transient
+    @QueryField(name="createTime",type= QueryType.GTE)
+    private Date startDrawingDate;
+
+    /**
+     * 结束提款时间
+     */
+    @Transient
+    @QueryField(name="createTime",type= QueryType.LT)
+    private Date endDrawingDate;
+
+    /**
+     * 起始审核时间
+     */
+    @Transient
+    @QueryField(name="audiTime",type= QueryType.GTE)
+    private Date startAudiTime;
+
+    /**
+     * 结束审核时间
+     */
+    @Transient
+    @QueryField(name="audiTime",type= QueryType.LT)
+    private Date endAudiTime;
+
+    public Date getStartDrawingDate() {
+        return startDrawingDate;
+    }
+
+    public void setStartDrawingDate(Date startDrawingDate) {
+        this.startDrawingDate = startDrawingDate;
+    }
+
+    public Date getEndDrawingDate() {
+        return endDrawingDate;
+    }
+
+    public void setEndDrawingDate(Date endDrawingDate) {
+        this.endDrawingDate = endDrawingDate;
+    }
+
+    public Date getStartAudiTime() {
+        return startAudiTime;
+    }
+
+    public void setStartAudiTime(Date startAudiTime) {
+        this.startAudiTime = startAudiTime;
+    }
+
+    public Date getEndAudiTime() {
+        return endAudiTime;
+    }
+
+    public void setEndAudiTime(Date endAudiTime) {
+        this.endAudiTime = endAudiTime;
+    }
 
     public Integer getDetainStatus() {
         return detainStatus;

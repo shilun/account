@@ -95,8 +95,8 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
             }
         }
 
-        BigDecimal rate = configService.findRate(sourceType, targetType);
-        BigDecimal total = sourceAmount.multiply(rate);
+//        BigDecimal rate = configService.findRate(sourceType, targetType);
+//        BigDecimal total = sourceAmount.multiply(rate);
 
         sourceAccount.setAmount(sourceAccount.getAmount().subtract(sourceAmount));
 
@@ -119,7 +119,7 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
             upTargetAccount = new Account();
             upTargetAccount.setId(targetAccount.getId());
         }
-        upTargetAccount.setAmount(targetAccount.getAmount().add(total));
+        upTargetAccount.setAmount(targetAccount.getAmount().add(sourceAmount));
         accountService.save(upTargetAccount);
     }
 
@@ -157,10 +157,10 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
             query.setEndCreateTime(TimeUtils.getMaxTime(DateUtil.StringToDate(dto.getQueryEndTime())));
         }
         query.setOrderColumn("id");
-        query.setOrderTpe(2);
         Page<AccountDetail> accountDetails = queryByPage(query, dto.getPageinfo().getPage());
-//        List<AccountDetail> accountDetails = getBaseDao().query(query);
+//        List<AccountDetail> list = getBaseDao().query(query);
 //        Integer total = getBaseDao().queryCount(query);
+//        System.out.println(System.currentTimeMillis());
 //        int totalPage = total % size >0 ? total/size+1: total/size;
         if (accountDetails.hasContent()) {
             for (AccountDetail detail : accountDetails.getContent()) {
