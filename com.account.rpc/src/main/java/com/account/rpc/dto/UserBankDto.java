@@ -4,6 +4,10 @@ import java.io.Serializable;
 
 public class UserBankDto implements Serializable {
     /**
+     * 代理id
+     */
+    private Long proxyId;
+    /**
      * 用户pin
      */
     private String pin;
@@ -32,6 +36,14 @@ public class UserBankDto implements Serializable {
      * 真实姓名
      */
     private String name;
+
+    public Long getProxyId() {
+        return proxyId;
+    }
+
+    public void setProxyId(Long proxyId) {
+        this.proxyId = proxyId;
+    }
 
     public String getPin() {
         return pin;
