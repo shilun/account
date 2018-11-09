@@ -62,16 +62,6 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         RPCResult<List<AccountDto>> result = null;
         try {
             List<AccountDto> resultlist = getAccountDtos(pin, proxyId);
-            for (AccountDto dto : resultlist) {
-                if (TokenTypeEnum.RMB.getValue().intValue() == dto.getTokenType()) {
-                    dto.setRate(BigDecimal.ONE);
-                } else {
-                    BigDecimal rate = configService.findRate(TokenTypeEnum.RMB.getValue(), dto.getTokenType());
-                    dto.setRate(rate);
-                }
-                dto.setAmount(dto.getAmount().subtract(dto.getFreeze()));
-                dto.setFreeze(BigDecimal.ZERO);
-            }
             result = new RPCResult<>(resultlist);
             return result;
         } catch (Exception e) {
