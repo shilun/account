@@ -26,6 +26,10 @@ public class Account extends AbstractBaseEntity implements java.io.Serializable 
 	private BigDecimal freeze;
 	/**状态 1 启用 2 禁用*/
 	private Integer status;
+    /**
+     * 用户id
+     */
+    private Long userCode;
 
 	/**
 	 * 是否为测试
@@ -37,7 +41,15 @@ public class Account extends AbstractBaseEntity implements java.io.Serializable 
 	 */
 	private Integer isRobot;
 
-	public Integer getIsRobot() {
+    public Long getUserCode() {
+        return userCode;
+    }
+
+    public void setUserCode(Long userCode) {
+        this.userCode = userCode;
+    }
+
+    public Integer getIsRobot() {
 		return isRobot;
 	}
 

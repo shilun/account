@@ -28,6 +28,7 @@ public class UserBankServiceImpl extends AbstractMongoService<UserBank> implemen
         old.setBankType(entity.getBankType());
         old.setCode(entity.getCode());
         old.setAddress(entity.getAddress());
+        old.setUserCode(entity.getUserCode());
         save(old);
     }
 

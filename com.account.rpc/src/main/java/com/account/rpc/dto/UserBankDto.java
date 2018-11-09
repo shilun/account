@@ -4,6 +4,14 @@ import java.io.Serializable;
 
 public class UserBankDto implements Serializable {
     /**
+     * 用户pin
+     */
+    private String pin;
+    /**
+     * 用户id
+     */
+    private Long userCode;
+    /**
      * 银行卡类型
      */
     private Integer bankType;
@@ -24,6 +32,22 @@ public class UserBankDto implements Serializable {
      * 真实姓名
      */
     private String name;
+
+    public String getPin() {
+        return pin;
+    }
+
+    public void setPin(String pin) {
+        this.pin = pin;
+    }
+
+    public Long getUserCode() {
+        return userCode;
+    }
+
+    public void setUserCode(Long userCode) {
+        this.userCode = userCode;
+    }
 
     public Integer getBankType() {
         return bankType;

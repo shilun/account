@@ -15,9 +15,21 @@ public class UserDrawalPass extends AbstractBaseEntity {
      */
     private String pin;
     /**
+     * 用户id
+     */
+    private Long userCode;
+    /**
      * 密码
      */
     private String pass;
+
+    public Long getUserCode() {
+        return userCode;
+    }
+
+    public void setUserCode(Long userCode) {
+        this.userCode = userCode;
+    }
 
     public Long getProxyId() {
         return proxyId;

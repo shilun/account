@@ -17,6 +17,10 @@ public class AccountDetailDto extends AbstractDTO implements Serializable {
      * pin
      */
     private String pin;
+    /**
+     * 用户id
+     */
+    private Long userCode;
 
     /**
      * 代币类型
@@ -107,6 +111,14 @@ public class AccountDetailDto extends AbstractDTO implements Serializable {
      * 时间筛选查询  1 全部 2 当天  3 本周 4 本月
      */
     private Integer dayStatus;
+
+    public Long getUserCode() {
+        return userCode;
+    }
+
+    public void setUserCode(Long userCode) {
+        this.userCode = userCode;
+    }
 
     public Integer getDayStatus() {
         return dayStatus;

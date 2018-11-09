@@ -546,16 +546,14 @@ public class AccountRPCServiceImpl implements AccountRPCService {
 
 
     @Override
-    public RPCResult<UserBankDto> queryUserBank(Long proxyId, String pin) {
+    public RPCResult<UserBankDto> queryUserBank(UserBankDto dto) {
         RPCResult<UserBankDto> result = new RPCResult<>();
         try {
-            UserBankDto dto = new UserBankDto();
-            UserBank userBank = new UserBank();
-            userBank.setProxyId(proxyId);
-            userBank.setPin(pin);
+
+            UserBank userBank = BeanCoper.copyProperties(UserBank.class,dto);
             UserBank byOne = userBankService.findByOne(userBank);
-            BeanCoper.copyProperties(dto, byOne);
-            result.setData(dto);
+            UserBankDto userBankDto = BeanCoper.copyProperties(UserBankDto.class, byOne);
+            result.setData(userBankDto);
             result.setSuccess(true);
             return result;
         } catch (Exception e) {

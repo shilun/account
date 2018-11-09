@@ -11,7 +11,8 @@
 
 <sql id="Condition">
 	<where>
-		<if test="id != null "><![CDATA[AND id =#{id}]]></if>		
+		<if test="id != null "><![CDATA[AND id =#{id}]]></if>
+        <if test="userCode != null "><![CDATA[AND user_code =#{userCode}]]></if>
 		<if test="pin != null "><![CDATA[AND pin =#{pin}]]></if>		
 		<if test="proxyId != null "><![CDATA[AND proxy_id =#{proxyId}]]></if>		
 		<if test="pass != null "><![CDATA[AND pass =#{pass}]]></if>		
@@ -21,13 +22,13 @@
 	</where>
 </sql>
 <sql id="columns">
-	id as id ,pin as pin ,proxy_id as proxyId ,pass as pass ,del_status as delStatus ,create_time as createTime ,update_time as updateTime 
+	id as id ,pin as pin,user_code as userCode ,proxy_id as proxyId ,pass as pass ,del_status as delStatus ,create_time as createTime ,update_time as updateTime
 </sql>
 <insert id="insert" parameterType="moneyPassCfg">
   	insert into money_pass_cfg
-  	(id,pin,proxy_id,pass,del_status,create_time,update_time)
+  	(id,pin,user_code,proxy_id,pass,del_status,create_time,update_time)
   	values
-  	(#{id},#{pin},#{proxyId},#{pass},#{delStatus},#{createTime},#{updateTime})
+  	(#{id},#{pin},#{userCode},#{proxyId},#{pass},#{delStatus},#{createTime},#{updateTime})
  	<selectKey keyProperty="id" resultType="long" order="AFTER">
         select last_insert_id()
     </selectKey>
@@ -40,7 +41,8 @@
 <update id="update" parameterType="moneyPassCfg">
 	update money_pass_cfg 
   	<set>
-  				<if test="pin != null "><![CDATA[ pin =#{pin},]]></if>		
+  				<if test="pin != null "><![CDATA[ pin =#{pin},]]></if>
+                <if test="userCode != null "><![CDATA[user_code =#{userCode},]]></if>
   				<if test="proxyId != null "><![CDATA[ proxy_id =#{proxyId},]]></if>		
   				<if test="pass != null "><![CDATA[ pass =#{pass},]]></if>		
   				<if test="delStatus != null "><![CDATA[ del_status =#{delStatus},]]></if>		

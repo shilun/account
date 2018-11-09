@@ -163,10 +163,12 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
                 account.setTest(dto.getTest());
                 account.setProxyId(dto.getProxyId());
                 account.setPin(dto.getPin());
+                account.setUserCode(dto.getUserCode());
             }
             AccountDetail detail = new AccountDetail();
             detail.setIsRobot(isRobot);
             detail.setPin(dto.getPin());
+            detail.setUserCode(dto.getUserCode());
             detail.setTest(dto.getTest());
             detail.setProxyId(dto.getProxyId());
             detail.setTokenType(dto.getTokenType());
@@ -211,6 +213,7 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
                 upEntity.setId(account.getId());
                 upEntity.setAmount(account.getAmount());
                 upEntity.setFreeze(account.getFreeze());
+                upEntity.setUserCode(account.getUserCode());
                 up(upEntity);
             }
             detail.setStatus(DetailStatusEnum.Normal.getValue());

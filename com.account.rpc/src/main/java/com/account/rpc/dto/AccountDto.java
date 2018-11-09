@@ -13,6 +13,11 @@ public class AccountDto implements Serializable {
      * pin
      */
     private String pin;
+
+    /**
+     * 用户id
+     */
+    private Long userCode;
     /**
      * 币种
      * 1(保险箱金币)    2 现金
@@ -36,6 +41,13 @@ public class AccountDto implements Serializable {
      */
     private BigDecimal rate;
 
+    public Long getUserCode() {
+        return userCode;
+    }
+
+    public void setUserCode(Long userCode) {
+        this.userCode = userCode;
+    }
 
     public BigDecimal getRate() {
         return rate;

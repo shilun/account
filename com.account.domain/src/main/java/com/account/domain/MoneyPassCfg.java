@@ -14,6 +14,10 @@ public class MoneyPassCfg extends AbstractBaseEntity implements java.io.Serializ
 	private Long id;
 	/**pin*/
 	private String pin;
+    /**
+     * 用户id
+     */
+    private Long userCode;
 	/**代理商*/
 	private Long proxyId;
 	/**提款密码*/
@@ -24,7 +28,16 @@ public class MoneyPassCfg extends AbstractBaseEntity implements java.io.Serializ
 	private Date createTime;
 	/**修改时间*/
 	private Date updateTime;
-	public Long getId(){
+
+    public Long getUserCode() {
+        return userCode;
+    }
+
+    public void setUserCode(Long userCode) {
+        this.userCode = userCode;
+    }
+
+    public Long getId(){
 		return this.id;
 	}
 	public void setId(Long id){

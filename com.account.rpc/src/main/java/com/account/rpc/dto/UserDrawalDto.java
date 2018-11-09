@@ -21,6 +21,10 @@ public class UserDrawalDto  extends AbstractDTO implements Serializable {
      * 提款人
      */
     private String pin;
+    /**
+     * 用户id
+     */
+    private Long userCode;
 
     /**
      * 审核时间
@@ -62,6 +66,14 @@ public class UserDrawalDto  extends AbstractDTO implements Serializable {
      * 结束审核时间
      */
     private String endAudiTime;
+
+    public Long getUserCode() {
+        return userCode;
+    }
+
+    public void setUserCode(Long userCode) {
+        this.userCode = userCode;
+    }
 
     public String getStartDrawingDate() {
         return startDrawingDate;

@@ -10,6 +10,10 @@ import java.math.BigDecimal;
  */
 public class InvertBizDto implements Serializable {
     private String pin;
+    /**
+     * 用户id
+     */
+    private Long userCode;
     /***
      * 代理商标识
      */
@@ -24,7 +28,7 @@ public class InvertBizDto implements Serializable {
     */
     private Integer bizType;
     /**
-     * 业务类型 充值 1 提款 2 赠送 3
+     * 业务类型 充值 1 提款 2 赠送 3 消费 4 5 棋牌扣费
      */
     private Integer bizToken;
 
@@ -49,6 +53,14 @@ public class InvertBizDto implements Serializable {
      * 是否为测试
      */
     private Integer test;
+
+    public Long getUserCode() {
+        return userCode;
+    }
+
+    public void setUserCode(Long userCode) {
+        this.userCode = userCode;
+    }
 
     public Integer getBizToken() {
         return bizToken;

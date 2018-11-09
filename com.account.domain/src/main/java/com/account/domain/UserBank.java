@@ -17,6 +17,11 @@ public class UserBank extends AbstractBaseEntity {
      * 用户pin
      */
     private String pin;
+
+    /**
+     * 用户id
+     */
+    private Long userCode;
     /**
      * 银行卡类型
      */
@@ -43,6 +48,14 @@ public class UserBank extends AbstractBaseEntity {
      * 开户行
      */
     private String address;
+
+    public Long getUserCode() {
+        return userCode;
+    }
+
+    public void setUserCode(Long userCode) {
+        this.userCode = userCode;
+    }
 
     public String getAddress() {
         return address;

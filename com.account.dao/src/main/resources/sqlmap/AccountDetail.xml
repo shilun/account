@@ -18,6 +18,7 @@
             <if test="startCreateTime != null "><![CDATA[AND create_time >= #{startCreateTime}]]></if>
             <if test="endCreateTime != null "><![CDATA[AND create_time <= #{endCreateTime}]]></if>
             <if test="pin != null "><![CDATA[AND pin =#{pin}]]></if>
+            <if test="userCode != null "><![CDATA[AND user_code =#{userCode}]]></if>
             <if test="id != null "><![CDATA[AND id =#{id}]]></if>
             <if test="test != null "><![CDATA[AND test =#{test}]]></if>
             <if test="tokenType != null "><![CDATA[AND token_type =#{tokenType}]]></if>
@@ -36,13 +37,13 @@
         </where>
     </sql>
     <sql id="columns">
-	id as id ,pin as pin,test ,proxy_id as proxyId ,token_type as tokenType ,biz_type as bizType ,biz_token as bizToken, biz_id as bizId ,is_robot as isRobot,charge_type as chargeType,before_amount as beforeAmount ,before_freeze as beforeFreeze ,change_amount as changeAmount ,change_freeze as changeFreeze ,after_amount as afterAmount ,after_freeze as afterFreeze ,status as status ,del_status as delStatus ,create_time as createTime ,update_time as updateTime
+	id as id ,pin as pin,user_code as userCode,test ,proxy_id as proxyId ,token_type as tokenType ,biz_type as bizType ,biz_token as bizToken, biz_id as bizId ,is_robot as isRobot,charge_type as chargeType,before_amount as beforeAmount ,before_freeze as beforeFreeze ,change_amount as changeAmount ,change_freeze as changeFreeze ,after_amount as afterAmount ,after_freeze as afterFreeze ,status as status ,del_status as delStatus ,create_time as createTime ,update_time as updateTime
 </sql>
     <insert id="insert" parameterType="accountDetail">
         insert into account_detail
-        (id,pin,test,proxy_id,token_type,biz_type,biz_token,biz_id,is_robot,charge_type,before_amount,before_freeze,change_amount,change_freeze,after_amount,after_freeze,status,del_status,create_time,update_time)
+        (id,pin,user_code,test,proxy_id,token_type,biz_type,biz_token,biz_id,is_robot,charge_type,before_amount,before_freeze,change_amount,change_freeze,after_amount,after_freeze,status,del_status,create_time,update_time)
         values
-        (#{id},#{pin},#{test},#{proxyId},#{tokenType},#{bizType},#{bizToken},#{bizId},#{isRobot},#{chargeType},#{beforeAmount},#{beforeFreeze},#{changeAmount},#{changeFreeze},#{afterAmount},#{afterFreeze},#{status},#{delStatus},#{createTime},#{updateTime})
+        (#{id},#{pin},#{userCode},#{test},#{proxyId},#{tokenType},#{bizType},#{bizToken},#{bizId},#{isRobot},#{chargeType},#{beforeAmount},#{beforeFreeze},#{changeAmount},#{changeFreeze},#{afterAmount},#{afterFreeze},#{status},#{delStatus},#{createTime},#{updateTime})
         <selectKey keyProperty="id" resultType="long" order="AFTER">
             select last_insert_id()
         </selectKey>
@@ -56,6 +57,7 @@
         update account_detail
         <set>
             <if test="pin != null "><![CDATA[ pin =#{pin},]]></if>
+            <if test="userCode != null "><![CDATA[user_code =#{userCode},]]></if>
             <if test="proxyId != null "><![CDATA[ proxy_id =#{proxyId},]]></if>
             <if test="test != null "><![CDATA[ test =#{test},]]></if>
             <if test="tokenType != null "><![CDATA[ token_type =#{tokenType},]]></if>
@@ -113,6 +115,7 @@
       <where>
           <if test="isRobot != null "><![CDATA[is_robot =#{isRobot}]]></if>
           <if test="pin != null "><![CDATA[AND pin =#{pin}]]></if>
+          <if test="userCode != null "><![CDATA[AND user_code =#{userCode}]]></if>
           <if test="proxyId != null "><![CDATA[AND proxy_id =#{proxyId}]]></if>
           <if test="bizToken != null "><![CDATA[AND biz_token =#{bizToken}]]></if>
           <if test="dayStatus == 2 "><![CDATA[AND to_days(create_time) = to_days(now())]]></if>

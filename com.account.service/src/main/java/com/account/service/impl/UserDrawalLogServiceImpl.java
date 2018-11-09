@@ -9,11 +9,14 @@ import com.account.service.AccountService;
 import com.account.service.UserBankService;
 import com.account.service.UserDrawalLogService;
 import com.account.service.utils.RPCBeanService;
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.common.exception.BizException;
 import com.common.mongo.AbstractMongoService;
 import com.common.util.RPCResult;
 import com.common.util.StringUtils;
 import com.common.util.model.YesOrNoEnum;
+import com.passport.rpc.UserRPCService;
+import com.passport.rpc.dto.UserDTO;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -60,6 +63,8 @@ public class UserDrawalLogServiceImpl extends AbstractMongoService<UserDrawalLog
 
     @Resource
     private UserBankService userBankService;
+    @Reference
+    private UserRPCService userRPCService;
     /**
      * 提款验证码短信
      */
@@ -86,11 +91,13 @@ public class UserDrawalLogServiceImpl extends AbstractMongoService<UserDrawalLog
             throw new BizException("user.drawal.error", "余额不足提款失败");
         }
         UserDrawalLog log = new UserDrawalLog();
+        RPCResult<UserDTO> byPin = userRPCService.findByPin(proxyId, pin);
         log.setPin(pin);
         log.setAmount(amount);
         log.setProxyId(proxyId);
         log.setStatus(YesOrNoEnum.NO.getValue());
         log.setDetainStatus(YesOrNoEnum.NO.getValue());
+        log.setUserCode(byPin.getData().getId());
         save(log);
         fixedThreadPool.execute(() -> {
             InvertBizDto dto = new InvertBizDto();

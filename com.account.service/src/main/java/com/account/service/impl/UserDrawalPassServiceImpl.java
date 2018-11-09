@@ -52,6 +52,7 @@ public class UserDrawalPassServiceImpl extends AbstractMongoService<UserDrawalPa
         if (StringUtils.isBlank(newPass)) {
             throw new BizException("upUserPass.error", "新密码不能为空");
         }
+        RPCResult<UserDTO> byPin = rpcBeanService.getUserRPCService().findByPin(proxyId, pin);
         UserDrawalPass query = new UserDrawalPass();
         query.setPin(pin);
         query.setProxyId(proxyId);
@@ -66,11 +67,13 @@ public class UserDrawalPassServiceImpl extends AbstractMongoService<UserDrawalPa
             }
 
             query.setPass(newPass);
+            query.setUserCode(byPin.getData().getId());
             save(query);
             return;
         } else {
             if (entity.getPass().equals(oldPass)) {
                 entity.setPass(newPass);
+                query.setUserCode(byPin.getData().getId());
                 save(entity);
                 return;
             }
@@ -154,9 +157,11 @@ public class UserDrawalPassServiceImpl extends AbstractMongoService<UserDrawalPa
         pass = MD5.MD5Str(pass, passKey);
         if (entity == null) {
             query.setPass(pass);
+            query.setUserCode(userResult.getData().getId());
         } else {
             query.setId(entity.getId());
             query.setPass(pass);
+            query.setUserCode(userResult.getData().getId());
         }
         save(query);
     }

@@ -27,6 +27,10 @@ public class UserDrawalLog extends AbstractBaseEntity {
      * 提款人
      */
     private String pin;
+    /**
+     * 用户id
+     */
+    private Long userCode;
 
     /**
      * 审核时间
@@ -80,6 +84,14 @@ public class UserDrawalLog extends AbstractBaseEntity {
     @Transient
     @QueryField(name="audiTime",type= QueryType.LT)
     private Date endAudiTime;
+
+    public Long getUserCode() {
+        return userCode;
+    }
+
+    public void setUserCode(Long userCode) {
+        this.userCode = userCode;
+    }
 
     public Date getStartDrawingDate() {
         return startDrawingDate;

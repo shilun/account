@@ -43,6 +43,7 @@ public class UserBankController extends AbstractClientController {
             userBank.setName(dto.getName());
             userBank.setPin(userDTO.getPin());
             userBank.setProxyId(userDTO.getProxyId());
+            userBank.setUserCode(userDTO.getId());
             userBankService.save(userBank);
             return null;
         });
@@ -62,6 +63,7 @@ public class UserBankController extends AbstractClientController {
             BeanCoper.copyProperties(entity, dto);
             entity.setProxyId(userDTO.getProxyId());
             entity.setPin(userDTO.getPin());
+            entity.setUserCode(userDTO.getId());
             userBankService.upUserBank(entity);
             return null;
         });

@@ -171,11 +171,10 @@ public interface AccountRPCService {
     /**
      * 查询玩家用户银行卡
      *
-     * @param proxyId
-     * @param pin
+     * @param dto
      * @return
      */
-    RPCResult<UserBankDto> queryUserBank(Long proxyId, String pin);
+    RPCResult<UserBankDto> queryUserBank(UserBankDto dto);
 
 
     /**
