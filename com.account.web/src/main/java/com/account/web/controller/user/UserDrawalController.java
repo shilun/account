@@ -69,7 +69,7 @@ public class UserDrawalController extends AbstractClientController {
                 WithdrawCfgInfo withdrawCfgInfo = new WithdrawCfgInfo();
                 withdrawCfgInfo.setProxyId(userDTO.getProxyId());
                 withdrawCfgInfo = withdrawCfgInfoService.findByOne(withdrawCfgInfo);
-                JSONObject obj = new JSONObject();
+               Map<String,Object> obj = new HashMap<>();
                 obj.put("accounts",listRPCResult.getData());
                 obj.put("withdrawCfgInfo",withdrawCfgInfo);
                 return obj;
