@@ -1,11 +1,13 @@
 package com.account.web.controller.user;
 
 import com.account.domain.UserDrawalLog;
+import com.account.domain.WithdrawCfgInfo;
 import com.account.rpc.AccountRPCService;
 import com.account.rpc.dto.AccountDetailDto;
 import com.account.rpc.dto.AccountDto;
 import com.account.service.UserDrawalLogService;
 import com.account.service.UserDrawalPassService;
+import com.account.service.WithdrawCfgInfoService;
 import com.account.service.utils.RPCBeanService;
 import com.account.web.AbstractClientController;
 import com.account.web.controller.dto.*;
@@ -16,6 +18,7 @@ import com.passport.rpc.dto.ProxyDto;
 import com.passport.rpc.dto.UserDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.sf.json.JSONObject;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,6 +47,9 @@ public class UserDrawalController extends AbstractClientController {
     @Resource
     private AccountRPCService accountRPCService;
 
+    @Resource
+    private WithdrawCfgInfoService withdrawCfgInfoService;
+
 
     /**
      * 查询现金
@@ -60,7 +66,13 @@ public class UserDrawalController extends AbstractClientController {
             query.setPin(userDTO.getPin());
             RPCResult<List<AccountDto>> listRPCResult = accountRPCService.queryAccountWithRate(userDTO.getPin(), userDTO.getProxyId());
             if (listRPCResult.getSuccess()) {
-                return listRPCResult.getData();
+                WithdrawCfgInfo withdrawCfgInfo = new WithdrawCfgInfo();
+                withdrawCfgInfo.setProxyId(userDTO.getProxyId());
+                withdrawCfgInfo = withdrawCfgInfoService.findByOne(withdrawCfgInfo);
+                JSONObject obj = new JSONObject();
+                obj.put("accounts",listRPCResult.getData());
+                obj.put("withdrawCfgInfo",withdrawCfgInfo);
+                return obj;
             }
             throw new BizException(listRPCResult.getCode(), listRPCResult.getMessage());
         });
