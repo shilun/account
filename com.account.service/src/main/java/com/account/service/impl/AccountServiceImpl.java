@@ -157,12 +157,16 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
                 account.setTest(dto.getTest());
                 account.setProxyId(dto.getProxyId());
                 account.setPin(dto.getPin());
-                account.setUserCode(byPin.getData().getId());
+                if(isRobot==YesOrNoEnum.NO.getValue()) {
+                    account.setUserCode(byPin.getData().getId());
+                }
             }
             AccountDetail detail = new AccountDetail();
             detail.setIsRobot(isRobot);
             detail.setPin(dto.getPin());
-            detail.setUserCode(byPin.getData().getId());
+            if(isRobot==YesOrNoEnum.NO.getValue()) {
+                detail.setUserCode(byPin.getData().getId());
+            }
             detail.setTest(dto.getTest());
             detail.setProxyId(dto.getProxyId());
             detail.setTokenType(dto.getTokenType());
