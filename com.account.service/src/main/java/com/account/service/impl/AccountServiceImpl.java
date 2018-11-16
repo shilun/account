@@ -207,11 +207,9 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
                 save(account);
             } else {
                 Account upEntity = new Account();
-                upEntity.setIsRobot(isRobot);
                 upEntity.setId(account.getId());
                 upEntity.setAmount(account.getAmount());
                 upEntity.setFreeze(account.getFreeze());
-                upEntity.setUserCode(byPin.getData().getId());
                 up(upEntity);
             }
             detail.setStatus(DetailStatusEnum.Normal.getValue());
