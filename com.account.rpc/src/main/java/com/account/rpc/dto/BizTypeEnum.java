@@ -1,4 +1,4 @@
-package com.account.domain.module;
+package com.account.rpc.dto;
 
 import com.common.util.IGlossary;
 
@@ -7,13 +7,9 @@ import com.common.util.IGlossary;
  */
 public enum BizTypeEnum implements IGlossary {
     /**
-     * 充值
+     * 订单系统
      */
     order("订单系统",1),
-    /**
-     * 提款
-     */
-    drawing("提款",2),
     /**
      * 棋牌
      */

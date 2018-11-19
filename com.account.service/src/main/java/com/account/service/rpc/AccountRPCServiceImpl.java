@@ -1,13 +1,12 @@
 package com.account.service.rpc;
 
 import com.account.domain.*;
-import com.account.domain.module.BizTypeEnum;
+import com.account.rpc.dto.BizTypeEnum;
 import com.account.domain.module.DetailStatusEnum;
 import com.account.domain.module.TokenTypeEnum;
 import com.account.rpc.AccountRPCService;
 import com.account.rpc.dto.*;
 import com.account.service.*;
-import com.account.service.utils.RPCBeanService;
 import com.account.service.utils.TimeUtils;
 import com.common.exception.BizException;
 import com.common.util.BeanCoper;
@@ -17,7 +16,6 @@ import com.common.util.StringUtils;
 import com.common.util.model.YesOrNoEnum;
 import org.apache.log4j.Logger;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
