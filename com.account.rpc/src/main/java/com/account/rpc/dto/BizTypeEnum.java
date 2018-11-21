@@ -21,7 +21,11 @@ public enum BizTypeEnum implements IGlossary {
     /**
      * 小游戏
      */
-    smallgame("小游戏",5)
+    smallgame("小游戏",5),
+    /**
+     * 签到系统
+     */
+    qiandao("签到系统",6),
     ;
 
     BizTypeEnum(String name, Integer value) {
