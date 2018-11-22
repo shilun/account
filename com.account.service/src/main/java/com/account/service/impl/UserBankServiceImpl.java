@@ -22,6 +22,7 @@ public class UserBankServiceImpl extends AbstractMongoService<UserBank> implemen
         UserBank query = new UserBank();
         query.setPin(entity.getPin());
         query.setProxyId(entity.getProxyId());
+        query.setBankType(entity.getBankType());
         UserBank old = findByOne(query);
         old.setName(entity.getName());
         old.setBankName(entity.getBankName());
@@ -29,6 +30,7 @@ public class UserBankServiceImpl extends AbstractMongoService<UserBank> implemen
         old.setCode(entity.getCode());
         old.setAddress(entity.getAddress());
         old.setUserCode(entity.getUserCode());
+        old.setPin(entity.getPin());
         save(old);
     }
 

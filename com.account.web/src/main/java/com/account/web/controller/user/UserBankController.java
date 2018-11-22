@@ -35,16 +35,28 @@ public class UserBankController extends AbstractClientController {
         return buildMessage(() -> {
             UserDTO userDTO = getUserDto();
             UserBank userBank = new UserBank();
-            userBank.setBankName(dto.getBankName());
-            userBank.setBankType(dto.getBankType());
-            userBank.setCode(dto.getCode());
-            userBank.setImg(dto.getImg());
-            userBank.setAddress(dto.getAddress());
-            userBank.setName(dto.getName());
             userBank.setPin(userDTO.getPin());
             userBank.setProxyId(userDTO.getProxyId());
-            userBank.setUserCode(userDTO.getId());
-            userBankService.save(userBank);
+            userBank.setBankType(dto.getBankType());
+            UserBank old = userBankService.findByOne(userBank);
+            if(old==null){
+                userBank.setBankName(dto.getBankName());
+                userBank.setBankType(dto.getBankType());
+                userBank.setCode(dto.getCode());
+                userBank.setImg(dto.getImg());
+                userBank.setAddress(dto.getAddress());
+                userBank.setName(dto.getName());
+                userBankService.save(userBank);
+            }else {
+                old.setName(dto.getName());
+                old.setBankName(dto.getBankName());
+                old.setBankType(dto.getBankType());
+                old.setCode(dto.getCode());
+                old.setAddress(dto.getAddress());
+                old.setUserCode(userDTO.getId());
+                old.setPin(userDTO.getPin());
+                userBankService.save(old);
+            }
             return null;
         });
     }
