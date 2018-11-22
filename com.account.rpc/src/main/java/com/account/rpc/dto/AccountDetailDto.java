@@ -27,11 +27,11 @@ public class AccountDetailDto extends AbstractDTO implements Serializable {
      */
     private String tokenName;
     /**
-     * 系统类型 1 订单 3 棋牌 4 彩票 5小游戏
+     * 系统类型 1 订单 3 棋牌 4 彩票 5小游戏 6 签到系统
      */
     private Integer bizType;
     /**
-     * 业务类型 充值 1 提款 2 赠送 3
+     * 业务类型 充值 1 提款 2 赠送 3 消费 4 棋牌扣费 5
      */
     private Integer bizToken;
     /**

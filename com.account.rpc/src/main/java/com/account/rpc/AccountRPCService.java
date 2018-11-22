@@ -143,6 +143,13 @@ public interface AccountRPCService {
      * @return
      */
     RPCResult<BigDecimal> queryChargeAmountByDay(AccountDetailDto accountDetailDto);
+
+    /**
+     * 根据时间查询农场代理商盈亏 dayStatus1 全部 2 当天  3 本周 4 本月
+     * @param accountDetailDto
+     * @return
+     */
+    RPCResult<BigDecimal> queryProxyprofileByDay(AccountDetailDto accountDetailDto);
     /**
      * 根据时间查询新增充值人数 dayStatus 1 全部 2 当天  3 本周 4 本月
      * @param accountDetailDto

@@ -117,6 +117,7 @@
           <if test="pin != null "><![CDATA[AND pin =#{pin}]]></if>
           <if test="userCode != null "><![CDATA[AND user_code =#{userCode}]]></if>
           <if test="proxyId != null "><![CDATA[AND proxy_id =#{proxyId}]]></if>
+          <if test="bizType != null "><![CDATA[AND biz_type =#{bizType}]]></if>
           <if test="bizToken != null "><![CDATA[AND biz_token =#{bizToken}]]></if>
           <if test="dayStatus == 2 "><![CDATA[AND to_days(create_time) = to_days(now())]]></if>
           <if test="dayStatus == 3 "><![CDATA[AND YEARWEEK(date_format(create_time,'%Y-%m-%d')) = YEARWEEK(now())]]></if>

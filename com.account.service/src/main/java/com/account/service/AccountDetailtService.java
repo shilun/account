@@ -64,4 +64,11 @@ public interface AccountDetailtService extends AbstractBaseService<AccountDetail
      * @return
      */
     public BigDecimal queryChargeNewUsers(AccountDetailDto dto);
+
+    /**
+     * 根据时间查询代理商盈亏数据 dayStatus1 全部 2 当天  3 本周 4 本月
+     * @param dto
+     * @return
+     */
+    public BigDecimal queryProxyProfile(AccountDetailDto dto);
 }

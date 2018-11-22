@@ -424,6 +424,24 @@ public class AccountRPCServiceImpl implements AccountRPCService {
     }
 
     @Override
+    public RPCResult<BigDecimal> queryProxyprofileByDay(AccountDetailDto accountDetailDto) {
+        RPCResult<BigDecimal> rpcResult = null;
+        try {
+            rpcResult = new RPCResult<>();
+            BigDecimal bigDecimal = accountDetailtService.queryProxyProfile(accountDetailDto);
+            rpcResult.setData(bigDecimal);
+            rpcResult.setSuccess(true);
+            return rpcResult;
+        }catch (Exception e){
+            logger.error("查询代理商盈亏失败", e);
+            rpcResult.setSuccess(false);
+            rpcResult.setMessage("查询代理商盈亏失败");
+            rpcResult.setCode("account.queryProxyprofileByDay.error");
+        }
+        return rpcResult;
+    }
+
+    @Override
     public RPCResult<BigDecimal> queryChargeNewUsersByDay(AccountDetailDto accountDetailDto) {
         RPCResult<BigDecimal> rpcResult = null;
         try {

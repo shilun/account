@@ -257,5 +257,16 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
         return BigDecimal.valueOf(integer);
     }
 
+    @Override
+    public BigDecimal queryProxyProfile(AccountDetailDto dto) {
+        AccountDetail accountDetail = BeanCoper.copyProperties(AccountDetail.class,dto);
+        accountDetail.setIsRobot(YesOrNoEnum.NO.getValue());
+        if(dto.getDayStatus()==null){
+            accountDetail.setDayStatus(2);
+        }
+        Double aDouble = accountDetailtDao.querySum(accountDetail);
+        return BigDecimal.valueOf(aDouble);
+    }
+
 
 }
