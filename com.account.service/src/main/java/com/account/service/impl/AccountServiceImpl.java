@@ -96,11 +96,11 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
             dto.setAmount(BigDecimal.ZERO);
         }
         //提现判断
-        if(dto.getBizToken()==BizTokenEnum.drawing.getValue()){
+        if(dto.getBizToken()==BizTokenEnum.drawing.getValue().intValue()){
             WithdrawCfgInfo withdrawCfgInfo = new WithdrawCfgInfo();
             withdrawCfgInfo.setProxyId(dto.getProxyId());
             withdrawCfgInfo = withdrawCfgInfoService.findByOne(withdrawCfgInfo);
-            if(withdrawCfgInfo.getStatus()==YesOrNoEnum.NO.getValue()){
+            if(withdrawCfgInfo.getStatus()==YesOrNoEnum.NO.getValue().intValue()){
                 throw new BizException("dto.error.status", "不允许提现");
             }
             if(withdrawCfgInfo.getMaxMoney().compareTo(dto.getAmount()) < 0){
@@ -164,7 +164,7 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
             AccountDetail detail = new AccountDetail();
             detail.setIsRobot(isRobot);
             detail.setPin(dto.getPin());
-            if(isRobot==YesOrNoEnum.NO.getValue()) {
+            if(isRobot==YesOrNoEnum.NO.getValue().intValue()) {
                 detail.setUserCode(byPin.getData().getId());
             }
             detail.setTest(dto.getTest());
@@ -189,17 +189,17 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
             detail.setAfterAmount(account.getAmount());
             detail.setAfterFreeze(account.getFreeze());
             if (account.getAmount().compareTo(BigDecimal.ZERO) < 0) {
-                if(dto.getBizToken()!=BizTokenEnum.qipaiconsume.getValue()){
+                if(dto.getBizToken()!=BizTokenEnum.qipaiconsume.getValue().intValue()){
                     throw new BizException("account.error", "账户余额不足");
                 }
             }
             if (account.getFreeze().compareTo(BigDecimal.ZERO) < 0) {
-                if(dto.getBizToken()!=BizTokenEnum.qipaiconsume.getValue()){
+                if(dto.getBizToken()!=BizTokenEnum.qipaiconsume.getValue().intValue()){
                     throw new BizException("account.error", "冻结金额不足");
                 }
             }
             if (account.getAmount().compareTo(account.getFreeze()) < 0) {
-                if(dto.getBizToken()!=BizTokenEnum.qipaiconsume.getValue()){
+                if(dto.getBizToken()!=BizTokenEnum.qipaiconsume.getValue().intValue()){
                     throw new BizException("account.error", "账户金额不足");
                 }
             }
@@ -214,7 +214,7 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
             }
             detail.setStatus(DetailStatusEnum.Normal.getValue());
             accountDetailtService.add(detail);
-            if(dto.getBizToken()==BizTokenEnum.recharge.getValue()){
+            if(dto.getBizToken()==BizTokenEnum.recharge.getValue().intValue()){
                 JSONObject data = new JSONObject();
                 data.put("pin",dto.getPin());
                 data.put("proxyId",dto.getProxyId());
@@ -246,7 +246,7 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
         DistributedLock distributedLock = null;
         try {
             boolean acquire = false;
-            if (testStatus == YesOrNoEnum.NO.getValue()) {
+            if (testStatus == YesOrNoEnum.NO.getValue().intValue()) {
                 distributedLock = distributedLockUtil.getDistributedLock(lock_key, 30 * 1000);
                 acquire = distributedLock.acquire();
             }
@@ -271,7 +271,7 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
         } catch (Exception e) {
             throw new BizException("freezeAll.error", "冻结失败");
         } finally {
-            if (testStatus == YesOrNoEnum.NO.getValue()) {
+            if (testStatus == YesOrNoEnum.NO.getValue().intValue()) {
                 distributedLock.release();
             }
 

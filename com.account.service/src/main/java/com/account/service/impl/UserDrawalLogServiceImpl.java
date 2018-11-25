@@ -82,7 +82,7 @@ public class UserDrawalLogServiceImpl extends AbstractMongoService<UserDrawalLog
         if (listRPCResult.getSuccess()) {
             List<AccountDto> data = listRPCResult.getData();
             for (AccountDto item : data) {
-                if (RMB_TYPE.intValue() == item.getTokenType()) {
+                if (RMB_TYPE.intValue() == item.getTokenType().intValue()) {
                     total = total.add(item.getAmount());
                 }
             }
