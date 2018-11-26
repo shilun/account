@@ -18,26 +18,8 @@ import javax.annotation.Resource;
 public class WithdrawCfgInfoServiceImpl extends AbstractMongoService<WithdrawCfgInfo> implements WithdrawCfgInfoService {
 
     private static Logger logger = Logger.getLogger(WithdrawCfgInfoServiceImpl.class);
-
-
-    @Resource
-    private MongoClient client;
     @Override
     protected Class getEntityClass() {
-        ClientSession clientSession =null;
-            try{
-                clientSession = client.startSession();
-                clientSession.startTransaction();
-
-                clientSession.commitTransaction();
-            }
-            catch (Exception e){
-                clientSession.abortTransaction();
-            }
-            finally {
-                clientSession.close();
-            }
-
         return WithdrawCfgInfo.class;
     }
 
