@@ -1,19 +1,15 @@
-package com.account.service; 
-import com.account.rpc.dto.AccountDetailDto;
-import com.common.util.AbstractBaseService;
+package com.account.service;
+
 import com.account.domain.AccountDetail;
+import com.account.rpc.dto.AccountDetailDto;
+import com.common.mongo.MongoService;
 import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-/**
- * 
- * @desc 账本流水账 
- *
- */
-public interface AccountDetailtService extends AbstractBaseService<AccountDetail> {
+public interface AccountDetailMgDbService extends MongoService<AccountDetail> {
     /**
      * 转账
      * @param proxyId
@@ -32,7 +28,7 @@ public interface AccountDetailtService extends AbstractBaseService<AccountDetail
      * @param size
      * @return
      */
-    public List<AccountDetailDto> queryDetailList(Long proxyId,String pin,Integer page,Integer size);
+    public List<AccountDetailDto> queryDetailList(Long proxyId, String pin, Integer page, Integer size);
 
     /**
      * 账本详情
@@ -66,7 +62,7 @@ public interface AccountDetailtService extends AbstractBaseService<AccountDetail
     public BigDecimal queryChargeNewUsers(AccountDetailDto dto);
 
     /**
-     * 根据时间查询代理商盈亏数据 dayStatus 1 全部 2 当天  3 本周 4 本月
+     * 根据时间查询代理商盈亏数据 dayStatus1 全部 2 当天  3 本周 4 本月
      * @param dto
      * @return
      */

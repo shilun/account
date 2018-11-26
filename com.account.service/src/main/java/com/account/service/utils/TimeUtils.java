@@ -68,18 +68,64 @@ public class TimeUtils {
         return new Date(calendar.getTime().getTime()+24*3600*1000l);
     }
 
+    /**
+     * 获取传入状态的 最小时间
+     * @param dayStatus 1 全部  2 当天  3 本周  4 本月
+     * @return
+     */
+    public static Date getDayStatusTime(Integer dayStatus){
+        Calendar calendar = Calendar.getInstance();
+        Date date = new Date();
+        if(dayStatus==1){
+            return date;
+        }
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY,0);
+        calendar.set(Calendar.MINUTE,0);
+        calendar.set(Calendar.SECOND,0);
+        calendar.set(Calendar.MILLISECOND,0);
+        if(dayStatus==2){//当天
+
+        }
+        if(dayStatus==3){//本周
+            calendar.set(Calendar.DAY_OF_WEEK,2);
+        }
+        if(dayStatus==4){//本月
+            calendar.set(Calendar.DAY_OF_MONTH,1);
+        }
+        return calendar.getTime();
+    }
+
+    /**
+     * 获取传入状态的 最大时间
+     * @param dayStatus 1 全部  2 当天  3 本周  4 本月
+     * @return
+     */
+    public static Date getDayStatusMaxTime(Integer dayStatus){
+        Calendar calendar = Calendar.getInstance();
+        Date date = new Date();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY,0);
+        calendar.set(Calendar.MINUTE,0);
+        calendar.set(Calendar.SECOND,0);
+        calendar.set(Calendar.MILLISECOND,0);
+        if(dayStatus==2){//当天
+            calendar.add(Calendar.DAY_OF_YEAR,1);
+        }
+        if(dayStatus==3){//本周
+            calendar.set(Calendar.DAY_OF_WEEK,2);
+            calendar.add(Calendar.DAY_OF_YEAR,7);
+        }
+        if(dayStatus==4){//本月
+            calendar.set(Calendar.DAY_OF_MONTH,1);
+            calendar.add(Calendar.MONTH,1);
+        }
+        return calendar.getTime();
+    }
 
 
     public static void main(String[] args) {
-        String dateStr = "2018-10-10";
-//        SimpleDateFormat sDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        try {
-//            Date parse = sDateFormat.parse(dateStr);
-//            System.out.println(parse);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-        Date date = DateUtil.StringToDate(dateStr);
+        System.out.println(getDayStatusMaxTime(2));
 
     }
 }
