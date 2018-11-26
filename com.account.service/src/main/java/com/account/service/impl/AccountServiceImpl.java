@@ -79,6 +79,9 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
         if (dto.getBizType() == null) {
             throw new BizException("dto.error.bizType", "数据验证失败 bizType null");
         }
+        if (dto.getBizToken() == null) {
+            throw new BizException("dto.error.bizToken", "数据验证失败 bizToken null");
+        }
         if (StringUtils.isBlank(dto.getPin())) {
             throw new BizException("dto.error.pin", "数据验证失败 pin null");
         }
