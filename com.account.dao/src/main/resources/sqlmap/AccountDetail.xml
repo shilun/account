@@ -97,7 +97,7 @@
            </when>
            <otherwise>
                account_detail
-               <include refid="orderCondition"/>
+               <include refid="Condition"/>
            </otherwise>
        </choose>
 
