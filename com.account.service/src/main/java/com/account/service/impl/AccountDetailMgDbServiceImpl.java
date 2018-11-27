@@ -19,9 +19,11 @@ import com.mongodb.AggregationOptions;
 import com.mongodb.BasicDBObject;
 import com.mongodb.Cursor;
 import com.mongodb.DBCollection;
+import com.mongodb.client.MongoCollection;
 import com.passport.rpc.UserRPCService;
 import com.passport.rpc.dto.UserDTO;
 import org.apache.log4j.Logger;
+import org.bson.conversions.Bson;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
@@ -178,7 +180,7 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
 //        account.setProxyId(dto.getProxyId());
 //        account.setIsRobot(YesOrNoEnum.NO.getValue());
         //代理商下的金币总额开始
-        List<BasicDBObject> querySum = new ArrayList<>();
+        List<Bson> querySum = new ArrayList<>();
         BasicDBObject match = new BasicDBObject("proxyId", dto.getProxyId());
         match.put("isRobot",YesOrNoEnum.NO.getValue());
         BasicDBObject queryMatch= new BasicDBObject("$match", match);
@@ -187,10 +189,13 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
         groupObject.put("amount", new BasicDBObject("$sum","$amount" ));
         BasicDBObject  queryGroup=new BasicDBObject("$group",groupObject);
         querySum.add(queryGroup);
+//        AggregationOptions build = AggregationOptions.builder()
+//                .outputMode(AggregationOptions.OutputMode.CURSOR)
+//                .build();
         AggregationOptions build = AggregationOptions.builder()
                 .outputMode(AggregationOptions.OutputMode.CURSOR)
                 .build();
-        DBCollection collection = this.template.getCollection("account");
+        MongoCollection collection = this.template.getCollection("account");
         Cursor cursor = collection.aggregate(querySum, build);
         if(cursor.hasNext()){
             Map obj= cursor.next().toMap();
@@ -201,7 +206,7 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
 //        accountDetail.setIsRobot(YesOrNoEnum.NO.getValue());
 //        accountDetail.setBizToken(BizTokenEnum.recharge.getValue());
         //代理商下平均充值量开始
-        List<BasicDBObject> queryCharge = new ArrayList<>();
+        List<Bson> queryCharge = new ArrayList<>();
         BasicDBObject matchCharge = new BasicDBObject("proxyId", dto.getProxyId());
         matchCharge.put("isRobot",YesOrNoEnum.NO.getValue());
         matchCharge.put("bizToken",BizTokenEnum.recharge.getValue());
@@ -211,7 +216,7 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
         groupCharge.put("changeAmount", new BasicDBObject("$sum","$changeAmount" ));
         BasicDBObject  queryGroupCharge=new BasicDBObject("$group",groupCharge);
         queryCharge.add(queryGroupCharge);
-        DBCollection collectionCharge = this.template.getCollection("accountDetail");
+        MongoCollection collectionCharge = this.template.getCollection("accountDetail");
         Cursor cursorCharge = collectionCharge.aggregate(queryCharge, build);
         BigDecimal charge = BigDecimal.ZERO;
         if(cursorCharge.hasNext()){
@@ -260,7 +265,7 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
         AggregationOptions build = AggregationOptions.builder()
                 .outputMode(AggregationOptions.OutputMode.CURSOR)
                 .build();
-        DBCollection collection = this.template.getCollection("accountDetail");
+        MongoCollection collection = this.template.getCollection("accountDetail");
         Cursor cursor = collection.aggregate(querySum, build);
         BigDecimal all = BigDecimal.ZERO;
         if(cursor.hasNext()){
@@ -349,7 +354,7 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
         AggregationOptions build = AggregationOptions.builder()
                 .outputMode(AggregationOptions.OutputMode.CURSOR)
                 .build();
-        DBCollection collection = this.template.getCollection("accountDetail");
+        MongoCollection collection = this.template.getCollection("accountDetail");
         Cursor cursor = collection.aggregate(querySum, build);
         BigDecimal all = BigDecimal.ZERO;
         if(cursor.hasNext()){
@@ -411,7 +416,7 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
         AggregationOptions build = AggregationOptions.builder()
                 .outputMode(AggregationOptions.OutputMode.CURSOR)
                 .build();
-        DBCollection collection = this.template.getCollection("accountDetail");
+        MongoCollection collection = this.template.getCollection("accountDetail");
         Cursor cursor = collection.aggregate(querySum, build);
         BigDecimal all = BigDecimal.ZERO;
         if(cursor.hasNext()){
