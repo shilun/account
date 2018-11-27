@@ -7,10 +7,7 @@ import com.account.domain.module.DetailStatusEnum;
 import com.account.rpc.dto.BizTokenEnum;
 import com.account.rpc.dto.BizTypeEnum;
 import com.account.rpc.dto.InvertBizDto;
-import com.account.service.AccountDetailMgDbService;
-import com.account.service.AccountDetailtService;
-import com.account.service.AccountMgDbService;
-import com.account.service.WithdrawCfgInfoService;
+import com.account.service.*;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.common.exception.ApplicationException;
 import com.common.exception.BizException;
@@ -62,6 +59,8 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
     private UserRPCService userRPCService;
     @Resource
     private IMqService iMqService;
+    @Resource
+    private AccountService accountService;
     @Resource
     private WithdrawCfgInfoService withdrawCfgInfoService;
     @Value("${daishan.rocketmq.topic.prefix}")
@@ -157,16 +156,19 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
             query.setTokenType(dto.getTokenType());
             Account account = findByOne(query);
             if (account == null) {
-                account = new Account();
-                account.setIsRobot(isRobot);
-                account.setTokenType(dto.getTokenType());
-                account.setFreeze(BigDecimal.ZERO);
-                account.setAmount(BigDecimal.ZERO);
-                account.setTest(dto.getTest());
-                account.setProxyId(dto.getProxyId());
-                account.setPin(dto.getPin());
-                if(isRobot==YesOrNoEnum.NO.getValue()) {
-                    account.setUserCode(byPin.getData().getId());
+                account = accountService.findByOne(query);
+                if(account == null){
+                    account = new Account();
+                    account.setIsRobot(isRobot);
+                    account.setTokenType(dto.getTokenType());
+                    account.setFreeze(BigDecimal.ZERO);
+                    account.setAmount(BigDecimal.ZERO);
+                    account.setTest(dto.getTest());
+                    account.setProxyId(dto.getProxyId());
+                    account.setPin(dto.getPin());
+                    if(isRobot==YesOrNoEnum.NO.getValue()) {
+                        account.setUserCode(byPin.getData().getId());
+                    }
                 }
             }
             AccountDetail detail = new AccountDetail();
