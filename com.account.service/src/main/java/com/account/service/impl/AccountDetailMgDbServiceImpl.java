@@ -19,7 +19,9 @@ import com.mongodb.AggregationOptions;
 import com.mongodb.BasicDBObject;
 import com.mongodb.Cursor;
 import com.mongodb.DBCollection;
+import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.passport.rpc.UserRPCService;
 import com.passport.rpc.dto.UserDTO;
 import org.apache.log4j.Logger;
@@ -189,17 +191,12 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
         groupObject.put("amount", new BasicDBObject("$sum","$amount" ));
         BasicDBObject  queryGroup=new BasicDBObject("$group",groupObject);
         querySum.add(queryGroup);
-//        AggregationOptions build = AggregationOptions.builder()
-//                .outputMode(AggregationOptions.OutputMode.CURSOR)
-//                .build();
-        AggregationOptions build = AggregationOptions.builder()
-                .outputMode(AggregationOptions.OutputMode.CURSOR)
-                .build();
         MongoCollection collection = this.template.getCollection("account");
-        Cursor cursor = collection.aggregate(querySum, build);
-        if(cursor.hasNext()){
-            Map obj= cursor.next().toMap();
-            map.put("all",BigDecimal.valueOf(Double.parseDouble(obj.get("amount").toString())));
+        AggregateIterable<Account> aggregate = collection.aggregate(querySum, Account.class);
+        MongoCursor<Account> iterator=aggregate.iterator();
+        while (iterator.hasNext()){
+            Account next = iterator.next();
+            map.put("all",next.getAmount());
         }
         //代理商下的金币总额结束
 //        AccountDetail accountDetail = BeanCoper.copyProperties(AccountDetail.class,dto);
@@ -217,11 +214,12 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
         BasicDBObject  queryGroupCharge=new BasicDBObject("$group",groupCharge);
         queryCharge.add(queryGroupCharge);
         MongoCollection collectionCharge = this.template.getCollection("accountDetail");
-        Cursor cursorCharge = collectionCharge.aggregate(queryCharge, build);
+        AggregateIterable<AccountDetail> aggregateIterable = collectionCharge.aggregate(queryCharge, AccountDetail.class);
+        MongoCursor<AccountDetail> detailMongoCursor = aggregateIterable.iterator();
         BigDecimal charge = BigDecimal.ZERO;
-        if(cursorCharge.hasNext()){
-            Map obj= cursorCharge.next().toMap();
-            charge = BigDecimal.valueOf(Double.parseDouble(obj.get("changeAmount").toString()));
+        while (detailMongoCursor.hasNext()){
+            AccountDetail next = detailMongoCursor.next();
+            charge = next.getChangeAmount();
         }
         //代理商下平均充结束
         RPCResult<Long> longRPCResult = userRPCService.queryUsersCount(userDTO);
@@ -262,15 +260,13 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
         BasicDBObject  queryGroup2=new BasicDBObject("$group",groupByNull);
         querySum.add(queryGroup2);
 
-        AggregationOptions build = AggregationOptions.builder()
-                .outputMode(AggregationOptions.OutputMode.CURSOR)
-                .build();
         MongoCollection collection = this.template.getCollection("accountDetail");
-        Cursor cursor = collection.aggregate(querySum, build);
+        AggregateIterable<Map> aggregate = collection.aggregate(querySum, Map.class);
+        MongoCursor<Map> iterator = aggregate.iterator();
         BigDecimal all = BigDecimal.ZERO;
-        if(cursor.hasNext()){
-            Map obj= cursor.next().toMap();
-            all = BigDecimal.valueOf(Double.parseDouble(obj.get("count").toString()));
+        while (iterator.hasNext()){
+            Map next = iterator.next();
+            all = BigDecimal.valueOf(Double.parseDouble(next.get("count").toString()));
         }
         return all;
     }
@@ -300,6 +296,7 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
         //第一次group
         querySum.add(queryMatch);
         BasicDBObject groupByPin = new BasicDBObject("_id","$pin");
+        groupByPin.put("changeAmount", new BasicDBObject("$sum","$changeAmount" ));
         BasicDBObject  queryGroup1=new BasicDBObject("$group",groupByPin);
         querySum.add(queryGroup1);
         //第二次group
@@ -308,15 +305,13 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
         BasicDBObject  queryGroup2=new BasicDBObject("$group",groupByNull);
         querySum.add(queryGroup2);
 
-        AggregationOptions build = AggregationOptions.builder()
-                .outputMode(AggregationOptions.OutputMode.CURSOR)
-                .build();
-        DBCollection collection = this.template.getCollection("accountDetail");
-        Cursor cursor = collection.aggregate(querySum, build);
+        MongoCollection collection = this.template.getCollection("accountDetail");
+        AggregateIterable<Map> aggregate = collection.aggregate(querySum, Map.class);
+        MongoCursor<Map> iterator = aggregate.iterator();
         BigDecimal all = BigDecimal.ZERO;
-        if(cursor.hasNext()){
-            Map obj= cursor.next().toMap();
-            all = BigDecimal.valueOf(Double.parseDouble(obj.get("count").toString()));
+        while (iterator.hasNext()){
+            Map next = iterator.next();
+            all = BigDecimal.valueOf(Double.parseDouble(next.get("count").toString()));
         }
         return all;
     }
@@ -351,15 +346,13 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
         BasicDBObject  queryGroup2=new BasicDBObject("$group",groupByNull);
         querySum.add(queryGroup2);
 
-        AggregationOptions build = AggregationOptions.builder()
-                .outputMode(AggregationOptions.OutputMode.CURSOR)
-                .build();
         MongoCollection collection = this.template.getCollection("accountDetail");
-        Cursor cursor = collection.aggregate(querySum, build);
+        AggregateIterable<Map> aggregate = collection.aggregate(querySum, Map.class);
+        MongoCursor<Map> iterator = aggregate.iterator();
         BigDecimal all = BigDecimal.ZERO;
-        if(cursor.hasNext()){
-            Map obj= cursor.next().toMap();
-            all = BigDecimal.valueOf(Double.parseDouble(obj.get("count").toString()));
+        while (iterator.hasNext()){
+            Map next = iterator.next();
+            all = BigDecimal.valueOf(Double.parseDouble(next.get("count").toString()));
         }
 
         if(dto.getDayStatus().intValue()!=1){
@@ -371,11 +364,12 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
             queryByDayStatus.add(groupByPin);
             queryByDayStatus.add(groupByNull);
 
-            Cursor cursorByDayStatus = collection.aggregate(queryByDayStatus, build);
+            AggregateIterable<Map> aggregate1 = collection.aggregate(queryByDayStatus, Map.class);
+            MongoCursor<Map> iterator1 = aggregate1.iterator();
             BigDecimal byDay = BigDecimal.ZERO;
-            if(cursorByDayStatus.hasNext()){
-                Map obj= cursorByDayStatus.next().toMap();
-                byDay = BigDecimal.valueOf(Double.parseDouble(obj.get("count").toString()));
+            if(iterator1.hasNext()){
+                Map next = iterator1.next();
+                byDay = BigDecimal.valueOf(Double.parseDouble(next.get("count").toString()));
             }
             all = all.subtract(byDay);
         }
@@ -413,15 +407,13 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
         BasicDBObject  queryGroup2=new BasicDBObject("$group",groupByNull);
         querySum.add(queryGroup2);
 
-        AggregationOptions build = AggregationOptions.builder()
-                .outputMode(AggregationOptions.OutputMode.CURSOR)
-                .build();
         MongoCollection collection = this.template.getCollection("accountDetail");
-        Cursor cursor = collection.aggregate(querySum, build);
+        AggregateIterable<Map> aggregate = collection.aggregate(querySum, Map.class);
+        MongoCursor<Map> iterator = aggregate.iterator();
         BigDecimal all = BigDecimal.ZERO;
-        if(cursor.hasNext()){
-            Map obj= cursor.next().toMap();
-            all = BigDecimal.valueOf(Double.parseDouble(obj.get("count").toString()));
+        while (iterator.hasNext()){
+            Map next = iterator.next();
+            all = BigDecimal.valueOf(Double.parseDouble(next.get("count").toString()));
         }
         return all;
     }
