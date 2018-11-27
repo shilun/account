@@ -1,14 +1,14 @@
 package com.account.service;
 
-import com.common.util.AbstractBaseService;
 import com.account.domain.Config;
+import com.common.mongo.MongoService;
 
 import java.math.BigDecimal;
 
 /**
  * @desc 配置管理 config
  */
-public interface ConfigService extends AbstractBaseService<Config> {
+public interface ConfigService extends MongoService<Config> {
 
 
     /**

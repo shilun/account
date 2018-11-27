@@ -15,6 +15,7 @@ import com.account.service.ConfigService;
 import com.account.service.utils.TimeUtils;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.common.exception.BizException;
+import com.common.mongo.AbstractMongoService;
 import com.common.util.*;
 import com.common.util.model.YesOrNoEnum;
 import com.passport.rpc.UserRPCService;
@@ -33,7 +34,7 @@ import java.util.*;
  * @desc 账本流水账
  */
 @Service
-public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail> implements AccountDetailtService {
+public class AccountDetailtServiceImpl extends AbstractMongoService<AccountDetail> implements AccountDetailtService {
 
     @Resource
     private AccountDetailtDao accountDetailtDao;
@@ -47,12 +48,9 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
     @Reference
     private UserRPCService userRPCService;
 
-    @Resource
-    private AccountDao accountDao;
-
     @Override
-    public AbstractBaseDao<AccountDetail> getBaseDao() {
-        return accountDetailtDao;
+    protected Class getEntityClass() {
+        return AccountDetail.class;
     }
 
     @Transactional
@@ -131,7 +129,7 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
         query.setPin(pin);
         query.setOrderColumn("id");
         query.setOrderTpe(2);
-        List<AccountDetail> accountDetails = getBaseDao().query(query);
+        List<AccountDetail> accountDetails = query(query);
         if (!accountDetails.isEmpty()) {
             for (AccountDetail detail : accountDetails) {
                 AccountDetailDto accountDetailDto = new AccountDetailDto();
@@ -200,7 +198,7 @@ public class AccountDetailtServiceImpl extends DefaultBaseService<AccountDetail>
         Account account = new Account();
         account.setProxyId(dto.getProxyId());
         account.setIsRobot(YesOrNoEnum.NO.getValue());
-        Double aDouble = accountDao.queryAmount(account);
+        Long aDouble =accountService.queryCount(account);
         map.put("all",BigDecimal.valueOf(aDouble));
 
 
