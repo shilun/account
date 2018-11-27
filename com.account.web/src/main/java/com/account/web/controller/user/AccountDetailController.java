@@ -34,12 +34,13 @@ public class AccountDetailController extends AbstractClientController {
     private AccountRPCService accountRPCService;
 
     @RequestMapping("user/accountDetail/list")
-    @ApiOperation(value = "查询记录",notes = "bizToken: 1,充值;2,提款;3,赠送 {bizToken:1,pageInfo{page:0,size:30}}")
+    @ApiOperation(value = "用户充值记录",notes = "bizToken: 1,充值;2,提款;3,赠送 {bizToken:1,pageInfo{page:0,size:30}}")
     public Map<String, Object> list(@RequestBody AccountDetailDto detailDto) {
         return buildMessage(() -> {
             UserDTO userDTO = getUserDto();
             AccountDetail accountDetail = BeanCoper.copyProperties(AccountDetail.class,detailDto);
             accountDetail.setPin(userDTO.getPin());
+            accountDetail.setProxyId(userDTO.getProxyId());
             Page<AccountDetail> accountDetails = accountDetailtService.queryByPage(accountDetail, detailDto.getPageinfo().getPage());
             List<AccountDetailDto> list = new ArrayList<>();
             for(AccountDetail detail : accountDetails.getContent()){
