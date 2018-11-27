@@ -216,9 +216,9 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
             /**
              * mongoDB 事务
              */
-            try (ClientSession clientSession = mongoClient.startSession()) {
-                clientSession.startTransaction();
+            ClientSession clientSession = mongoClient.startSession();
                 try {
+                    clientSession.startTransaction();
                     if (account.getId() == null) {
                         save(account);
                     } else {
@@ -233,9 +233,9 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
                     clientSession.commitTransaction();
                 } catch (Exception e) {
                     clientSession.abortTransaction();
-                    throw new BizException("account.error", "account业务执行失败");
+                    logger.error("account.error",e);
+                    throw new Exception("account.error", e);
                 }
-            }
             if(dto.getBizToken()==BizTokenEnum.recharge.getValue().intValue()){
                 JSONObject data = new JSONObject();
                 data.put("pin",dto.getPin());
