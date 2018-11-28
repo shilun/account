@@ -1,13 +1,10 @@
 package com.account.web.controller.test;
 
-import com.account.domain.Account;
 import com.account.rpc.AccountRPCService;
 import com.account.rpc.dto.AccountDetailDto;
 import com.account.service.AccountDetailtService;
 import com.account.web.AbstractClientController;
-import com.account.web.controller.dto.AccountDto;
 import com.common.annotation.RoleResource;
-import com.common.util.BeanCoper;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

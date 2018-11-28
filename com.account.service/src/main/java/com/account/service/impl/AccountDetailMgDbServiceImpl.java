@@ -15,10 +15,7 @@ import com.common.exception.BizException;
 import com.common.mongo.AbstractMongoService;
 import com.common.util.*;
 import com.common.util.model.YesOrNoEnum;
-import com.mongodb.AggregationOptions;
 import com.mongodb.BasicDBObject;
-import com.mongodb.Cursor;
-import com.mongodb.DBCollection;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
@@ -191,6 +188,7 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
         groupObject.put("amount", new BasicDBObject("$sum","$amount" ));
         BasicDBObject  queryGroup=new BasicDBObject("$group",groupObject);
         querySum.add(queryGroup);
+        this.template.g
         MongoCollection collection = this.template.getCollection("account");
         AggregateIterable<Account> aggregate = collection.aggregate(querySum, Account.class);
         MongoCursor<Account> iterator=aggregate.iterator();

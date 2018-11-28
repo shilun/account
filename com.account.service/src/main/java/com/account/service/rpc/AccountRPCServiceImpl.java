@@ -255,7 +255,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         upEntity.setId(account.getId());
         upEntity.setFreeze(account.getFreeze());
         upEntity.setAmount(account.getAmount());
-        accountService.up(upEntity);
+        accountService.save(upEntity);
 
         //更新账户明细
         AccountDetail upAccount = new AccountDetail();

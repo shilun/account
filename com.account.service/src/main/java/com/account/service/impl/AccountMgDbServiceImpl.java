@@ -22,7 +22,7 @@ import com.common.util.RPCResult;
 import com.common.util.StringUtils;
 import com.common.util.model.YesOrNoEnum;
 import com.mongodb.MongoClient;
-import com.mongodb.client.ClientSession;
+import com.mongodb.session.ClientSession;
 import com.passport.rpc.UserRPCService;
 import com.passport.rpc.dto.UserDTO;
 import com.version.MqKey;

@@ -14,6 +14,7 @@ import com.account.service.WithdrawCfgInfoService;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.common.exception.ApplicationException;
 import com.common.exception.BizException;
+import com.common.mongo.AbstractMongoService;
 import com.common.redis.DistributedLock;
 import com.common.redis.DistributedLockUtil;
 import com.common.util.*;
@@ -38,9 +39,8 @@ import java.util.List;
  * @desc 账户信息 account
  */
 @Service
-public class AccountServiceImpl extends DefaultBaseService<Account> implements AccountService {
+public class AccountServiceImpl extends AbstractMongoService<Account> implements AccountService {
     private Logger logger = Logger.getLogger(AccountServiceImpl.class);
-    @Resource
     private AccountDao accountDao;
 
     @Resource
@@ -58,8 +58,8 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
     private String prefix;
 
     @Override
-    public AbstractBaseDao<Account> getBaseDao() {
-        return accountDao;
+    protected Class getEntityClass() {
+        return Account.class;
     }
 
     @Transactional
@@ -216,7 +216,7 @@ public class AccountServiceImpl extends DefaultBaseService<Account> implements A
                 up(upEntity);
             }
             detail.setStatus(DetailStatusEnum.Normal.getValue());
-            accountDetailtService.add(detail);
+            accountDetailtService.insert(detail);
             if(dto.getBizToken()==BizTokenEnum.recharge.getValue().intValue()){
                 JSONObject data = new JSONObject();
                 data.put("pin",dto.getPin());

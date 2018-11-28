@@ -1,21 +1,18 @@
-package com.account.service.impl; 
+package com.account.service.impl;
 
-import java.math.BigDecimal;
-import java.util.concurrent.TimeUnit;
-
-import javax.annotation.Resource;
-
-import com.account.domain.module.TokenTypeEnum;
-import com.common.util.AbstractBaseDao;
-import com.common.util.DefaultBaseService;
-
-import com.account.domain.Config;
 import com.account.dao.ConfigDao;
+import com.account.domain.Config;
+import com.account.domain.module.TokenTypeEnum;
 import com.account.service.ConfigService;
+import com.common.mongo.AbstractMongoService;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -24,11 +21,14 @@ import org.springframework.stereotype.Service;
  *
  */
 @Service
-public class ConfigServiceImpl extends DefaultBaseService<Config> implements ConfigService  {
+public class ConfigServiceImpl extends AbstractMongoService<Config> implements ConfigService  {
 
-	@Resource
 	private ConfigDao configDao;
 
+	@Override
+	protected Class getEntityClass() {
+		return Config.class;
+	}
 
 	private Cache<String, BigDecimal> cache = CacheBuilder.newBuilder().initialCapacity(10)
 			//设置并发数为5，即同一时间最多只能有5个线程往cache执行写入操作
@@ -38,10 +38,6 @@ public class ConfigServiceImpl extends DefaultBaseService<Config> implements Con
 			//构建cache实例
 			.build();
 
-	@Override
-	public AbstractBaseDao<Config> getBaseDao() {
-		return configDao;
-	}
 
 	public BigDecimal findRate(Integer sourceType, Integer targetType) {
 		Config query = new Config();

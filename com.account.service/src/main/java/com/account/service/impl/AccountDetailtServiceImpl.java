@@ -1,14 +1,13 @@
 package com.account.service.impl;
 
-import com.account.dao.AccountDao;
 import com.account.dao.AccountDetailtDao;
 import com.account.domain.Account;
 import com.account.domain.AccountDetail;
+import com.account.domain.module.ChargeTypeEnum;
+import com.account.domain.module.TokenTypeEnum;
+import com.account.rpc.dto.AccountDetailDto;
 import com.account.rpc.dto.BizTokenEnum;
 import com.account.rpc.dto.BizTypeEnum;
-import com.account.domain.module.ChargeTypeEnum;
-import com.account.rpc.dto.AccountDetailDto;
-import com.account.domain.module.TokenTypeEnum;
 import com.account.service.AccountDetailtService;
 import com.account.service.AccountService;
 import com.account.service.ConfigService;
@@ -27,7 +26,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -36,7 +38,6 @@ import java.util.*;
 @Service
 public class AccountDetailtServiceImpl extends AbstractMongoService<AccountDetail> implements AccountDetailtService {
 
-    @Resource
     private AccountDetailtDao accountDetailtDao;
 
     @Resource
@@ -223,7 +224,7 @@ public class AccountDetailtServiceImpl extends AbstractMongoService<AccountDetai
         if(dto.getDayStatus()==null){
             accountDetail.setDayStatus(1);
         }
-        Integer amount = accountDetailtDao.queryCount(accountDetail);
+        Long amount = queryCount(accountDetail);
         return BigDecimal.valueOf(amount);
     }
 
