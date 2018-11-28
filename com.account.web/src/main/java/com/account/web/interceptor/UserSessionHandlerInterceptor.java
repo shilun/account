@@ -21,9 +21,6 @@ public class UserSessionHandlerInterceptor implements HandlerInterceptor {
     @Reference
     private UserRPCService userRPCService;
 
-    @Value("${app.cookie.encode.key}")
-    private String cookieEncodeKey;
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         UserDTO userDto = (UserDTO) request.getSession().getAttribute("userDto");

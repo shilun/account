@@ -221,7 +221,7 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
              */
             ClientSession clientSession = mongoClient.startSession();
                 try {
-                    clientSession.startTransaction();
+                    ((com.mongodb.client.ClientSession) clientSession).startTransaction();
                     if (account.getId() == null) {
                         save(account);
                     } else {
@@ -233,9 +233,9 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
                     }
                     detail.setStatus(DetailStatusEnum.Normal.getValue());
                     accountDetailMgDbService.save(detail);
-                    clientSession.commitTransaction();
+                    ((com.mongodb.client.ClientSession) clientSession).commitTransaction();
                 } catch (Exception e) {
-                    clientSession.abortTransaction();
+                    ((com.mongodb.client.ClientSession) clientSession).abortTransaction();
                     logger.error("account.error",e);
                     throw new Exception("account.error", e);
                 }
@@ -284,7 +284,7 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
              * mongoDB 事务
              */
             try (ClientSession clientSession = mongoClient.startSession()) {
-                clientSession.startTransaction();
+                ((com.mongodb.client.ClientSession) clientSession).startTransaction();
                 try {
                     for (Account item : list) {
                         if (item.getTokenType().intValue() == tokenType.intValue()) {
@@ -295,9 +295,9 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
                             up(upEntity);
                         }
                     }
-                    clientSession.commitTransaction();
+                    ((com.mongodb.client.ClientSession) clientSession).commitTransaction();
                 } catch (Exception e) {
-                    clientSession.abortTransaction();
+                    ((com.mongodb.client.ClientSession) clientSession).abortTransaction();
                     throw new BizException("freezeAll.error", "冻结失败");
                 }
             }

@@ -188,7 +188,6 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
         groupObject.put("amount", new BasicDBObject("$sum","$amount" ));
         BasicDBObject  queryGroup=new BasicDBObject("$group",groupObject);
         querySum.add(queryGroup);
-        this.template.g
         MongoCollection collection = this.template.getCollection("account");
         AggregateIterable<Account> aggregate = collection.aggregate(querySum, Account.class);
         MongoCursor<Account> iterator=aggregate.iterator();
