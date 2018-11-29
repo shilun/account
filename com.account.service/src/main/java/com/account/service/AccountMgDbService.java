@@ -3,6 +3,7 @@ package com.account.service;
 import com.account.domain.Account;
 import com.account.rpc.dto.InvertBizDto;
 import com.common.mongo.MongoService;
+import net.sf.json.JSONObject;
 
 import java.util.List;
 
@@ -23,4 +24,6 @@ public interface AccountMgDbService extends MongoService<Account> {
      * @param tokenType
      */
     List<Account> freezeAll(Long proxyId, String pin, Integer tokenType, Integer testStatus);
+
+    void sendMqMsg(JSONObject data);
 }

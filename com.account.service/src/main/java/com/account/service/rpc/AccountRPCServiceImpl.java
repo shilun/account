@@ -33,12 +33,13 @@ public class AccountRPCServiceImpl implements AccountRPCService {
 
     private Logger logger = Logger.getLogger(AccountRPCServiceImpl.class);
 
-    @Resource
-    private AccountService accountService;
 
     @Resource
-    private AccountDetailtService accountDetailtService;
+    private AccountMgDbService accountMgDbService;
 
+    @Resource
+    private AccountDetailMgDbService accountDetailMgDbService;
+    
     @Resource
     private ConfigService configService;
 
@@ -97,7 +98,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         RPCResult<List<AccountDto>> result = new RPCResult<>();
         try {
             List<AccountDto> resultList = new ArrayList<>();
-            Page<Account> accounts = accountService.queryByPage(query, new PageRequest(pageIndex, pageSize));
+            Page<Account> accounts = accountMgDbService.queryByPage(query, new PageRequest(pageIndex, pageSize));
             result.setSuccess(true);
             result.setPageIndex(pageIndex);
             result.setPageSize(pageSize);
@@ -122,7 +123,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         Account query = new Account();
         query.setProxyId(proxyId);
         query.setPin(pin);
-        List<Account> list = accountService.query(query);
+        List<Account> list = accountMgDbService.query(query);
         for (TokenTypeEnum type : TokenTypeEnum.values()) {
             boolean moneyed = false;
             for (Account item : list) {
@@ -157,7 +158,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
     public RPCResult<Boolean> invertBiz(InvertBizDto dto) {
         RPCResult result = new RPCResult<>();
         try {
-            accountService.newBiz(dto);
+            accountMgDbService.newBiz(dto);
             result.setSuccess(true);
             return result;
         } catch (BizException e) {
@@ -179,7 +180,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         List<String> faildList = new ArrayList<>();
         for (InvertBizDto dto : dtos) {
             try {
-                accountService.newBiz(dto);
+                accountMgDbService.newBiz(dto);
             } catch (Exception e) {
                 logger.error("执行业务失败", e);
                 faildList.add(dto.getBizId());
@@ -194,7 +195,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
     public RPCResult changeTo(Long proxyId, String pin, Integer sourceType, BigDecimal sourceAmount, Integer targetType) {
         RPCResult result = new RPCResult();
         try {
-            accountDetailtService.changeTo(proxyId, pin, sourceType, sourceAmount, targetType);
+            accountDetailMgDbService.changeTo(proxyId, pin, sourceType, sourceAmount, targetType);
             result.setSuccess(true);
             return result;
         } catch (BizException e) {
@@ -232,11 +233,11 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         AccountDetail query = new AccountDetail();
         query.setBizType(bizType.getValue());
         query.setBizId(bizId);
-        AccountDetail detail = accountDetailtService.findByOne(query);
+        AccountDetail detail = accountDetailMgDbService.findByOne(query);
         Account queryAccount = new Account();
         queryAccount.setPin(detail.getPin());
         queryAccount.setTokenType(detail.getTokenType());
-        Account account = accountService.findByOne(queryAccount);
+        Account account = accountMgDbService.findByOne(queryAccount);
         if (detail.getChangeAmount().compareTo(BigDecimal.ZERO) > 0) {
             account.setAmount(account.getAmount().subtract(detail.getChangeAmount()));
         }
@@ -255,7 +256,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         upEntity.setId(account.getId());
         upEntity.setFreeze(account.getFreeze());
         upEntity.setAmount(account.getAmount());
-        accountService.save(upEntity);
+        accountMgDbService.save(upEntity);
 
         //更新账户明细
         AccountDetail upAccount = new AccountDetail();
@@ -283,7 +284,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
     public RPCResult<List<AccountDetailDto>> queryDetail(Long proxyId, String pin, Integer page, Integer size) {
         RPCResult<List<AccountDetailDto>> rpcResult = new RPCResult<>();
         try {
-            List<AccountDetailDto> accountDetailDtos = accountDetailtService.queryDetailList(proxyId, pin, page, size);
+            List<AccountDetailDto> accountDetailDtos = accountDetailMgDbService.queryDetailList(proxyId, pin, page, size);
             if (!accountDetailDtos.isEmpty()) {
                 rpcResult.setSuccess(true);
                 rpcResult.setData(accountDetailDtos);
@@ -306,7 +307,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         RPCResult<List<AccountDetailDto>> rpcResult = new RPCResult<>();
         try {
 
-            Page<AccountDetailDto> detailDtoPage = accountDetailtService.queryDetailList(dto);
+            Page<AccountDetailDto> detailDtoPage = accountDetailMgDbService.queryDetailList(dto);
 
             rpcResult=new RPCResult<>(detailDtoPage);
             rpcResult.setSuccess(true);
@@ -350,7 +351,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
     public RPCResult<List<AccountDto>> freezeAll(Long proxyId, String pin, Integer tokenType, Integer testStatus) {
         RPCResult<List<AccountDto>> result = new RPCResult<>();
         try {
-            List<Account> accounts = accountService.freezeAll(proxyId, pin, tokenType, testStatus);
+            List<Account> accounts = accountMgDbService.freezeAll(proxyId, pin, tokenType, testStatus);
             List<AccountDto> resultList = new ArrayList<>();
             for (Account item : accounts) {
                 AccountDto dto = new AccountDto();
@@ -374,7 +375,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         RPCResult<Map<String,Object>> rpcResult = null;
         try {
             rpcResult = new RPCResult<>();
-            Map<String,Object> map = accountDetailtService.avargCharge(accountDetailDto);
+            Map<String,Object> map = accountDetailMgDbService.avargCharge(accountDetailDto);
             rpcResult.setData(map);
             rpcResult.setSuccess(true);
             return rpcResult;
@@ -392,7 +393,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         RPCResult<BigDecimal> rpcResult = null;
         try {
             rpcResult = new RPCResult<>();
-            BigDecimal bigDecimal = accountDetailtService.queryChargeUsers(accountDetailDto);
+            BigDecimal bigDecimal = accountDetailMgDbService.queryChargeUsers(accountDetailDto);
             rpcResult.setData(bigDecimal);
             rpcResult.setSuccess(true);
             return rpcResult;
@@ -410,7 +411,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         RPCResult<BigDecimal> rpcResult = null;
         try {
             rpcResult = new RPCResult<>();
-            BigDecimal bigDecimal = accountDetailtService.queryChargeAmount(accountDetailDto);
+            BigDecimal bigDecimal = accountDetailMgDbService.queryChargeAmount(accountDetailDto);
             rpcResult.setData(bigDecimal);
             rpcResult.setSuccess(true);
             return rpcResult;
@@ -428,7 +429,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         RPCResult<BigDecimal> rpcResult = null;
         try {
             rpcResult = new RPCResult<>();
-            BigDecimal bigDecimal = accountDetailtService.queryProxyProfile(accountDetailDto);
+            BigDecimal bigDecimal = accountDetailMgDbService.queryProxyProfile(accountDetailDto);
             rpcResult.setData(bigDecimal);
             rpcResult.setSuccess(true);
             return rpcResult;
@@ -446,7 +447,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
         RPCResult<BigDecimal> rpcResult = null;
         try {
             rpcResult = new RPCResult<>();
-            BigDecimal bigDecimal = accountDetailtService.queryChargeNewUsers(accountDetailDto);
+            BigDecimal bigDecimal = accountDetailMgDbService.queryChargeNewUsers(accountDetailDto);
             rpcResult.setData(bigDecimal);
             rpcResult.setSuccess(true);
             return rpcResult;
@@ -468,7 +469,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
             query.setProxyId(proxyId);
             query.setTokenType(tokenType);
             query.setTest(testStatus);
-            query = accountService.findByOne(query);
+            query = accountMgDbService.findByOne(query);
             if (query == null) {
                 query = new Account();
                 query.setTest(testStatus);

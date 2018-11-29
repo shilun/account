@@ -189,11 +189,11 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
         BasicDBObject  queryGroup=new BasicDBObject("$group",groupObject);
         querySum.add(queryGroup);
         MongoCollection collection = this.template.getCollection("account");
-        AggregateIterable<Account> aggregate = collection.aggregate(querySum, Account.class);
-        MongoCursor<Account> iterator=aggregate.iterator();
+        AggregateIterable<Map> aggregate = collection.aggregate(querySum, Map.class);
+        MongoCursor<Map> iterator = aggregate.iterator();
         while (iterator.hasNext()){
-            Account next = iterator.next();
-            map.put("all",next.getAmount());
+            Map next = iterator.next();
+            map.put("all",next.get("amount").toString());
         }
         //代理商下的金币总额结束
 //        AccountDetail accountDetail = BeanCoper.copyProperties(AccountDetail.class,dto);
@@ -211,12 +211,12 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
         BasicDBObject  queryGroupCharge=new BasicDBObject("$group",groupCharge);
         queryCharge.add(queryGroupCharge);
         MongoCollection collectionCharge = this.template.getCollection("accountDetail");
-        AggregateIterable<AccountDetail> aggregateIterable = collectionCharge.aggregate(queryCharge, AccountDetail.class);
-        MongoCursor<AccountDetail> detailMongoCursor = aggregateIterable.iterator();
+        AggregateIterable<Map> aggregateIterable = collectionCharge.aggregate(queryCharge, Map.class);
+        MongoCursor<Map> detailMongoCursor = aggregateIterable.iterator();
         BigDecimal charge = BigDecimal.ZERO;
         while (detailMongoCursor.hasNext()){
-            AccountDetail next = detailMongoCursor.next();
-            charge = next.getChangeAmount();
+            Map next = detailMongoCursor.next();
+            charge = BigDecimal.valueOf(Double.parseDouble(next.get("changeAmount").toString()));
         }
         //代理商下平均充结束
         RPCResult<Long> longRPCResult = userRPCService.queryUsersCount(userDTO);

@@ -30,12 +30,14 @@ import com.version.mq.service.api.IMqService;
 import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 /**
  * mongoDB account账户信息
@@ -57,6 +59,10 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
     private String accountFreezeAll_key = "account.freezeAll.pin.{0}";
 
     @Resource
+    private Executor executor;
+
+    @Resource
+    @Lazy
     private AccountDetailMgDbService accountDetailMgDbService;
     @Reference
     private UserRPCService userRPCService;
@@ -68,6 +74,9 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
     private WithdrawCfgInfoService withdrawCfgInfoService;
     @Value("${daishan.rocketmq.topic.prefix}")
     private String prefix;
+    @Value("${daishan.rocketmq.log:false}")
+    private boolean logOpen;
+
 
     @Override
     public void newBiz(InvertBizDto dto) {
@@ -120,33 +129,35 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
                 throw new BizException("dto.error.minMoney", "小于最小提现金额");
             }
         }
+        AccountDetail findDetail = new AccountDetail();
+
+        findDetail.setBizType(dto.getBizType());
+        findDetail.setBizToken(dto.getBizToken());
+        RPCResult<UserDTO> byPin = userRPCService.findByPin(dto.getProxyId(), dto.getPin());
+        int isRobot = 2;
+        Long userCode=null;
+        if(byPin.getSuccess() && byPin.getData()!=null){
+            isRobot = YesOrNoEnum.NO.getValue();
+            userCode = byPin.getData().getId();
+        }else {
+            isRobot = YesOrNoEnum.YES.getValue();
+        }
+        findDetail.setIsRobot(isRobot);
+        findDetail.setProxyId(dto.getProxyId());
+        findDetail.setBizId(dto.getBizId());
+        findDetail.setChargeType(dto.getChargeType());
+        findDetail.setTest(dto.getTest());
+        findDetail = accountDetailMgDbService.findByOne(findDetail);
+        if (findDetail != null) {
+            return;
+        }
         String lock_key = MessageFormat.format(user_login_key, dto.getPin());
-        DistributedLock distributedLock = distributedLockUtil.getDistributedLock(lock_key, 30 * 1000);
+        DistributedLock distributedLock = distributedLockUtil.getDistributedLock(lock_key, 600 * 1000);
         boolean acquire = distributedLock.acquire();
         if (!acquire) {
             return;
         }
         try {
-            AccountDetail findDetail = new AccountDetail();
-
-            findDetail.setBizType(dto.getBizType());
-            findDetail.setBizToken(dto.getBizToken());
-            RPCResult<UserDTO> byPin = userRPCService.findByPin(dto.getProxyId(), dto.getPin());
-            int isRobot = 2;
-            if(byPin.getSuccess() && byPin.getData()!=null){
-                isRobot = YesOrNoEnum.NO.getValue();
-            }else {
-                isRobot = YesOrNoEnum.YES.getValue();
-            }
-            findDetail.setIsRobot(isRobot);
-            findDetail.setProxyId(dto.getProxyId());
-            findDetail.setBizId(dto.getBizId());
-            findDetail.setChargeType(dto.getChargeType());
-            findDetail.setTest(dto.getTest());
-            findDetail = accountDetailMgDbService.findByOne(findDetail);
-            if (findDetail != null) {
-                return;
-            }
             Account query = new Account();
             query.setProxyId(dto.getProxyId());
             query.setPin(dto.getPin());
@@ -159,26 +170,23 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
             query.setTokenType(dto.getTokenType());
             Account account = findByOne(query);
             if (account == null) {
-                account = accountService.findByOne(query);
-                if(account == null){
-                    account = new Account();
-                    account.setIsRobot(isRobot);
-                    account.setTokenType(dto.getTokenType());
-                    account.setFreeze(BigDecimal.ZERO);
-                    account.setAmount(BigDecimal.ZERO);
-                    account.setTest(dto.getTest());
-                    account.setProxyId(dto.getProxyId());
-                    account.setPin(dto.getPin());
-                    if(isRobot==YesOrNoEnum.NO.getValue()) {
-                        account.setUserCode(byPin.getData().getId());
-                    }
+                account = new Account();
+                account.setIsRobot(isRobot);
+                account.setTokenType(dto.getTokenType());
+                account.setFreeze(BigDecimal.ZERO);
+                account.setAmount(BigDecimal.ZERO);
+                account.setTest(dto.getTest());
+                account.setProxyId(dto.getProxyId());
+                account.setPin(dto.getPin());
+                if(isRobot==YesOrNoEnum.NO.getValue()) {
+                    account.setUserCode(userCode);
                 }
             }
             AccountDetail detail = new AccountDetail();
             detail.setIsRobot(isRobot);
             detail.setPin(dto.getPin());
             if(isRobot==YesOrNoEnum.NO.getValue().intValue()) {
-                detail.setUserCode(byPin.getData().getId());
+                detail.setUserCode(userCode);
             }
             detail.setTest(dto.getTest());
             detail.setProxyId(dto.getProxyId());
@@ -204,16 +212,22 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
             if (account.getAmount().compareTo(BigDecimal.ZERO) < 0) {
                 if(dto.getBizToken()!=BizTokenEnum.qipaiconsume.getValue().intValue()){
                     throw new BizException("account.error", "账户余额不足");
+                }else {
+                    logger.warn("棋牌游戏消费："+dto.getAmount()+"元，账户余额不足");
                 }
             }
             if (account.getFreeze().compareTo(BigDecimal.ZERO) < 0) {
                 if(dto.getBizToken()!=BizTokenEnum.qipaiconsume.getValue().intValue()){
                     throw new BizException("account.error", "冻结金额不足");
+                }else {
+                    logger.warn("棋牌游戏取消冻结："+dto.getFreeze()+"元，冻结金额不足");
                 }
             }
             if (account.getAmount().compareTo(account.getFreeze()) < 0) {
                 if(dto.getBizToken()!=BizTokenEnum.qipaiconsume.getValue().intValue()){
                     throw new BizException("account.error", "账户金额不足");
+                }else {
+                    logger.warn("棋牌游戏冻结账户："+dto.getFreeze()+"元，账户金额不足");
                 }
             }
             /**
@@ -245,8 +259,16 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
                 data.put("proxyId",dto.getProxyId());
                 data.put("bizType",dto.getBizType());
                 data.put(MqKey.COM_VERSION_MQ_KEY,"recharge");
-                iMqService.pushToMq(prefix+"account",data.toString());
-
+                if (userCode != null) {
+                    data.put("userCode", String.valueOf(userCode));
+                }
+                data.put(MqKey.COM_VERSION_MQ_KEY, "recharge");
+                executor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        sendMqMsg(data);
+                    }
+                });
             }
         } catch (BizException biz) {
             throw biz;
@@ -311,8 +333,15 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
 
         }
     }
+    @Override
+    public void sendMqMsg(JSONObject data){
+        logger.warn("begin sent mq message...");
+        iMqService.pushToMq("mq-topic-account", data.toString());
+        if (logOpen) {
+            logger.warn("recharge sent mq message ok"+data.toString());
+        }
 
-
+    }
 
     @Override
     protected Class getEntityClass() {

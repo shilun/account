@@ -4,6 +4,7 @@ import com.account.domain.AccountDetail;
 import com.account.domain.module.ChargeTypeEnum;
 import com.account.rpc.AccountRPCService;
 import com.account.rpc.dto.AccountDetailDto;
+import com.account.service.AccountDetailMgDbService;
 import com.account.service.AccountDetailtService;
 import com.account.web.AbstractClientController;
 import com.common.util.BeanCoper;
@@ -29,7 +30,7 @@ import java.util.Map;
 public class AccountDetailController extends AbstractClientController {
 
     @Resource
-    private AccountDetailtService accountDetailtService;
+    private AccountDetailMgDbService accountDetailMgDbService;
     @Resource
     private AccountRPCService accountRPCService;
 
@@ -41,7 +42,7 @@ public class AccountDetailController extends AbstractClientController {
             AccountDetail accountDetail = BeanCoper.copyProperties(AccountDetail.class,detailDto);
             accountDetail.setPin(userDTO.getPin());
             accountDetail.setProxyId(userDTO.getProxyId());
-            Page<AccountDetail> accountDetails = accountDetailtService.queryByPage(accountDetail, detailDto.getPageinfo().getPage());
+            Page<AccountDetail> accountDetails = accountDetailMgDbService.queryByPage(accountDetail, detailDto.getPageinfo().getPage());
             List<AccountDetailDto> list = new ArrayList<>();
             for(AccountDetail detail : accountDetails.getContent()){
                 AccountDetailDto dto =  BeanCoper.copyProperties(AccountDetailDto.class,detail);
