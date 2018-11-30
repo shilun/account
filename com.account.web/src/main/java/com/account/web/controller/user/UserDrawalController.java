@@ -153,7 +153,7 @@ public class UserDrawalController extends AbstractClientController {
     @RequestMapping("user/drawal/forgetPassVerfiyMsg")
     public Map<String, Object> forgetPassVerfiyMsg(@RequestBody ForgetPassDto dto) {
         return buildMessage(() -> {
-            userDrawalPassService.forgetPassVerfiyMsg(getProxy().getId(), dto.getPhoneNo(), dto.getMsg(), dto.getPass());
+            userDrawalPassService.forgetPassVerfiyMsg(getProxy().getId(), dto.getAccessName(), dto.getValidateCode(), dto.getPwd());
             return null;
         });
     }

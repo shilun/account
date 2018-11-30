@@ -4,31 +4,31 @@ package com.account.web.controller.dto;
  * 忘记密码
  */
 public class ForgetPassDto {
-    private String phoneNo;
-    private String msg;
-    private String pass;
+    private String accessName;
+    private String pwd;
+    private String validateCode;
 
-    public String getPhoneNo() {
-        return phoneNo;
+    public String getAccessName() {
+        return accessName;
     }
 
-    public void setPhoneNo(String phoneNo) {
-        this.phoneNo = phoneNo;
+    public void setAccessName(String accessName) {
+        this.accessName = accessName;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getPwd() {
+        return pwd;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
     }
 
-    public String getPass() {
-        return pass;
+    public String getValidateCode() {
+        return validateCode;
     }
 
-    public void setPass(String pass) {
-        this.pass = pass;
+    public void setValidateCode(String validateCode) {
+        this.validateCode = validateCode;
     }
 }
