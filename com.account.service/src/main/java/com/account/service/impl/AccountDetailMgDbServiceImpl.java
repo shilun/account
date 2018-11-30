@@ -243,7 +243,9 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
         if(dto.getDayStatus().intValue()!=1){
             Date startDate = TimeUtils.getDayStatusTime(dto.getDayStatus());
             Date endDate = TimeUtils.getDayStatusMaxTime(dto.getDayStatus());
-            match.put("createTime",new BasicDBObject("$gte",startDate).put("$lt",endDate));
+            BasicDBObject timeMatch = new BasicDBObject("$gte",startDate);
+            timeMatch.put("$lt",endDate);
+            match.put("createTime",timeMatch);
         }
         BasicDBObject queryMatch= new BasicDBObject("$match", match);
         //第一次group
@@ -358,8 +360,8 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
             match.put("createTime",new BasicDBObject("$lt",date));
             BasicDBObject matchByDayStatus= new BasicDBObject("$match", match);
             queryByDayStatus.add(matchByDayStatus);
-            queryByDayStatus.add(groupByPin);
-            queryByDayStatus.add(groupByNull);
+            queryByDayStatus.add(queryGroup1);
+            queryByDayStatus.add(queryGroup2);
 
             AggregateIterable<Map> aggregate1 = collection.aggregate(queryByDayStatus, Map.class);
             MongoCursor<Map> iterator1 = aggregate1.iterator();
@@ -390,7 +392,9 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
         if(dto.getDayStatus()!=1){
             Date startDate = TimeUtils.getDayStatusTime(dto.getDayStatus());
             Date endDate = TimeUtils.getDayStatusMaxTime(dto.getDayStatus());
-            match.put("createTime",new BasicDBObject("$gte",startDate).put("$lt",endDate));
+            BasicDBObject timeMatch = new BasicDBObject("$gte",startDate);
+            timeMatch.put("$lt",endDate);
+            match.put("createTime",timeMatch);
         }
         BasicDBObject queryMatch= new BasicDBObject("$match", match);
         querySum.add(queryMatch);
