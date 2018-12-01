@@ -22,6 +22,9 @@ import com.common.util.RPCResult;
 import com.common.util.StringUtils;
 import com.common.util.model.YesOrNoEnum;
 import com.mongodb.MongoClient;
+import com.mongodb.ReadPreference;
+import com.mongodb.TransactionOptions;
+import com.mongodb.WriteConcern;
 import com.mongodb.session.ClientSession;
 import com.passport.rpc.UserRPCService;
 import com.passport.rpc.dto.UserDTO;
@@ -234,8 +237,11 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
              * mongoDB 事务
              */
             ClientSession clientSession = mongoClient.startSession();
+            com.mongodb.client.ClientSession clientSession1 = (com.mongodb.client.ClientSession) clientSession;
+            clientSession1.startTransaction(TransactionOptions.builder().readPreference(ReadPreference.primary()).build());
+            clientSession1.startTransaction();
                 try {
-                    ((com.mongodb.client.ClientSession) clientSession).startTransaction();
+                    clientSession1.startTransaction();
                     if (account.getId() == null) {
                         save(account);
                     } else {
@@ -247,9 +253,9 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
                     }
                     detail.setStatus(DetailStatusEnum.Normal.getValue());
                     accountDetailMgDbService.save(detail);
-                    ((com.mongodb.client.ClientSession) clientSession).commitTransaction();
+                    clientSession1.commitTransaction();
                 } catch (Exception e) {
-                    ((com.mongodb.client.ClientSession) clientSession).abortTransaction();
+                    clientSession1.abortTransaction();
                     logger.error("account.error",e);
                     throw new Exception("account.error", e);
                 }
@@ -306,7 +312,8 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
              * mongoDB 事务
              */
             try (ClientSession clientSession = mongoClient.startSession()) {
-                ((com.mongodb.client.ClientSession) clientSession).startTransaction();
+                com.mongodb.client.ClientSession clientSession1 = (com.mongodb.client.ClientSession) clientSession;
+                clientSession1.startTransaction(TransactionOptions.builder().readPreference(ReadPreference.primary()).build());
                 try {
                     for (Account item : list) {
                         if (item.getTokenType().intValue() == tokenType.intValue()) {
@@ -317,7 +324,7 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
                             up(upEntity);
                         }
                     }
-                    ((com.mongodb.client.ClientSession) clientSession).commitTransaction();
+                    clientSession1.commitTransaction();
                 } catch (Exception e) {
                     ((com.mongodb.client.ClientSession) clientSession).abortTransaction();
                     throw new BizException("freezeAll.error", "冻结失败");
