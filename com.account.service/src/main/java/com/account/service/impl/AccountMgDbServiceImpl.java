@@ -238,9 +238,8 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
              */
             ClientSession clientSession = mongoClient.startSession();
             com.mongodb.client.ClientSession clientSession1 = (com.mongodb.client.ClientSession) clientSession;
-            clientSession1.startTransaction(TransactionOptions.builder().readPreference(ReadPreference.primary()).build());
                 try {
-                    clientSession1.startTransaction();
+                    clientSession1.startTransaction(TransactionOptions.builder().readPreference(ReadPreference.primary()).build());
                     if (account.getId() == null) {
                         save(account);
                     } else {
