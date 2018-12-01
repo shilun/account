@@ -12,6 +12,7 @@ import com.account.service.AccountMgDbService;
 import com.account.service.AccountService;
 import com.account.service.WithdrawCfgInfoService;
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.fastjson.JSON;
 import com.common.exception.ApplicationException;
 import com.common.exception.BizException;
 import com.common.mongo.AbstractMongoService;
@@ -21,10 +22,8 @@ import com.common.util.GlosseryEnumUtils;
 import com.common.util.RPCResult;
 import com.common.util.StringUtils;
 import com.common.util.model.YesOrNoEnum;
-import com.mongodb.MongoClient;
-import com.mongodb.ReadPreference;
-import com.mongodb.TransactionOptions;
-import com.mongodb.WriteConcern;
+import com.mongodb.*;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.session.ClientSession;
 import com.passport.rpc.UserRPCService;
 import com.passport.rpc.dto.UserDTO;
@@ -32,6 +31,10 @@ import com.version.MqKey;
 import com.version.mq.service.api.IMqService;
 import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
+import org.bson.Document;
+import org.redisson.api.RLock;
+import org.redisson.api.RReadWriteLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -39,8 +42,11 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * mongoDB account账户信息
@@ -80,9 +86,13 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
     @Value("${daishan.rocketmq.log:false}")
     private boolean logOpen;
 
+    @Resource
+    private RedissonClient redissonClient;
+
 
     @Override
-    public void newBiz(InvertBizDto dto) {
+    public  void newBiz(InvertBizDto dto) {
+
         if (dto.getAmount() == null && dto.getFreeze() == null) {
             throw new BizException("dto.error", "数据验证失败,acmount or freeze null");
         }
@@ -154,9 +164,18 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
         if (findDetail != null) {
             return;
         }
+
+        
         String lock_key = MessageFormat.format(user_login_key, dto.getPin());
         DistributedLock distributedLock = distributedLockUtil.getDistributedLock(lock_key, 600 * 1000);
         boolean acquire = distributedLock.acquire();
+//        RReadWriteLock lock = redissonClient.getReadWriteLock(lock_key);
+//        boolean wl = false;
+//        try {
+//            wl = lock.writeLock().tryLock(100, 10, TimeUnit.SECONDS);
+//        } catch (InterruptedException e) {
+//            throw new ApplicationException("redis.lock.error", e);
+//        }
         if (!acquire) {
             return;
         }
@@ -240,17 +259,39 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
             com.mongodb.client.ClientSession clientSession1 = (com.mongodb.client.ClientSession) clientSession;
                 try {
                     clientSession1.startTransaction(TransactionOptions.builder().readPreference(ReadPreference.primary()).build());
+                    MongoCollection collection = mongoClient.getDatabase("account").getCollection("account");
                     if (account.getId() == null) {
-                        save(account);
+                        Map<String,Object> map = JSON.parseObject(JSON.toJSONString(account));
+                        Document document = new Document(map);
+                        collection.insertOne(clientSession1,document);
+//                        save(account);
                     } else {
-                        Account upEntity = new Account();
-                        upEntity.setId(account.getId());
-                        upEntity.setAmount(account.getAmount());
-                        upEntity.setFreeze(account.getFreeze());
-                        up(upEntity);
+//                        Account upEntity = new Account();
+//                        upEntity.setId(account.getId());
+//                        upEntity.setAmount(account.getAmount());
+//                        upEntity.setFreeze(account.getFreeze());
+                        //查询条件
+                        Document  filter = new Document();
+                        filter.put("id",account.getId());
+                        //修改字段
+                        Document updateCondtion = new Document();
+                        updateCondtion.put("amount",account.getAmount());
+                        updateCondtion.put("freeze",account.getFreeze());
+                        //修改文档
+                        Document update = new Document();
+                        update.put("$set",updateCondtion);
+                        collection.updateOne(clientSession1,filter,update);
+//                        up(upEntity);
                     }
                     detail.setStatus(DetailStatusEnum.Normal.getValue());
-                    accountDetailMgDbService.save(detail);
+                    Date createTime = new Date();
+                    detail.setCreateTime(createTime);
+                    detail.setUpdateTime(createTime);
+                    detail.setDelStatus(YesOrNoEnum.NO.getValue());
+                    Document deDocument = new Document(JSON.parseObject(JSON.toJSONString(detail)));
+                    MongoCollection DeCollection =mongoClient.getDatabase("account").getCollection("accountDetail");
+                    DeCollection.insertOne(clientSession1,deDocument);
+//                    accountDetailMgDbService.save(detail);
                     clientSession1.commitTransaction();
                 } catch (Exception e) {
                     clientSession1.abortTransaction();
@@ -280,6 +321,7 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
             logger.error("newBiz.error", e);
             throw new ApplicationException("newBiz.error");
         } finally {
+//            lock.unlock();
             distributedLock.release();
         }
 
