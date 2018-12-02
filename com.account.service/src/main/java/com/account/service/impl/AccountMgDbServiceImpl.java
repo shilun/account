@@ -118,17 +118,17 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
             dto.setAmount(BigDecimal.ZERO);
         }
         //提现判断
-        if(dto.getBizToken()== BizTokenEnum.drawing.getValue().intValue()){
+        if (dto.getBizToken() == BizTokenEnum.drawing.getValue().intValue()) {
             WithdrawCfgInfo withdrawCfgInfo = new WithdrawCfgInfo();
             withdrawCfgInfo.setProxyId(dto.getProxyId());
             withdrawCfgInfo = withdrawCfgInfoService.findByOne(withdrawCfgInfo);
-            if(withdrawCfgInfo.getStatus()==YesOrNoEnum.NO.getValue().intValue()){
+            if (withdrawCfgInfo.getStatus() == YesOrNoEnum.NO.getValue().intValue()) {
                 throw new BizException("dto.error.status", "不允许提现");
             }
-            if(withdrawCfgInfo.getMaxMoney().compareTo(dto.getAmount()) < 0){
+            if (withdrawCfgInfo.getMaxMoney().compareTo(dto.getAmount()) < 0) {
                 throw new BizException("dto.error.maxMoney", "超出最大提现金额");
             }
-            if(withdrawCfgInfo.getMinMoney().compareTo(dto.getAmount()) >0){
+            if (withdrawCfgInfo.getMinMoney().compareTo(dto.getAmount()) > 0) {
                 throw new BizException("dto.error.minMoney", "小于最小提现金额");
             }
         }
@@ -138,11 +138,11 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
         findDetail.setBizToken(dto.getBizToken());
         RPCResult<UserDTO> byPin = userRPCService.findByPin(dto.getProxyId(), dto.getPin());
         int isRobot = 2;
-        Long userCode=null;
-        if(byPin.getSuccess() && byPin.getData()!=null){
+        Long userCode = null;
+        if (byPin.getSuccess() && byPin.getData() != null) {
             isRobot = YesOrNoEnum.NO.getValue();
             userCode = byPin.getData().getId();
-        }else {
+        } else {
             isRobot = YesOrNoEnum.YES.getValue();
         }
         findDetail.setIsRobot(isRobot);
@@ -155,7 +155,7 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
             return;
         }
         String lock_key = MessageFormat.format(user_login_key, dto.getPin());
-        DistributedLock distributedLock = distributedLockUtil.getDistributedLock(lock_key, 600 * 1000);
+        DistributedLock distributedLock = distributedLockUtil.getDistributedLock(lock_key, 10 * 1000, 60 * 1000);
         boolean acquire = distributedLock.acquire();
         if (!acquire) {
             return;
@@ -167,7 +167,7 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
             query.setTest(dto.getTest());
             BizTypeEnum bizTypeEnum = GlosseryEnumUtils.getItem(BizTypeEnum.class, dto.getBizType());
             BizTokenEnum bizTokenEnum = BizTokenEnum.consume;
-            if(dto.getBizToken() != null){
+            if (dto.getBizToken() != null) {
                 bizTokenEnum = GlosseryEnumUtils.getItem(BizTokenEnum.class, dto.getBizToken());
             }
             query.setTokenType(dto.getTokenType());
@@ -181,14 +181,14 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
                 account.setTest(dto.getTest());
                 account.setProxyId(dto.getProxyId());
                 account.setPin(dto.getPin());
-                if(isRobot==YesOrNoEnum.NO.getValue()) {
+                if (isRobot == YesOrNoEnum.NO.getValue()) {
                     account.setUserCode(userCode);
                 }
             }
             AccountDetail detail = new AccountDetail();
             detail.setIsRobot(isRobot);
             detail.setPin(dto.getPin());
-            if(isRobot==YesOrNoEnum.NO.getValue().intValue()) {
+            if (isRobot == YesOrNoEnum.NO.getValue().intValue()) {
                 detail.setUserCode(userCode);
             }
             detail.setTest(dto.getTest());
@@ -199,9 +199,9 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
             detail.setBizToken(bizTokenEnum.getValue());
             detail.setBizId(dto.getBizId());
             detail.setTest(dto.getTest());
-            if(dto.getChargeType()!=null){
+            if (dto.getChargeType() != null) {
                 detail.setChargeType(dto.getChargeType());
-            }else {
+            } else {
                 detail.setChargeType(0);
             }
             detail.setBeforeAmount(account.getAmount());
@@ -213,24 +213,24 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
             detail.setAfterAmount(account.getAmount());
             detail.setAfterFreeze(account.getFreeze());
             if (account.getAmount().compareTo(BigDecimal.ZERO) < 0) {
-                if(dto.getBizToken()!=BizTokenEnum.qipaiconsume.getValue().intValue()){
+                if (dto.getBizToken() != BizTokenEnum.qipaiconsume.getValue().intValue()) {
                     throw new BizException("account.error", "账户余额不足");
-                }else {
-                    logger.warn("棋牌游戏消费："+dto.getAmount()+"元，账户余额不足");
+                } else {
+                    logger.warn("棋牌游戏消费：" + dto.getAmount() + "元，账户余额不足");
                 }
             }
             if (account.getFreeze().compareTo(BigDecimal.ZERO) < 0) {
-                if(dto.getBizToken()!=BizTokenEnum.qipaiconsume.getValue().intValue()){
+                if (dto.getBizToken() != BizTokenEnum.qipaiconsume.getValue().intValue()) {
                     throw new BizException("account.error", "冻结金额不足");
-                }else {
-                    logger.warn("棋牌游戏取消冻结："+dto.getFreeze()+"元，冻结金额不足");
+                } else {
+                    logger.warn("棋牌游戏取消冻结：" + dto.getFreeze() + "元，冻结金额不足");
                 }
             }
             if (account.getAmount().compareTo(account.getFreeze()) < 0) {
-                if(dto.getBizToken()!=BizTokenEnum.qipaiconsume.getValue().intValue()){
+                if (dto.getBizToken() != BizTokenEnum.qipaiconsume.getValue().intValue()) {
                     throw new BizException("account.error", "账户金额不足");
-                }else {
-                    logger.warn("棋牌游戏冻结账户："+dto.getFreeze()+"元，账户金额不足");
+                } else {
+                    logger.warn("棋牌游戏冻结账户：" + dto.getFreeze() + "元，账户金额不足");
                 }
             }
             /**
@@ -238,31 +238,31 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
              */
             ClientSession clientSession = mongoClient.startSession();
             com.mongodb.client.ClientSession clientSession1 = (com.mongodb.client.ClientSession) clientSession;
-                try {
-                    clientSession1.startTransaction(TransactionOptions.builder().readPreference(ReadPreference.primary()).build());
-                    if (account.getId() == null) {
-                        save(account);
-                    } else {
-                        Account upEntity = new Account();
-                        upEntity.setId(account.getId());
-                        upEntity.setAmount(account.getAmount());
-                        upEntity.setFreeze(account.getFreeze());
-                        up(upEntity);
-                    }
-                    detail.setStatus(DetailStatusEnum.Normal.getValue());
-                    accountDetailMgDbService.save(detail);
-                    clientSession1.commitTransaction();
-                } catch (Exception e) {
-                    clientSession1.abortTransaction();
-                    logger.error("account.error",e);
-                    throw new Exception("account.error", e);
+            try {
+                clientSession1.startTransaction(TransactionOptions.builder().readPreference(ReadPreference.primary()).build());
+                if (account.getId() == null) {
+                    save(account);
+                } else {
+                    Account upEntity = new Account();
+                    upEntity.setId(account.getId());
+                    upEntity.setAmount(account.getAmount());
+                    upEntity.setFreeze(account.getFreeze());
+                    up(upEntity);
                 }
-            if(dto.getBizToken()==BizTokenEnum.recharge.getValue().intValue()){
+                detail.setStatus(DetailStatusEnum.Normal.getValue());
+                accountDetailMgDbService.save(detail);
+                clientSession1.commitTransaction();
+            } catch (Exception e) {
+                clientSession1.abortTransaction();
+                logger.error("account.error", e);
+                throw new Exception("account.error", e);
+            }
+            if (dto.getBizToken() == BizTokenEnum.recharge.getValue().intValue()) {
                 JSONObject data = new JSONObject();
-                data.put("pin",dto.getPin());
-                data.put("proxyId",dto.getProxyId());
-                data.put("bizType",dto.getBizType());
-                data.put(MqKey.COM_VERSION_MQ_KEY,"recharge");
+                data.put("pin", dto.getPin());
+                data.put("proxyId", dto.getProxyId());
+                data.put("bizType", dto.getBizType());
+                data.put(MqKey.COM_VERSION_MQ_KEY, "recharge");
                 if (userCode != null) {
                     data.put("userCode", String.valueOf(userCode));
                 }
@@ -338,12 +338,13 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
 
         }
     }
+
     @Override
-    public void sendMqMsg(JSONObject data){
+    public void sendMqMsg(JSONObject data) {
         logger.warn("begin sent mq message...");
         iMqService.pushToMq("mq-topic-account", data.toString());
         if (logOpen) {
-            logger.warn("recharge sent mq message ok"+data.toString());
+            logger.warn("recharge sent mq message ok" + data.toString());
         }
 
     }
