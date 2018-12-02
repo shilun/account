@@ -153,7 +153,7 @@ public class AccountDetailMgDbController extends AbstractClientController {
                         try{
                             listRPCResult = accountRPCService.invertBizs(dd);
                         }catch (Exception e){
-                            logger.error(listRPCResult.getMessage());
+                            logger.error(listRPCResult.getMessage(),e);
                         }
                     }
                 });
