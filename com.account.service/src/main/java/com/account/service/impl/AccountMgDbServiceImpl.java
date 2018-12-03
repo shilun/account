@@ -235,21 +235,21 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
                 if (dto.getBizToken() != BizTokenEnum.qipaiconsume.getValue().intValue()) {
                     throw new BizException("account.error", "账户余额不足");
                 } else {
-                    logger.warn("棋牌游戏消费：" + dto.getAmount() + "元，账户余额不足");
+                    logger.warn("pin:"+dto.getPin()+"棋牌游戏消费：" + dto.getAmount() + "元，账户余额不足");
                 }
             }
             if (account.getFreeze().compareTo(BigDecimal.ZERO) < 0) {
                 if (dto.getBizToken() != BizTokenEnum.qipaiconsume.getValue().intValue()) {
                     throw new BizException("account.error", "冻结金额不足");
                 } else {
-                    logger.warn("棋牌游戏取消冻结：" + dto.getFreeze() + "元，冻结金额不足");
+                    logger.warn("pin:"+dto.getPin()+"棋牌游戏取消冻结：" + dto.getFreeze() + "元，冻结金额不足");
                 }
             }
             if (account.getAmount().compareTo(account.getFreeze()) < 0) {
                 if (dto.getBizToken() != BizTokenEnum.qipaiconsume.getValue().intValue()) {
                     throw new BizException("account.error", "账户金额不足");
                 } else {
-                    logger.warn("棋牌游戏冻结账户：" + dto.getFreeze() + "元，账户金额不足");
+                    logger.warn("pin:"+dto.getPin()+"棋牌游戏冻结账户：" + dto.getFreeze() + "元，账户金额不足");
                 }
             }
             /**
