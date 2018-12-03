@@ -3,6 +3,7 @@ package com.account.service.impl;
 import com.account.domain.Account;
 import com.account.domain.AccountDetail;
 import com.account.domain.module.ChargeTypeEnum;
+import com.account.domain.module.DetailStatusEnum;
 import com.account.domain.module.TokenTypeEnum;
 import com.account.rpc.dto.AccountDetailDto;
 import com.account.rpc.dto.BizTokenEnum;
@@ -11,12 +12,14 @@ import com.account.service.AccountDetailMgDbService;
 import com.account.service.AccountMgDbService;
 import com.account.service.utils.TimeUtils;
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.common.exception.ApplicationException;
 import com.common.exception.BizException;
 import com.common.mongo.AbstractMongoService;
 import com.common.util.*;
 import com.common.util.model.YesOrNoEnum;
-import com.mongodb.BasicDBObject;
+import com.mongodb.*;
 import com.mongodb.client.AggregateIterable;
+import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.passport.rpc.UserRPCService;
@@ -25,6 +28,7 @@ import org.apache.log4j.Logger;
 import org.bson.conversions.Bson;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -44,6 +48,8 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
 
     @Reference
     private UserRPCService userRPCService;
+    @Resource
+    private MongoClient mongoClient;
 
     @Override
     public void changeTo(Long proxyId, String pin, Integer sourceType, BigDecimal sourceAmount, Integer targetType) {
@@ -101,16 +107,28 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
             upSourceAccount.setId(sourceAccount.getId());
         }
         upSourceAccount.setAmount(sourceAccount.getAmount());
-        accountMgDbService.save(upSourceAccount);
-        Account upTargetAccount = null;
-        if (targetAccount.getId() == null) {
-            upTargetAccount = targetAccount;
-        } else {
-            upTargetAccount = new Account();
-            upTargetAccount.setId(targetAccount.getId());
+
+        ClientSession clientSession = mongoClient.startSession();
+        try{
+            clientSession.startTransaction(TransactionOptions.builder().writeConcern(WriteConcern.MAJORITY).readPreference(ReadPreference.primary()).build());
+            accountMgDbService.save(upSourceAccount);
+            Account upTargetAccount = null;
+            if (targetAccount.getId() == null) {
+                upTargetAccount = targetAccount;
+            } else {
+                upTargetAccount = new Account();
+                upTargetAccount.setId(targetAccount.getId());
+            }
+            upTargetAccount.setAmount(targetAccount.getAmount().add(sourceAmount));
+            accountMgDbService.save(upTargetAccount);
+
+            clientSession.commitTransaction();
+        }catch (Exception e){
+            clientSession.abortTransaction();
+            logger.error("account.changeTo.error", e);
+            throw new ApplicationException("account.changeTo.error",e);
         }
-        upTargetAccount.setAmount(targetAccount.getAmount().add(sourceAmount));
-        accountMgDbService.save(upTargetAccount);
+
     }
 
     @Override
@@ -417,6 +435,29 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
             all = BigDecimal.valueOf(Double.parseDouble(next.get("count").toString()));
         }
         return all;
+    }
+
+    @Override
+    @Async("asyncWorkerExecutor")
+    public void verfiyDeateilStatus() {
+        AccountDetail query = new AccountDetail();
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.MINUTE,-10);
+        date = calendar.getTime();
+        query.setStartCreateTime(TimeUtils.getMinTime(date));
+        query.setEndCreateTime(TimeUtils.getMaxTime(date));
+        List<AccountDetail> details = query(query);
+        for(AccountDetail detail : details){
+            if(detail.getAfterAmount().subtract(detail.getBeforeAmount()).compareTo(detail.getChangeAmount())!=0){
+                AccountDetail upEntyity = new AccountDetail();
+                upEntyity.setId(detail.getId());
+                upEntyity.setErrorStatus(YesOrNoEnum.YES.getValue());
+                up(upEntyity);
+            }
+        }
+
     }
 
     @Override

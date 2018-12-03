@@ -258,40 +258,19 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
             ClientSession clientSession = mongoClient.startSession();
             com.mongodb.client.ClientSession clientSession1 = (com.mongodb.client.ClientSession) clientSession;
             try {
-                clientSession1.startTransaction(TransactionOptions.builder().readPreference(ReadPreference.primary()).build());
-                MongoCollection collection = mongoClient.getDatabase("account").getCollection("account");
+                clientSession1.startTransaction(TransactionOptions.builder().writeConcern(WriteConcern.MAJORITY).readPreference(ReadPreference.primary()).build());
                 if (account.getId() == null) {
-                    Map<String, Object> map = JSON.parseObject(JSON.toJSONString(account));
-                    Document document = new Document(map);
-                    collection.insertOne(clientSession1, document);
-//                        save(account);
+                        save(account);
                 } else {
-//                        Account upEntity = new Account();
-//                        upEntity.setId(account.getId());
-//                        upEntity.setAmount(account.getAmount());
-//                        upEntity.setFreeze(account.getFreeze());
-                    //查询条件
-                    Document filter = new Document();
-                    filter.put("id", account.getId());
-                    //修改字段
-                    Document updateCondtion = new Document();
-                    updateCondtion.put("amount", account.getAmount());
-                    updateCondtion.put("freeze", account.getFreeze());
-                    //修改文档
-                    Document update = new Document();
-                    update.put("$set", updateCondtion);
-                    collection.updateOne(clientSession1, filter, update);
-//                        up(upEntity);
+                        Account upEntity = new Account();
+                        upEntity.setId(account.getId());
+                        upEntity.setAmount(account.getAmount());
+                        upEntity.setFreeze(account.getFreeze());
+                        up(upEntity);
                 }
+                detail.setErrorStatus(YesOrNoEnum.NO.getValue());
                 detail.setStatus(DetailStatusEnum.Normal.getValue());
-                Date createTime = new Date();
-                detail.setCreateTime(createTime);
-                detail.setUpdateTime(createTime);
-                detail.setDelStatus(YesOrNoEnum.NO.getValue());
-                Document deDocument = new Document(JSON.parseObject(JSON.toJSONString(detail)));
-                MongoCollection DeCollection = mongoClient.getDatabase("account").getCollection("accountDetail");
-                DeCollection.insertOne(clientSession1, deDocument);
-//                    accountDetailMgDbService.save(detail);
+                accountDetailMgDbService.save(detail);
                 clientSession1.commitTransaction();
             } catch (Exception e) {
                 clientSession1.abortTransaction();

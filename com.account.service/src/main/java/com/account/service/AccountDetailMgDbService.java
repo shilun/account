@@ -67,4 +67,7 @@ public interface AccountDetailMgDbService extends MongoService<AccountDetail> {
      * @return
      */
     public BigDecimal queryProxyProfile(AccountDetailDto dto);
+
+
+    void verfiyDeateilStatus();
 }

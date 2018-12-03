@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@com.alibaba.dubbo.config.annotation.Service(interfaceClass=AccountRPCService.class)
+@com.alibaba.dubbo.config.annotation.Service(interfaceClass=AccountRPCService.class,group = "test")
 public class AccountRPCServiceImpl implements AccountRPCService {
 
     private Logger logger = Logger.getLogger(AccountRPCServiceImpl.class);

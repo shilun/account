@@ -89,6 +89,18 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
      * 时间筛选查询  1 全部 2 当天  3 本周 4 本月
      */
     private Integer dayStatus;
+    /**
+     * 数据验证状态  1 错误  2 正常
+     */
+    private Integer errorStatus;
+
+    public Integer getErrorStatus() {
+        return errorStatus;
+    }
+
+    public void setErrorStatus(Integer errorStatus) {
+        this.errorStatus = errorStatus;
+    }
 
     public Long getUserCode() {
         return userCode;
