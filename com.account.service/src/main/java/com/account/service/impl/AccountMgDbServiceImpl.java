@@ -86,10 +86,6 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
     @Value("${daishan.rocketmq.log:false}")
     private boolean logOpen;
 
-    @Resource
-    private RedissonClient redissonClient;
-
-
     @Override
     public void newBiz(InvertBizDto dto) {
 
@@ -169,13 +165,6 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
         String lock_key = MessageFormat.format(user_login_key, dto.getPin());
         DistributedLock distributedLock = distributedLockUtil.getDistributedLock(lock_key, 10 * 1000, 60 * 1000);
         boolean acquire = distributedLock.acquire();
-//        RReadWriteLock lock = redissonClient.getReadWriteLock(lock_key);
-//        boolean wl = false;
-//        try {
-//            wl = lock.writeLock().tryLock(100, 10, TimeUnit.SECONDS);
-//        } catch (InterruptedException e) {
-//            throw new ApplicationException("redis.lock.error", e);
-//        }
         if (!acquire) {
             return;
         }
@@ -287,12 +276,13 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
                     data.put("userCode", String.valueOf(userCode));
                 }
                 data.put(MqKey.COM_VERSION_MQ_KEY, "recharge");
-                executor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        sendMqMsg(data);
-                    }
-                });
+                sendMqMsg(data);
+//                executor.execute(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        sendMqMsg(data);
+//                    }
+//                });
             }
         } catch (BizException biz) {
             throw biz;
@@ -332,7 +322,7 @@ public class AccountMgDbServiceImpl extends AbstractMongoService<Account> implem
              */
             try (ClientSession clientSession = mongoClient.startSession()) {
                 com.mongodb.client.ClientSession clientSession1 = (com.mongodb.client.ClientSession) clientSession;
-                clientSession1.startTransaction(TransactionOptions.builder().readPreference(ReadPreference.primary()).build());
+                clientSession1.startTransaction(TransactionOptions.builder().writeConcern(WriteConcern.MAJORITY).readPreference(ReadPreference.primary()).build());
                 try {
                     for (Account item : list) {
                         if (item.getTokenType().intValue() == tokenType.intValue()) {
