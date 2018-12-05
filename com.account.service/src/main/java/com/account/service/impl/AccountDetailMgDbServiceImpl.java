@@ -211,7 +211,7 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
         MongoCursor<Map> iterator = aggregate.iterator();
         while (iterator.hasNext()){
             Map next = iterator.next();
-            map.put("all",next.get("amount").toString());
+            map.put("all",new BigDecimal(next.get("amount").toString()));
         }
         //代理商下的金币总额结束
 //        AccountDetail accountDetail = BeanCoper.copyProperties(AccountDetail.class,dto);
