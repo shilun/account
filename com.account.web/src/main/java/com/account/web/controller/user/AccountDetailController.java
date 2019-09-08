@@ -46,7 +46,6 @@ public class AccountDetailController extends AbstractClientController {
             List<AccountDetailDto> list = new ArrayList<>();
             for(AccountDetail detail : accountDetails.getContent()){
                 AccountDetailDto dto =  BeanCoper.copyProperties(AccountDetailDto.class,detail);
-                dto.setChargeTypeName(GlosseryEnumUtils.getItem(ChargeTypeEnum.class,dto.getChargeType()).getName());
                 list.add(dto);
             }
             Page<AccountDetailDto> page =  new PageImpl<>(list,detailDto.getPageinfo().getPage(),accountDetails.getTotalElements());

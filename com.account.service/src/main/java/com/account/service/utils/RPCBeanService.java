@@ -1,10 +1,10 @@
 package com.account.service.utils;
 
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.passport.rpc.AdminRPCService;
 import com.passport.rpc.ProxyRpcService;
 import com.passport.rpc.SMSInfoRPCService;
 import com.passport.rpc.UserRPCService;
+import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.stereotype.Component;
 
 @Component

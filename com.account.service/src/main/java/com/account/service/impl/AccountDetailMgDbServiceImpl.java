@@ -11,7 +11,6 @@ import com.account.rpc.dto.BizTypeEnum;
 import com.account.service.AccountDetailMgDbService;
 import com.account.service.AccountMgDbService;
 import com.account.service.utils.TimeUtils;
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.common.exception.ApplicationException;
 import com.common.exception.BizException;
 import com.common.mongo.AbstractMongoService;
@@ -24,12 +23,14 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.passport.rpc.UserRPCService;
 import com.passport.rpc.dto.UserDTO;
-import org.apache.log4j.Logger;
+import org.apache.dubbo.config.annotation.Reference;
+import org.slf4j.Logger; import org.slf4j.LoggerFactory;
 import org.bson.conversions.Bson;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -41,7 +42,7 @@ import java.util.*;
 @Service
 public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDetail> implements AccountDetailMgDbService {
 
-    private Logger logger = Logger.getLogger(AccountDetailMgDbServiceImpl.class);
+    private Logger logger = LoggerFactory.getLogger(AccountDetailMgDbServiceImpl.class);
 
     @Resource
     private AccountMgDbService accountMgDbService;
@@ -52,6 +53,7 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
     private MongoClient mongoClient;
 
     @Override
+    @Transactional
     public void changeTo(Long proxyId, String pin, Integer sourceType, BigDecimal sourceAmount, Integer targetType) {
         Account query = new Account();
         query.setPin(pin);
@@ -71,7 +73,6 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
                 e.setTokenType(type.getValue());
                 e.setProxyId(proxyId);
                 e.setAmount(BigDecimal.ZERO);
-                e.setFreeze(BigDecimal.ZERO);
                 e.setTokenType(type.getValue());
                 e.setStatus(YesOrNoEnum.NO.getValue());
                 list.add(e);
@@ -96,7 +97,7 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
 
         sourceAccount.setAmount(sourceAccount.getAmount().subtract(sourceAmount));
 
-        if (sourceAccount.getAmount().compareTo(sourceAccount.getFreeze()) < 0) {
+        if (sourceAccount.getAmount().compareTo(sourceAccount.getAmount()) < 0) {
             throw new BizException("changeTo.error", "转账失败,余额不足");
         }
         Account upSourceAccount = null;
@@ -169,15 +170,6 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
             for (AccountDetail detail : accountDetails.getContent()) {
                 AccountDetailDto accountDetailDto = new AccountDetailDto();
                 BeanCoper.copyProperties(accountDetailDto, detail);
-                if(accountDetailDto.getBizType() != null){
-                    accountDetailDto.setBizTypeName(GlosseryEnumUtils.getItem(BizTypeEnum.class,accountDetailDto.getBizType()).getName());
-                }
-                if(accountDetailDto.getTokenType() != null){
-                    accountDetailDto.setTokenName(GlosseryEnumUtils.getItem(TokenTypeEnum.class,accountDetailDto.getTokenType()).getName());
-                }
-                if(accountDetailDto.getChargeType() != null){
-                    accountDetailDto.setChargeTypeName(GlosseryEnumUtils.getItem(ChargeTypeEnum.class,accountDetailDto.getChargeType()).getName());
-                }
                 accountDetailDtos.add(accountDetailDto);
             }
         }
@@ -245,218 +237,27 @@ public class AccountDetailMgDbServiceImpl extends AbstractMongoService<AccountDe
 
     @Override
     public BigDecimal queryChargeUsers(AccountDetailDto dto) {
-        if(dto.getBizToken()==null){
-            dto.setBizToken(BizTokenEnum.recharge.getValue());
-        }
-        if(dto.getDayStatus()==null){
-            dto.setDayStatus(1);
-        }
-        List<BasicDBObject> querySum = new ArrayList<>();
-        BasicDBObject match = new BasicDBObject("proxyId", dto.getProxyId());
-        match.put("isRobot",YesOrNoEnum.NO.getValue());
-        match.put("bizToken",dto.getBizToken());
-        if(dto.getBizType()!=null){
-            match.put("bizType",dto.getBizType());
-        }
-        if(dto.getDayStatus().intValue()!=1){
-            Date startDate = TimeUtils.getDayStatusTime(dto.getDayStatus());
-            Date endDate = TimeUtils.getDayStatusMaxTime(dto.getDayStatus());
-            BasicDBObject timeMatch = new BasicDBObject("$gte",startDate);
-            timeMatch.put("$lt",endDate);
-            match.put("createTime",timeMatch);
-        }
-        BasicDBObject queryMatch= new BasicDBObject("$match", match);
-        //第一次group
-        querySum.add(queryMatch);
-        BasicDBObject groupByPin = new BasicDBObject("_id","$pin");
-        BasicDBObject  queryGroup1=new BasicDBObject("$group",groupByPin);
-        querySum.add(queryGroup1);
-        //第二次group
-        BasicDBObject groupByNull = new BasicDBObject("_id","null");
-        groupByNull.put("count", new BasicDBObject("$sum",1 ));
-        BasicDBObject  queryGroup2=new BasicDBObject("$group",groupByNull);
-        querySum.add(queryGroup2);
-
-        MongoCollection collection = this.template.getCollection("accountDetail");
-        AggregateIterable<Map> aggregate = collection.aggregate(querySum, Map.class);
-        MongoCursor<Map> iterator = aggregate.iterator();
-        BigDecimal all = BigDecimal.ZERO;
-        while (iterator.hasNext()){
-            Map next = iterator.next();
-            all = BigDecimal.valueOf(Double.parseDouble(next.get("count").toString()));
-        }
-        return all;
+        return null;
     }
 
     @Override
     public BigDecimal queryChargeAmount(AccountDetailDto dto) {
-        if(dto.getBizToken()==null){
-            dto.setBizToken(BizTokenEnum.recharge.getValue());
-        }
-        if(dto.getDayStatus()==null){
-            dto.setDayStatus(1);
-        }
-        List<BasicDBObject> querySum = new ArrayList<>();
-        BasicDBObject match = new BasicDBObject("proxyId", dto.getProxyId());
-        match.put("isRobot",YesOrNoEnum.NO.getValue());
-        match.put("bizToken",dto.getBizToken());
-        if(dto.getPin()!=null){
-            match.put("pin",dto.getPin());
-        }
-        if(dto.getUserCode()!=null){
-            match.put("userCode",dto.getUserCode());
-        }
-        if(dto.getBizType()!=null){
-            match.put("bizType",dto.getBizType());
-        }
-        BasicDBObject queryMatch= new BasicDBObject("$match", match);
-        //第一次group
-        querySum.add(queryMatch);
-        BasicDBObject groupByPin = new BasicDBObject("_id","$pin");
-        groupByPin.put("changeAmount", new BasicDBObject("$sum","$changeAmount" ));
-        BasicDBObject  queryGroup1=new BasicDBObject("$group",groupByPin);
-        querySum.add(queryGroup1);
-        //第二次group
-        BasicDBObject groupByNull = new BasicDBObject("_id","null");
-        groupByNull.put("count", new BasicDBObject("$sum","$changeAmount" ));
-        BasicDBObject  queryGroup2=new BasicDBObject("$group",groupByNull);
-        querySum.add(queryGroup2);
-
-        MongoCollection collection = this.template.getCollection("accountDetail");
-        AggregateIterable<Map> aggregate = collection.aggregate(querySum, Map.class);
-        MongoCursor<Map> iterator = aggregate.iterator();
-        BigDecimal all = BigDecimal.ZERO;
-        while (iterator.hasNext()){
-            Map next = iterator.next();
-            all = BigDecimal.valueOf(Double.parseDouble(next.get("count").toString()));
-        }
-        return all;
+        return null;
     }
 
     @Override
     public BigDecimal queryChargeNewUsers(AccountDetailDto dto) {
-        if(dto.getBizToken()==null){
-            dto.setBizToken(BizTokenEnum.recharge.getValue());
-        }
-        if(dto.getDayStatus()==null){
-            dto.setDayStatus(1);
-        }
-        List<BasicDBObject> querySum = new ArrayList<>();
-        BasicDBObject match = new BasicDBObject("proxyId", dto.getProxyId());
-        match.put("isRobot",YesOrNoEnum.NO.getValue());
-        match.put("bizToken",dto.getBizToken());
-        if(dto.getBizToken()!=null){
-            match.put("bizToken",dto.getBizToken());
-        }
-        if(dto.getBizType()!=null){
-            match.put("bizType",dto.getBizType());
-        }
-        BasicDBObject queryMatch= new BasicDBObject("$match", match);
-        //第一次group
-        querySum.add(queryMatch);
-        BasicDBObject groupByPin = new BasicDBObject("_id","$pin");
-        BasicDBObject  queryGroup1=new BasicDBObject("$group",groupByPin);
-        querySum.add(queryGroup1);
-        //第二次group
-        BasicDBObject groupByNull = new BasicDBObject("_id","null");
-        groupByNull.put("count", new BasicDBObject("$sum",1 ));
-        BasicDBObject  queryGroup2=new BasicDBObject("$group",groupByNull);
-        querySum.add(queryGroup2);
-
-        MongoCollection collection = this.template.getCollection("accountDetail");
-        AggregateIterable<Map> aggregate = collection.aggregate(querySum, Map.class);
-        MongoCursor<Map> iterator = aggregate.iterator();
-        BigDecimal all = BigDecimal.ZERO;
-        while (iterator.hasNext()){
-            Map next = iterator.next();
-            all = BigDecimal.valueOf(Double.parseDouble(next.get("count").toString()));
-        }
-
-        if(dto.getDayStatus().intValue()!=1){
-            List<BasicDBObject> queryByDayStatus = new ArrayList<>();
-            Date date = TimeUtils.getDayStatusTime(dto.getDayStatus());
-            match.put("createTime",new BasicDBObject("$lt",date));
-            BasicDBObject matchByDayStatus= new BasicDBObject("$match", match);
-            queryByDayStatus.add(matchByDayStatus);
-            queryByDayStatus.add(queryGroup1);
-            queryByDayStatus.add(queryGroup2);
-
-            AggregateIterable<Map> aggregate1 = collection.aggregate(queryByDayStatus, Map.class);
-            MongoCursor<Map> iterator1 = aggregate1.iterator();
-            BigDecimal byDay = BigDecimal.ZERO;
-            if(iterator1.hasNext()){
-                Map next = iterator1.next();
-                byDay = BigDecimal.valueOf(Double.parseDouble(next.get("count").toString()));
-            }
-            all = all.subtract(byDay);
-        }
-        return all;
+        return null;
     }
 
     @Override
     public BigDecimal queryProxyProfile(AccountDetailDto dto) {
-        if(dto.getDayStatus()==null){
-            dto.setDayStatus(2);
-        }
-        List<BasicDBObject> querySum = new ArrayList<>();
-        BasicDBObject match = new BasicDBObject("proxyId", dto.getProxyId());
-        match.put("isRobot",YesOrNoEnum.NO.getValue());
-        if(dto.getBizToken()!=null){
-            match.put("bizToken",dto.getBizToken());
-        }
-        if(dto.getBizType()!=null){
-            match.put("bizType",dto.getBizType());
-        }
-        if(dto.getDayStatus()!=1){
-            Date startDate = TimeUtils.getDayStatusTime(dto.getDayStatus());
-            Date endDate = TimeUtils.getDayStatusMaxTime(dto.getDayStatus());
-            BasicDBObject timeMatch = new BasicDBObject("$gte",startDate);
-            timeMatch.put("$lt",endDate);
-            match.put("createTime",timeMatch);
-        }
-        BasicDBObject queryMatch= new BasicDBObject("$match", match);
-        querySum.add(queryMatch);
-        //        第一次group
-//        BasicDBObject groupByPin = new BasicDBObject("_id","$pin");
-//        BasicDBObject  queryGroup1=new BasicDBObject("$group",groupByPin);
-//        querySum.add(queryGroup1);
-        //第二次group
-        BasicDBObject groupByNull = new BasicDBObject("_id","null");
-        groupByNull.put("count", new BasicDBObject("$sum","$changeAmount" ));
-        BasicDBObject  queryGroup2=new BasicDBObject("$group",groupByNull);
-        querySum.add(queryGroup2);
-
-        MongoCollection collection = this.template.getCollection("accountDetail");
-        AggregateIterable<Map> aggregate = collection.aggregate(querySum, Map.class);
-        MongoCursor<Map> iterator = aggregate.iterator();
-        BigDecimal all = BigDecimal.ZERO;
-        while (iterator.hasNext()){
-            Map next = iterator.next();
-            all = BigDecimal.valueOf(Double.parseDouble(next.get("count").toString()));
-        }
-        return all;
+        return null;
     }
 
     @Override
     @Async("asyncWorkerExecutor")
     public void verfiyDeateilStatus() {
-        AccountDetail query = new AccountDetail();
-        Date date = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.set(Calendar.MINUTE,-10);
-        date = calendar.getTime();
-        query.setStartCreateTime(TimeUtils.getMinTime(date));
-        query.setEndCreateTime(TimeUtils.getMaxTime(date));
-        List<AccountDetail> details = query(query);
-        for(AccountDetail detail : details){
-            if(detail.getAfterAmount().subtract(detail.getBeforeAmount()).compareTo(detail.getChangeAmount())!=0){
-                AccountDetail upEntyity = new AccountDetail();
-                upEntyity.setId(detail.getId());
-                upEntyity.setErrorStatus(YesOrNoEnum.YES.getValue());
-                up(upEntyity);
-            }
-        }
 
     }
 

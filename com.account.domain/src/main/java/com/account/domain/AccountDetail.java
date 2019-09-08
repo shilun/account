@@ -15,10 +15,6 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
      */
     private String pin;
     /**
-     * 用户id
-     */
-    private Long userCode;
-    /**
      * 代理商id
      */
     private Long proxyId;
@@ -27,10 +23,6 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
      * 系统类型 1 订单 3 棋牌 4 彩票 5小游戏
      */
     private Integer bizType;
-    /**
-     * 业务类型 充值 1 提款 2 赠送 3
-     */
-    private Integer bizToken;
     /**
      * 业务标识（外键流水号）
      */
@@ -42,131 +34,22 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
      */
     private Integer tokenType;
     /**
-     * 充值方式 0 数据库默认值  1 支付宝 2 微信 3 银联
-     */
-    private Integer chargeType;
-    /**
      * before_总余额
      */
     private BigDecimal beforeAmount;
-    /**
-     * before_冻结余额
-     */
-    private BigDecimal beforeFreeze;
     /**
      * change_总余额
      */
     private BigDecimal changeAmount;
     /**
-     * change_冻结余额
-     */
-    private BigDecimal changeFreeze;
-    /**
      * after_总余额
      */
     private BigDecimal afterAmount;
-    /**
-     * after_冻结余额
-     */
-    private BigDecimal afterFreeze;
 
     /**
      * 1 正常 2 回滚
      */
     private Integer status;
-
-
-    /**
-     * 是否为测试
-     */
-    private Integer test;
-
-    /**
-     * 是否机器人 1 是 2不是
-     */
-    private Integer isRobot;
-    /**
-     * 时间筛选查询  1 全部 2 当天  3 本周 4 本月
-     */
-    private Integer dayStatus;
-    /**
-     * 数据验证状态  1 错误  2 正常
-     */
-    private Integer errorStatus;
-
-    public Integer getErrorStatus() {
-        return errorStatus;
-    }
-
-    public void setErrorStatus(Integer errorStatus) {
-        this.errorStatus = errorStatus;
-    }
-
-    public Long getUserCode() {
-        return userCode;
-    }
-
-    public void setUserCode(Long userCode) {
-        this.userCode = userCode;
-    }
-
-    public Integer getDayStatus() {
-        return dayStatus;
-    }
-
-    public void setDayStatus(Integer dayStatus) {
-        this.dayStatus = dayStatus;
-    }
-
-    public Integer getIsRobot() {
-        return isRobot;
-    }
-
-    public void setIsRobot(Integer isRobot) {
-        this.isRobot = isRobot;
-    }
-
-    public Integer getBizToken() {
-        return bizToken;
-    }
-
-    public void setBizToken(Integer bizToken) {
-        this.bizToken = bizToken;
-    }
-
-
-    public Integer getChargeType() {
-        return chargeType;
-    }
-
-    public void setChargeType(Integer chargeType) {
-        this.chargeType = chargeType;
-    }
-
-    public Integer getTokenType() {
-        return tokenType;
-    }
-
-    public void setTokenType(Integer tokenType) {
-        this.tokenType = tokenType;
-    }
-
-    public Integer getTest() {
-        return test;
-    }
-
-    public void setTest(Integer test) {
-        this.test = test;
-    }
-
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
 
     public String getPin() {
         return pin;
@@ -200,20 +83,20 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
         this.bizId = bizId;
     }
 
+    public Integer getTokenType() {
+        return tokenType;
+    }
+
+    public void setTokenType(Integer tokenType) {
+        this.tokenType = tokenType;
+    }
+
     public BigDecimal getBeforeAmount() {
         return beforeAmount;
     }
 
     public void setBeforeAmount(BigDecimal beforeAmount) {
         this.beforeAmount = beforeAmount;
-    }
-
-    public BigDecimal getBeforeFreeze() {
-        return beforeFreeze;
-    }
-
-    public void setBeforeFreeze(BigDecimal beforeFreeze) {
-        this.beforeFreeze = beforeFreeze;
     }
 
     public BigDecimal getChangeAmount() {
@@ -224,14 +107,6 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
         this.changeAmount = changeAmount;
     }
 
-    public BigDecimal getChangeFreeze() {
-        return changeFreeze;
-    }
-
-    public void setChangeFreeze(BigDecimal changeFreeze) {
-        this.changeFreeze = changeFreeze;
-    }
-
     public BigDecimal getAfterAmount() {
         return afterAmount;
     }
@@ -240,11 +115,11 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
         this.afterAmount = afterAmount;
     }
 
-    public BigDecimal getAfterFreeze() {
-        return afterFreeze;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setAfterFreeze(BigDecimal afterFreeze) {
-        this.afterFreeze = afterFreeze;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

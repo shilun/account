@@ -5,7 +5,7 @@ import com.common.util.RPCResult;
 import com.common.util.StringUtils;
 import com.passport.rpc.UserRPCService;
 import com.passport.rpc.dto.UserDTO;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger; import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Component
 public class UserSessionHandlerInterceptor implements HandlerInterceptor {
-    private Logger logger = Logger.getLogger(UserSessionHandlerInterceptor.class);
+    private Logger logger = LoggerFactory.getLogger(UserSessionHandlerInterceptor.class);
     @Reference
     private UserRPCService userRPCService;
 

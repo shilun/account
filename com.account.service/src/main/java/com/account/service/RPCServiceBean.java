@@ -1,8 +1,8 @@
 package com.account.service;
 
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.passport.rpc.AdminRPCService;
 import com.passport.rpc.ProxyRpcService;
+import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.stereotype.Service;
 
 @Service

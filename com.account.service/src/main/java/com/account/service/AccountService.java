@@ -12,19 +12,5 @@ import java.util.List;
  *
  */
 public interface AccountService extends MongoService<Account> {
-    /**
-     * 转账
-     * @param dto
-     */
 
-    public void newBiz(InvertBizDto dto);
-
-
-    /**
-     * 冻结所有币
-     * @param proxyId
-     * @param pin
-     * @param tokenType
-     */
-    List<Account> freezeAll(Long proxyId, String pin, Integer tokenType, Integer testStatus);
 }

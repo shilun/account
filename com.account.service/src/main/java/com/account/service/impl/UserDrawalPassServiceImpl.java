@@ -122,7 +122,7 @@ public class UserDrawalPassServiceImpl extends AbstractMongoService<UserDrawalPa
         if (!userResult.getSuccess()) {
             throw new BizException(userResult.getCode(), userResult.getMessage());
         }
-        RPCResult<Boolean> result = rpcBeanService.getSmsInfoRPCService().buildSMSCode(mobile, "您好!您的验证码:" + code + ",有效时间3分钟，请及时验证!", "pay");
+        RPCResult<Boolean> result = rpcBeanService.getSmsInfoRPCService().buildSMSCode(mobile, "您好!您的验证码:" + code + ",有效时间3分钟，请及时验证!", "pay","");
         if (!result.getSuccess()) {
             throw new BizException(result.getCode(), result.getMessage());
         }

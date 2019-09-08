@@ -102,14 +102,11 @@ public class UserDrawalLogServiceImpl extends AbstractMongoService<UserDrawalLog
         fixedThreadPool.execute(() -> {
             InvertBizDto dto = new InvertBizDto();
             dto.setBizType(BIZ_TYP_DRAW_MONEY);
-            dto.setBizToken(BIZ_TYP_DRAW_MONEY);
             dto.setTokenType(RMB_TYPE);
             dto.setBizId(log.getId().toString());
             dto.setPin(pin);
             dto.setProxyId(proxyId);
             dto.setAmount(BigDecimal.ZERO.subtract(amount));
-            dto.setFreeze(BigDecimal.ZERO);
-            dto.setTest(YesOrNoEnum.NO.getValue());
             RPCResult result = accountRPCService.invertBiz(dto);
             if (result.getSuccess()) {
                 UserDrawalLog up = new UserDrawalLog();
@@ -131,7 +128,7 @@ public class UserDrawalLogServiceImpl extends AbstractMongoService<UserDrawalLog
         }
         String code = StringUtils.randomSixCode();
         String content = MessageFormat.format(MSG_CONTENT, code);
-        RPCResult<Boolean> msgResult = rpcBeanService.getSmsInfoRPCService().buildSMSCode(phoneNo, content, "pay.drawal");
+        RPCResult<Boolean> msgResult = rpcBeanService.getSmsInfoRPCService().buildSMSCode(phoneNo, content, "pay.drawal","");
         if (!msgResult.getSuccess()) {
             throw new BizException(msgResult.getCode(), msgResult.getMessage());
         }

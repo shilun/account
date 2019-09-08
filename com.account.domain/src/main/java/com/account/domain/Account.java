@@ -22,48 +22,8 @@ public class Account extends AbstractBaseEntity implements java.io.Serializable 
 	private Integer tokenType;
 	/**总金额*/
 	private BigDecimal amount;
-	/**冻结金额*/
-	private BigDecimal freeze;
 	/**状态 1 启用 2 禁用*/
 	private Integer status;
-    /**
-     * 用户id
-     */
-    private Long userCode;
-
-	/**
-	 * 是否为测试
-	 */
-	private Integer test;
-
-	/**
-	 * 是否机器人 1 是 2不是
-	 */
-	private Integer isRobot;
-
-    public Long getUserCode() {
-        return userCode;
-    }
-
-    public void setUserCode(Long userCode) {
-        this.userCode = userCode;
-    }
-
-    public Integer getIsRobot() {
-		return isRobot;
-	}
-
-	public void setIsRobot(Integer isRobot) {
-		this.isRobot = isRobot;
-	}
-
-	public Integer getTest() {
-		return test;
-	}
-
-	public void setTest(Integer test) {
-		this.test = test;
-	}
 
 	public Integer getStatus() {
 		return status;
@@ -103,13 +63,5 @@ public class Account extends AbstractBaseEntity implements java.io.Serializable 
 
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
-	}
-
-	public BigDecimal getFreeze() {
-		return freeze;
-	}
-
-	public void setFreeze(BigDecimal freeze) {
-		this.freeze = freeze;
 	}
 }

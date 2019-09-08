@@ -27,43 +27,6 @@ public class AccountDto implements Serializable {
      * 余额
      */
     private BigDecimal amount;
-    /**
-     * 冻结
-     */
-    private BigDecimal freeze;
-    /**
-     * 是否为测试 1 否 2 是
-     */
-    private Integer test;
-
-    /**
-     * 汇率
-     */
-    private BigDecimal rate;
-
-    public Long getUserCode() {
-        return userCode;
-    }
-
-    public void setUserCode(Long userCode) {
-        this.userCode = userCode;
-    }
-
-    public BigDecimal getRate() {
-        return rate;
-    }
-
-    public void setRate(BigDecimal rate) {
-        this.rate = rate;
-    }
-
-    public Integer getTest() {
-        return test;
-    }
-
-    public void setTest(Integer test) {
-        this.test = test;
-    }
 
     public Long getProxyId() {
         return proxyId;
@@ -81,20 +44,12 @@ public class AccountDto implements Serializable {
         this.pin = pin;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
+    public Long getUserCode() {
+        return userCode;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
-    public BigDecimal getFreeze() {
-        return freeze;
-    }
-
-    public void setFreeze(BigDecimal freeze) {
-        this.freeze = freeze;
+    public void setUserCode(Long userCode) {
+        this.userCode = userCode;
     }
 
     public Integer getTokenType() {
@@ -103,5 +58,13 @@ public class AccountDto implements Serializable {
 
     public void setTokenType(Integer tokenType) {
         this.tokenType = tokenType;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 }

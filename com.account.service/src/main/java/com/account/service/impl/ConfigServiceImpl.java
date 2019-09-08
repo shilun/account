@@ -1,6 +1,5 @@
 package com.account.service.impl;
 
-import com.account.dao.ConfigDao;
 import com.account.domain.Config;
 import com.account.domain.module.TokenTypeEnum;
 import com.account.service.ConfigService;
@@ -23,7 +22,6 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class ConfigServiceImpl extends AbstractMongoService<Config> implements ConfigService  {
 
-	private ConfigDao configDao;
 
 	@Override
 	protected Class getEntityClass() {

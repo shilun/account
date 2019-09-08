@@ -31,23 +31,6 @@ public interface AccountRPCService {
      */
     RPCResult<List<AccountDto>> queryAccount(String pin, Long proxyId);
 
-    /**
-     * 查询用户账户
-     * @param proxyId
-     * @param tokenType
-     * @param pageIndex
-     * @param pageSize
-     * @return
-     */
-    RPCResult<List<AccountDto>> queryAccounts(Long proxyId,Integer tokenType,Integer pageIndex,Integer pageSize);
-
-    /**
-     * 查看用户账户带汇率
-     * @param pin 用户id
-     * @param proxyId 代理商
-     * @return
-     */
-    RPCResult<List<AccountDto>> queryAccountWithRate(String pin, Long proxyId);
 
     /**
      * 执行业务
@@ -56,7 +39,7 @@ public interface AccountRPCService {
      * @param dto
      * @return
      */
-    RPCResult invertBiz(InvertBizDto dto);
+    RPCResult<BigDecimal> invertBiz(InvertBizDto dto);
 
     /**
      * 批量执行业务
@@ -68,7 +51,7 @@ public interface AccountRPCService {
     RPCResult<List<String>> invertBizs(List<InvertBizDto> dtos);
 
     /**
-     * 账户汇率转账
+     * 账户转账
      * @param proxyId 代理商id
      * @param pin 用户 pin
      * @param sourceType 源币种
@@ -78,31 +61,6 @@ public interface AccountRPCService {
      */
     RPCResult changeTo(Long proxyId, String pin, Integer sourceType,BigDecimal sourceAmount, Integer targetType);
 
-    /**
-     * 汇率查询
-     * @param sourceType 源
-     * @param targetType 目标
-     * @return
-     */
-    RPCResult<BigDecimal> queryRate(Integer sourceType, Integer targetType);
-
-
-    /**
-     * 查询账本详情
-     * @param proxyId
-     * @param pin
-     * @param page
-     * @param size
-     * @return
-     */
-    RPCResult<List<AccountDetailDto>> queryDetail(Long proxyId,String pin,Integer page,Integer size);
-
-    /**
-     * 查询账本详情 推荐使用这个
-     * @param accountDetailDto
-     * @return
-     */
-    RPCResult<List<AccountDetailDto>> queryDetail(AccountDetailDto accountDetailDto);
 
     /**
      * 查询可用总账户金额
@@ -112,109 +70,5 @@ public interface AccountRPCService {
      * @return
      */
     RPCResult<BigDecimal> findTotal(Long proxyId,String pin,Integer targetType);
-
-
-    /**
-     * 冻结并查询币种
-     * @param proxyId 代理商
-     * @param pin 用户pin
-     * @param tokenType 保险柜 1   现金 2
-     * @param testStatus 1 测试 2正试
-     * @return
-     */
-    public RPCResult<List<AccountDto>>  freezeAll(Long proxyId,String pin,Integer tokenType,Integer testStatus);
-
-    /**
-     * 用户平均充值量 及平台所有游戏币
-     * @param accountDetailDto
-     * @return
-     */
-    RPCResult<Map<String,Object>> userChargeAvrge(AccountDetailDto accountDetailDto);
-
-    /**
-     * 根据时间查询充值人数 dayStatus 1 全部 2 当天  3 本周 4 本月
-     * @param accountDetailDto
-     * @return
-     */
-    RPCResult<BigDecimal> queryChargeUsersByDay(AccountDetailDto accountDetailDto);
-    /**
-     * 根据时间查询充值总额 dayStatus1 全部 2 当天  3 本周 4 本月
-     * @param accountDetailDto
-     * @return
-     */
-    RPCResult<BigDecimal> queryChargeAmountByDay(AccountDetailDto accountDetailDto);
-
-    /**
-     * 根据时间查询农场代理商盈亏 dayStatus1 全部 2 当天  3 本周 4 本月
-     * @param accountDetailDto
-     * @return
-     */
-    RPCResult<BigDecimal> queryProxyprofileByDay(AccountDetailDto accountDetailDto);
-    /**
-     * 根据时间查询新增充值人数 dayStatus 1 全部 2 当天  3 本周 4 本月
-     * @param accountDetailDto
-     * @return
-     */
-    RPCResult<BigDecimal> queryChargeNewUsersByDay(AccountDetailDto accountDetailDto);
-
-    /**
-     * 代理商确认用户提款
-     *
-     * @param proxyId      代理商id
-     * @param userDrawalId 用户提款标识
-     * @return
-     */
-    RPCResult proxyDrawalSure(Long proxyId, Long userDrawalId);
-
-    /**
-     * 代理商确认用户取消提款
-     *
-     * @param proxyId      代理商id
-     * @param userDrawalId 用户提款标识
-     * @return
-     */
-    RPCResult proxyDrawalCancle(Long proxyId, Long userDrawalId);
-
-    /**
-     * 查询玩家用户银行卡
-     *
-     * @param dto
-     * @return
-     */
-    RPCResult<UserBankDto> queryUserBank(UserBankDto dto);
-
-
-    /**
-     * 用户提款查询
-     *
-     * @param dto
-     * @return
-     */
-    RPCResult<List<UserDrawalDto>> queryUserDrawal(UserDrawalDto dto);
-
-
-
-    /**
-     * 验证保险柜密码
-     * @param proxyId
-     * @param pin
-     * @param pass
-     * @return
-     */
-    RPCResult verfiyPass(Long proxyId, String pin, String pass);
-
-    /**
-     * 查看提现配置
-     * @param dto
-     * @return
-     */
-    RPCResult<WithdrawCfgDTO> viewWithdrawCfg(WithdrawCfgDTO dto);
-
-    /**
-     * 保存提现配置
-     * @param dto
-     * @return
-     */
-    RPCResult saveWithdrawCfg(WithdrawCfgDTO dto);
 
 }

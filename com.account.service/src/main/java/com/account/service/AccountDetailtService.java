@@ -35,41 +35,4 @@ public interface AccountDetailtService extends MongoService<AccountDetail> {
      */
     public List<AccountDetailDto> queryDetailList(Long proxyId,String pin,Integer page,Integer size);
 
-    /**
-     * 账本详情
-     * @param dto
-     * @return
-     */
-    public Page<AccountDetailDto> queryDetailList(AccountDetailDto dto);
-
-    /**
-     * 平台平均充值量
-     * @return
-     */
-    public Map<String,Object> avargCharge(AccountDetailDto dto);
-    /**
-     * 根据时间查询充值人数 dayStatus 1 全部 2 当天  3 本周 4 本月
-     * @param dto
-     * @return
-     */
-    public BigDecimal queryChargeUsers(AccountDetailDto dto);
-    /**
-     * 根据时间查询充值总额 dayStatus1 全部 2 当天  3 本周 4 本月
-     * @param dto
-     * @return
-     */
-    public BigDecimal queryChargeAmount(AccountDetailDto dto);
-    /**
-     * 根据时间查询新增充值人数 dayStatus 1 全部 2 当天  3 本周 4 本月
-     * @param dto
-     * @return
-     */
-    public BigDecimal queryChargeNewUsers(AccountDetailDto dto);
-
-    /**
-     * 根据时间查询代理商盈亏数据 dayStatus 1 全部 2 当天  3 本周 4 本月
-     * @param dto
-     * @return
-     */
-    public BigDecimal queryProxyProfile(AccountDetailDto dto);
 }

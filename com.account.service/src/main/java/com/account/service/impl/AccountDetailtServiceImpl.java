@@ -1,35 +1,25 @@
 package com.account.service.impl;
 
-import com.account.dao.AccountDetailtDao;
 import com.account.domain.Account;
 import com.account.domain.AccountDetail;
-import com.account.domain.module.ChargeTypeEnum;
 import com.account.domain.module.TokenTypeEnum;
 import com.account.rpc.dto.AccountDetailDto;
-import com.account.rpc.dto.BizTokenEnum;
-import com.account.rpc.dto.BizTypeEnum;
 import com.account.service.AccountDetailtService;
 import com.account.service.AccountService;
 import com.account.service.ConfigService;
-import com.account.service.utils.TimeUtils;
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.common.exception.BizException;
 import com.common.mongo.AbstractMongoService;
-import com.common.util.*;
+import com.common.util.BeanCoper;
 import com.common.util.model.YesOrNoEnum;
 import com.passport.rpc.UserRPCService;
-import com.passport.rpc.dto.UserDTO;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -38,7 +28,6 @@ import java.util.Map;
 @Service
 public class AccountDetailtServiceImpl extends AbstractMongoService<AccountDetail> implements AccountDetailtService {
 
-    private AccountDetailtDao accountDetailtDao;
 
     @Resource
     private AccountService accountService;
@@ -74,7 +63,6 @@ public class AccountDetailtServiceImpl extends AbstractMongoService<AccountDetai
                 e.setTokenType(type.getValue());
                 e.setProxyId(proxyId);
                 e.setAmount(BigDecimal.ZERO);
-                e.setFreeze(BigDecimal.ZERO);
                 e.setTokenType(type.getValue());
                 e.setStatus(YesOrNoEnum.NO.getValue());
                 list.add(e);
@@ -99,7 +87,7 @@ public class AccountDetailtServiceImpl extends AbstractMongoService<AccountDetai
 
         sourceAccount.setAmount(sourceAccount.getAmount().subtract(sourceAmount));
 
-        if (sourceAccount.getAmount().compareTo(sourceAccount.getFreeze()) < 0) {
+        if (sourceAccount.getAmount().compareTo(sourceAccount.getAmount()) < 0) {
             throw new BizException("changeTo.error", "转账失败,余额不足");
         }
         Account upSourceAccount = null;
@@ -139,132 +127,6 @@ public class AccountDetailtServiceImpl extends AbstractMongoService<AccountDetai
             }
         }
         return accountDetailDtos;
-    }
-
-    @Override
-    public Page<AccountDetailDto> queryDetailList(AccountDetailDto dto) {
-        List<AccountDetailDto> accountDetailDtos = new ArrayList<>();
-        AccountDetail query = BeanCoper.copyProperties(AccountDetail.class,dto);
-        if(StringUtils.isBlank(dto.getQueryStartTime())){
-            query.setStartCreateTime(null);
-        }else{
-            query.setStartCreateTime(TimeUtils.getMinTime(DateUtil.StringToDate(dto.getQueryStartTime())));
-        }
-        if(StringUtils.isBlank(dto.getQueryEndTime())){
-            query.setEndCreateTime(null);
-        }else {
-            query.setEndCreateTime(TimeUtils.getMaxTime(DateUtil.StringToDate(dto.getQueryEndTime())));
-        }
-        query.setOrderColumn("id");
-        Page<AccountDetail> accountDetails = queryByPage(query, dto.getPageinfo().getPage());
-//        List<AccountDetail> list = getBaseDao().query(query);
-//        Integer total = getBaseDao().queryCount(query);
-//        System.out.println(System.currentTimeMillis());
-//        int totalPage = total % size >0 ? total/size+1: total/size;
-        if (accountDetails.hasContent()) {
-            for (AccountDetail detail : accountDetails.getContent()) {
-                AccountDetailDto accountDetailDto = new AccountDetailDto();
-                BeanCoper.copyProperties(accountDetailDto, detail);
-                if(accountDetailDto.getBizType() != null){
-                    accountDetailDto.setBizTypeName(GlosseryEnumUtils.getItem(BizTypeEnum.class,accountDetailDto.getBizType()).getName());
-                }
-                if(accountDetailDto.getTokenType() != null){
-                    accountDetailDto.setTokenName(GlosseryEnumUtils.getItem(TokenTypeEnum.class,accountDetailDto.getTokenType()).getName());
-                }
-                if(accountDetailDto.getChargeType() != null){
-                    accountDetailDto.setChargeTypeName(GlosseryEnumUtils.getItem(ChargeTypeEnum.class,accountDetailDto.getChargeType()).getName());
-                }
-                accountDetailDtos.add(accountDetailDto);
-            }
-        }
-        Page<AccountDetailDto> detailDtoPage = new PageImpl<>(accountDetailDtos,dto.getPageinfo().getPage(),accountDetails.getTotalElements());
-        return detailDtoPage;
-    }
-
-    @Override
-    public Map<String,Object> avargCharge(AccountDetailDto dto) {
-        Map<String,Object> map = new HashMap<>();
-        UserDTO userDTO = new UserDTO();
-        if(dto.getProxyId()!=null){
-            userDTO.setProxyId(dto.getProxyId());
-        }
-//        RPCResult<List<UserDTO>> rpcResult = userRPCService.query(userDTO);
-//        List<String> pins = new ArrayList<>();
-//        if(rpcResult.getSuccess()){
-//            for(UserDTO dd : rpcResult.getData()){
-//                pins.add(dd.getPin());
-//            }
-//        }
-
-        Account account = new Account();
-        account.setProxyId(dto.getProxyId());
-        account.setIsRobot(YesOrNoEnum.NO.getValue());
-        Long aDouble =accountService.queryCount(account);
-        map.put("all",BigDecimal.valueOf(aDouble));
-
-
-        AccountDetail accountDetail = BeanCoper.copyProperties(AccountDetail.class,dto);
-        accountDetail.setIsRobot(YesOrNoEnum.NO.getValue());
-        accountDetail.setBizToken(BizTokenEnum.recharge.getValue());
-        Double amount = accountDetailtDao.querySum(accountDetail);
-        BigDecimal all = BigDecimal.valueOf(amount);
-        RPCResult<Long> longRPCResult = userRPCService.queryUsersCount(userDTO);
-        BigDecimal count = BigDecimal.valueOf(longRPCResult.getData());
-        map.put("avargCharge",all.divide(count,2, BigDecimal.ROUND_HALF_UP));
-        return map;
-    }
-
-    @Override
-    public BigDecimal queryChargeUsers(AccountDetailDto dto) {
-        AccountDetail accountDetail = BeanCoper.copyProperties(AccountDetail.class,dto);
-        accountDetail.setIsRobot(YesOrNoEnum.NO.getValue());
-        if(dto.getBizToken()==null){
-            accountDetail.setBizToken(BizTokenEnum.recharge.getValue());
-        }
-        if(dto.getDayStatus()==null){
-            accountDetail.setDayStatus(1);
-        }
-        Long amount = queryCount(accountDetail);
-        return BigDecimal.valueOf(amount);
-    }
-
-    @Override
-    public BigDecimal queryChargeAmount(AccountDetailDto dto) {
-        AccountDetail accountDetail = BeanCoper.copyProperties(AccountDetail.class,dto);
-        accountDetail.setIsRobot(YesOrNoEnum.NO.getValue());
-        if(dto.getBizToken()==null){
-            accountDetail.setBizToken(BizTokenEnum.recharge.getValue());
-        }
-        if(dto.getDayStatus()==null){
-            accountDetail.setDayStatus(1);
-        }
-        Double aDouble = accountDetailtDao.querySum(accountDetail);
-        return BigDecimal.valueOf(aDouble);
-    }
-
-    @Override
-    public BigDecimal queryChargeNewUsers(AccountDetailDto dto) {
-        AccountDetail accountDetail = BeanCoper.copyProperties(AccountDetail.class,dto);
-        accountDetail.setIsRobot(YesOrNoEnum.NO.getValue());
-        if(dto.getBizToken()==null){
-            accountDetail.setBizToken(BizTokenEnum.recharge.getValue());
-        }
-        if(dto.getDayStatus()==null){
-            accountDetail.setDayStatus(1);
-        }
-        Integer integer = accountDetailtDao.queryNewCount(accountDetail);
-        return BigDecimal.valueOf(integer);
-    }
-
-    @Override
-    public BigDecimal queryProxyProfile(AccountDetailDto dto) {
-        AccountDetail accountDetail = BeanCoper.copyProperties(AccountDetail.class,dto);
-        accountDetail.setIsRobot(YesOrNoEnum.NO.getValue());
-        if(dto.getDayStatus()==null){
-            accountDetail.setDayStatus(2);
-        }
-        Double aDouble = accountDetailtDao.querySum(accountDetail);
-        return BigDecimal.valueOf(aDouble);
     }
 
 

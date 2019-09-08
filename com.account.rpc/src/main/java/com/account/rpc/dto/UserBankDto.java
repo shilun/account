@@ -12,10 +12,6 @@ public class UserBankDto implements Serializable {
      */
     private String pin;
     /**
-     * 用户id
-     */
-    private Long userCode;
-    /**
      * 银行卡类型
      */
     private Integer bankType;
@@ -51,14 +47,6 @@ public class UserBankDto implements Serializable {
 
     public void setPin(String pin) {
         this.pin = pin;
-    }
-
-    public Long getUserCode() {
-        return userCode;
-    }
-
-    public void setUserCode(Long userCode) {
-        this.userCode = userCode;
     }
 
     public Integer getBankType() {

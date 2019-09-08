@@ -21,10 +21,6 @@ public class UserDrawalDto  extends AbstractDTO implements Serializable {
      * 提款人
      */
     private String pin;
-    /**
-     * 用户id
-     */
-    private Long userCode;
 
     /**
      * 审核时间
@@ -66,46 +62,6 @@ public class UserDrawalDto  extends AbstractDTO implements Serializable {
      * 结束审核时间
      */
     private String endAudiTime;
-
-    public Long getUserCode() {
-        return userCode;
-    }
-
-    public void setUserCode(Long userCode) {
-        this.userCode = userCode;
-    }
-
-    public String getStartDrawingDate() {
-        return startDrawingDate;
-    }
-
-    public void setStartDrawingDate(String startDrawingDate) {
-        this.startDrawingDate = startDrawingDate;
-    }
-
-    public String getEndDrawingDate() {
-        return endDrawingDate;
-    }
-
-    public void setEndDrawingDate(String endDrawingDate) {
-        this.endDrawingDate = endDrawingDate;
-    }
-
-    public String getStartAudiTime() {
-        return startAudiTime;
-    }
-
-    public void setStartAudiTime(String startAudiTime) {
-        this.startAudiTime = startAudiTime;
-    }
-
-    public String getEndAudiTime() {
-        return endAudiTime;
-    }
-
-    public void setEndAudiTime(String endAudiTime) {
-        this.endAudiTime = endAudiTime;
-    }
 
     public Long getProxyId() {
         return proxyId;
@@ -169,5 +125,37 @@ public class UserDrawalDto  extends AbstractDTO implements Serializable {
 
     public void setDetainStatus(Integer detainStatus) {
         this.detainStatus = detainStatus;
+    }
+
+    public String getStartDrawingDate() {
+        return startDrawingDate;
+    }
+
+    public void setStartDrawingDate(String startDrawingDate) {
+        this.startDrawingDate = startDrawingDate;
+    }
+
+    public String getEndDrawingDate() {
+        return endDrawingDate;
+    }
+
+    public void setEndDrawingDate(String endDrawingDate) {
+        this.endDrawingDate = endDrawingDate;
+    }
+
+    public String getStartAudiTime() {
+        return startAudiTime;
+    }
+
+    public void setStartAudiTime(String startAudiTime) {
+        this.startAudiTime = startAudiTime;
+    }
+
+    public String getEndAudiTime() {
+        return endAudiTime;
+    }
+
+    public void setEndAudiTime(String endAudiTime) {
+        this.endAudiTime = endAudiTime;
     }
 }
