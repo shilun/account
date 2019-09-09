@@ -17,9 +17,9 @@
     </dependencies>
     <distributionManagement>
         <repository>
-            <id>releases</id>
-            <name>releases</name>
-            <url>http://maven.jiahou.com/repository/maven-releases/</url>
+            <id>snapshots</id>
+            <name>snapshots</name>
+            <url>http://maven.movie.com/repository/maven-snapshots/</url>
         </repository>
     </distributionManagement>
 
