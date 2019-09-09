@@ -53,30 +53,4 @@ public class AccountDetailController extends AbstractClientController {
         });
     }
 
-    @RequestMapping("accountDetail/list")
-    @ApiOperation(value = "查询记录",notes = "bizToken: 1,充值;2,提款;3,赠送 {bizToken:1,pageInfo{page:0,size:30}}")
-    public Map<String, Object> accountDetailList(@RequestBody AccountDetailDto detailDto) {
-        return buildMessage(() -> {
-
-            return accountRPCService.queryDetail(detailDto);
-        });
-    }
-
-    @RequestMapping("accountDetail/proxyProfile")
-    @ApiOperation(value = "测试代理盈亏统计",notes = "bizToken: 1,充值;2,提款;3,赠送 {bizToken:1,pageInfo{page:0,size:30}}")
-    public Map<String, Object> proxyProfile(@RequestBody AccountDetailDto detailDto) {
-        return buildMessage(() -> {
-
-            return accountRPCService.queryProxyprofileByDay(detailDto);
-        });
-    }
-
-    @RequestMapping("accountDetail/new")
-    @ApiOperation(value = "测试代理盈亏统计",notes = "bizToken: 1,充值;2,提款;3,赠送 {bizToken:1,pageInfo{page:0,size:30}}")
-    public Map<String, Object> newUsers(@RequestBody AccountDetailDto detailDto) {
-        return buildMessage(() -> {
-
-            return accountRPCService.queryChargeNewUsersByDay(detailDto);
-        });
-    }
 }

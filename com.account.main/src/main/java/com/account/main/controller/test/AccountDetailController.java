@@ -36,20 +36,4 @@ public class AccountDetailController extends AbstractClientController {
         });
     }
 
-    /**
-     * 查询
-     *
-     * @param
-     * @return
-     */
-    @RoleResource(resource = "account")
-    @RequestMapping("/account/cco")
-    public Map<String, Object> view() {
-        return buildMessage(() ->{
-                    AccountDetailDto accountDetailDto = new AccountDetailDto();
-                    accountDetailDto.setProxyId(1l);
-                    return accountRPCService.userChargeAvrge(accountDetailDto);
-                }
-        );
-    }
 }

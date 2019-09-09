@@ -52,33 +52,6 @@ public class UserDrawalController extends AbstractClientController {
 
 
     /**
-     * 查询现金
-     *
-     * @return
-     */
-    @ApiOperation("查询保险箱金币")
-    @RequestMapping("user/cash")
-    public Map<String, Object> cash() {
-        return buildMessage(() -> {
-            UserDrawalLog query = new UserDrawalLog();
-            UserDTO userDTO = getUserDto();
-            query.setProxyId(userDTO.getProxyId());
-            query.setPin(userDTO.getPin());
-            RPCResult<List<AccountDto>> listRPCResult = accountRPCService.queryAccountWithRate(userDTO.getPin(), userDTO.getProxyId());
-            if (listRPCResult.getSuccess()) {
-                WithdrawCfgInfo withdrawCfgInfo = new WithdrawCfgInfo();
-                withdrawCfgInfo.setProxyId(userDTO.getProxyId());
-                withdrawCfgInfo = withdrawCfgInfoService.findByOne(withdrawCfgInfo);
-               Map<String,Object> obj = new HashMap<>();
-                obj.put("accounts",listRPCResult.getData());
-                obj.put("withdrawCfgInfo",withdrawCfgInfo);
-                return obj;
-            }
-            throw new BizException(listRPCResult.getCode(), listRPCResult.getMessage());
-        });
-    }
-
-    /**
      * 用户提款
      *
      * @return
