@@ -41,14 +41,6 @@ public interface AccountRPCService {
      */
     RPCResult<BigDecimal> invertBiz(InvertBizDto dto);
 
-    /**
-     * 批量执行业务
-     * amount 正数时 账户加余额 负数时增加余额
-     * freeze 正数 则从amount 转账到 freeze 则，负数时则直接减少锁定余额
-     * @param dtos
-     * @return
-     */
-    RPCResult<List<String>> invertBizs(List<InvertBizDto> dtos);
 
     /**
      * 账户转账
@@ -61,14 +53,5 @@ public interface AccountRPCService {
      */
     RPCResult changeTo(Long proxyId, String pin, Integer sourceType,BigDecimal sourceAmount, Integer targetType);
 
-
-    /**
-     * 查询可用总账户金额
-     * @param proxyId 代理商
-     * @param pin 用户pin
-     * @param targetType 目标币种
-     * @return
-     */
-    RPCResult<BigDecimal> findTotal(Long proxyId,String pin,Integer targetType);
 
 }

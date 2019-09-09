@@ -33,6 +33,16 @@ public class InvertBizDto implements Serializable {
      */
     private BigDecimal amount;
 
+    /**
+     * 备注
+     */
+    private String remark;
+
+    /**
+     * 操作人
+     */
+    private String operator;
+
     public String getPin() {
         return pin;
     }
@@ -79,5 +89,21 @@ public class InvertBizDto implements Serializable {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
     }
 }

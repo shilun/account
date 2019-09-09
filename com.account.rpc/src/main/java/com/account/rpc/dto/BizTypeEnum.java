@@ -26,7 +26,11 @@ public enum BizTypeEnum implements IGlossary {
      * 签到系统
      */
     qiandao("签到系统",6),
-    ;
+
+    /**
+     * 账本系统
+     */
+    account("账本系统",100);
 
     BizTypeEnum(String name, Integer value) {
         this.name = name;

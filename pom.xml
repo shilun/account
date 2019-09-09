@@ -13,7 +13,6 @@
         <module>com.account.service</module>
         <module>com.account.main</module>
         <module>com.account.rpc</module>
-        <module>com.account.web</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

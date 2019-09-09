@@ -1,6 +1,7 @@
 package com.account.domain;
 
 import com.common.util.AbstractBaseEntity;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -8,6 +9,7 @@ import java.util.Date;
 /**
  * @desc 账本流水账
  */
+@Data
 public class AccountDetail extends AbstractBaseEntity implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
     /**
@@ -51,75 +53,16 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
      */
     private Integer status;
 
-    public String getPin() {
-        return pin;
-    }
+    /**
+     * 备注
+     */
+    private String remark;
 
-    public void setPin(String pin) {
-        this.pin = pin;
-    }
+    /**
+     * 操作人
+     */
+    private String operator;
 
-    public Long getProxyId() {
-        return proxyId;
-    }
 
-    public void setProxyId(Long proxyId) {
-        this.proxyId = proxyId;
-    }
 
-    public Integer getBizType() {
-        return bizType;
-    }
-
-    public void setBizType(Integer bizType) {
-        this.bizType = bizType;
-    }
-
-    public String getBizId() {
-        return bizId;
-    }
-
-    public void setBizId(String bizId) {
-        this.bizId = bizId;
-    }
-
-    public Integer getTokenType() {
-        return tokenType;
-    }
-
-    public void setTokenType(Integer tokenType) {
-        this.tokenType = tokenType;
-    }
-
-    public BigDecimal getBeforeAmount() {
-        return beforeAmount;
-    }
-
-    public void setBeforeAmount(BigDecimal beforeAmount) {
-        this.beforeAmount = beforeAmount;
-    }
-
-    public BigDecimal getChangeAmount() {
-        return changeAmount;
-    }
-
-    public void setChangeAmount(BigDecimal changeAmount) {
-        this.changeAmount = changeAmount;
-    }
-
-    public BigDecimal getAfterAmount() {
-        return afterAmount;
-    }
-
-    public void setAfterAmount(BigDecimal afterAmount) {
-        this.afterAmount = afterAmount;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
 }
