@@ -77,7 +77,7 @@ public class AccountServiceImpl extends AbstractMongoService<Account> implements
         query.setPin(dto.getPin());
         query.setProxyId(dto.getProxyId());
         query.setTokenType(dto.getTokenType());
-        Account account = findByOne(query);
+        Account account = findByOne(query,true);
         //账户充值总额
         if (account == null) {
             account = new Account();
@@ -118,7 +118,7 @@ public class AccountServiceImpl extends AbstractMongoService<Account> implements
             Update upAccount = new Update();
             upAccount.inc("ver", 1);
             upAccount.inc("amount", dto.getAmount());
-            UpdateResult updateResult = template.updateFirst(upQuery, upAccount, Account.class);
+            UpdateResult updateResult = primaryTemplate.updateFirst(upQuery, upAccount, Account.class);
             if (1 != updateResult.getMatchedCount()) {
                 throw new ApplicationException("mongodb乐观锁异常");
             }
