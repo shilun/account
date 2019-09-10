@@ -26,6 +26,10 @@ public enum BizTypeEnum implements IGlossary {
      * 签到系统
      */
     qiandao("签到系统",6),
+    /**
+     * 签到系统
+     */
+    movie("电影",7),
 
     /**
      * 账本系统
