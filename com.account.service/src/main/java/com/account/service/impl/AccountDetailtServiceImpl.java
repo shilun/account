@@ -161,7 +161,7 @@ public class AccountDetailtServiceImpl extends AbstractMongoService<AccountDetai
         query.setProxyId(proxyId);
         query.setPin(pin);
         query.setOrderColumn("id");
-        query.setOrderTpe(2);
+        query.setOrderType(2);
         List<AccountDetail> accountDetails = query(query);
         if (!accountDetails.isEmpty()) {
             for (AccountDetail detail : accountDetails) {

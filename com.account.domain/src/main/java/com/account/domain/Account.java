@@ -12,11 +12,6 @@ import java.math.BigDecimal;
  * @desc 账户信息 account
  */
 @Data
-@Document(collection = "account")
-@CompoundIndexes(
-        {
-                @CompoundIndex(name = "uniIndex", def = "{'pin':1,'tokenType':1}", unique = true)
-        })
 public class Account extends AbstractBaseEntity implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
 

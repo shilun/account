@@ -12,11 +12,6 @@ import java.util.Date;
  * @desc 账本流水账
  */
 @Data
-@CompoundIndexes(
-        {
-                @CompoundIndex(name = "uniqueIndex", def = "{'bizType':1,'bizId':1}", unique = true),
-                @CompoundIndex(name = "searchIndex", def = "{'createTime':-1,'proxyId':1,'pin':1,'bizType':1}")
-        })
 public class AccountDetail extends AbstractBaseEntity implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
     /**
