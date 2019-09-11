@@ -2,6 +2,9 @@ package com.account.domain;
 
 import com.common.util.AbstractBaseEntity;
 import lombok.Data;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
 
@@ -9,6 +12,11 @@ import java.math.BigDecimal;
  * @desc 账户信息 account
  */
 @Data
+@Document(collection = "account")
+@CompoundIndexes(
+        {
+                @CompoundIndex(name = "uniIndex", def = "{'pin':1,'tokenType':1}", unique = true)
+        })
 public class Account extends AbstractBaseEntity implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
 

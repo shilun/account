@@ -19,10 +19,9 @@ public interface AccountRPCService {
      * @param proxyId
      * @param pin
      * @param tokenType   * 保险柜 1   现金 2
-     * @param testStatus  * 是否为测试 1 否 2 是
      * @return
      */
-    RPCResult<AccountDto>  findAccount(Long proxyId,String pin,Integer tokenType,Integer testStatus);
+    RPCResult<AccountDto>  findAccount(Long proxyId,String pin,Integer tokenType);
     /**
      * 查看用户账户
      * @param pin 用户id

@@ -106,7 +106,7 @@ public class AccountServiceImpl extends AbstractMongoService<Account> implements
         detail.setStatus(DetailStatusEnum.Normal.getValue());
         accountDetailtService.insert(detail);
         //修改充值总额
-        if (account.getId() == null || StringUtils.isNotBlank(account.getUuid())) {
+        if (account.getId() == null || StringUtils.isNotBlank(account.getId())) {
             insert(account);
         } else {
             Query upQuery = new Query();

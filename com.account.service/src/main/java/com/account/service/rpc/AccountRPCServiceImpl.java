@@ -1,16 +1,17 @@
 package com.account.service.rpc;
 
-import com.account.domain.*;
+import com.account.domain.Account;
 import com.account.domain.module.TokenTypeEnum;
 import com.account.rpc.AccountRPCService;
-import com.account.rpc.dto.*;
-import com.account.service.*;
+import com.account.rpc.dto.AccountDto;
+import com.account.rpc.dto.InvertBizDto;
+import com.account.service.AccountDetailtService;
+import com.account.service.AccountService;
 import com.common.exception.BizException;
 import com.common.util.BeanCoper;
 import com.common.util.RPCResult;
 import com.common.util.model.YesOrNoEnum;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,9 +21,8 @@ import java.util.List;
 
 @Service
 @org.apache.dubbo.config.annotation.Service
+@Slf4j
 public class AccountRPCServiceImpl implements AccountRPCService {
-
-    private Logger logger = LoggerFactory.getLogger(AccountRPCServiceImpl.class);
 
 
     @Resource
@@ -41,7 +41,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
             result.setData(resultlist);
             return result;
         } catch (Exception e) {
-            logger.error("查询账户失败", e);
+            log.error("查询账户失败", e);
             result.setSuccess(false);
         }
         result.setMessage("查询账户失败");
@@ -96,7 +96,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
             result.setMessage(e.getMessage());
             return result;
         } catch (Exception e) {
-            logger.error("执行业务失败", e);
+            log.error("执行业务失败", e);
         }
         result.setCode("account.invertBiz.error");
         result.setMessage("执行业务失败");
@@ -116,7 +116,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
             result.setMessage(e.getMessage());
             return result;
         } catch (Exception e) {
-            logger.error("AccountRPCServiceImpl.changeTo.error", e);
+            log.error("AccountRPCServiceImpl.changeTo.error", e);
             result.setSuccess(false);
             result.setCode("changeTo.error");
             result.setMessage("转账失败");
@@ -126,7 +126,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
 
 
     @Override
-    public RPCResult<AccountDto> findAccount(Long proxyId, String pin, Integer tokenType, Integer testStatus) {
+    public RPCResult<AccountDto> findAccount(Long proxyId, String pin, Integer tokenType) {
         RPCResult<AccountDto> result = null;
         try {
             Account query = new Account();
@@ -146,6 +146,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
             result = new RPCResult<>(dto);
             return result;
         } catch (Exception e) {
+            log.error("查询账户失败",e);
             result = new RPCResult<>();
             result.setMessage("查询账户失败");
             result.setCode("account.findAccount.error");

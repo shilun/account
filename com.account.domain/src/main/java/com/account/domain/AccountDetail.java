@@ -2,6 +2,8 @@ package com.account.domain;
 
 import com.common.util.AbstractBaseEntity;
 import lombok.Data;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -10,6 +12,11 @@ import java.util.Date;
  * @desc 账本流水账
  */
 @Data
+@CompoundIndexes(
+        {
+                @CompoundIndex(name = "uniqueIndex", def = "{'bizType':1,'bizId':1}", unique = true),
+                @CompoundIndex(name = "searchIndex", def = "{'createTime':-1,'proxyId':1,'pin':1,'bizType':1}")
+        })
 public class AccountDetail extends AbstractBaseEntity implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
     /**
@@ -62,7 +69,6 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
      * 操作人
      */
     private String operator;
-
 
 
 }
