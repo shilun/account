@@ -13,6 +13,7 @@ import com.common.mongo.AbstractMongoService;
 import com.common.util.BeanCoper;
 import com.common.util.GlosseryEnumUtils;
 import com.common.util.StringUtils;
+import com.common.util.model.OrderTypeEnum;
 import com.common.util.model.YesOrNoEnum;
 import com.mongodb.client.result.UpdateResult;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -161,7 +162,7 @@ public class AccountDetailtServiceImpl extends AbstractMongoService<AccountDetai
         query.setProxyId(proxyId);
         query.setPin(pin);
         query.setOrderColumn("id");
-        query.setOrderType(2);
+        query.setOrderType(OrderTypeEnum.DESC);
         List<AccountDetail> accountDetails = query(query);
         if (!accountDetails.isEmpty()) {
             for (AccountDetail detail : accountDetails) {
