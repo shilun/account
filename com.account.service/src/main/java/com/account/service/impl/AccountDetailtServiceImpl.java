@@ -54,7 +54,7 @@ public class AccountDetailtServiceImpl extends AbstractMongoService<AccountDetai
         Account accountQuery = new Account();
         accountQuery.setPin(pin);
         accountQuery.setProxyId(proxyId);
-        List<Account> list = accountService.query(accountQuery,true);
+        List<Account> list = accountService.query(accountQuery, true);
         if (list == null) {
             list = new ArrayList<>();
         }
@@ -129,7 +129,7 @@ public class AccountDetailtServiceImpl extends AbstractMongoService<AccountDetai
             upAccount.inc("amount", sourceAmount.negate());
             UpdateResult updateResult = primaryTemplate.updateFirst(upQuery, upAccount, Account.class);
             if (1 != updateResult.getMatchedCount()) {
-                throw new ApplicationException("mongodb乐观锁异常");
+                throw new ApplicationException("mongodb异常");
             }
         }
         if (targetAccount.getId() == null) {
