@@ -15,24 +15,14 @@ import java.util.Map;
  *
  */
 public interface AccountDetailtService extends MongoService<AccountDetail> {
-    /**
-     * 转账
-     * @param proxyId
-     * @param pin
-     * @param sourceType
-     * @param sourceAmount
-     * @param targetType
-     */
-    public void changeTo(Long proxyId, String pin, Integer sourceType, BigDecimal sourceAmount, Integer targetType);
 
     /**
      * 账本详情
-     * @param proxyId
      * @param pin
      * @param page
      * @param size
      * @return
      */
-    public List<AccountDetailDto> queryDetailList(Long proxyId,String pin,Integer page,Integer size);
+    public List<AccountDetailDto> queryDetailList(String pin,Integer page,Integer size);
 
 }

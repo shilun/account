@@ -1,7 +1,6 @@
 package com.account.service.rpc;
 
 import com.account.domain.Account;
-import com.account.domain.module.TokenTypeEnum;
 import com.account.rpc.AccountRPCService;
 import com.account.rpc.dto.AccountDto;
 import com.account.rpc.dto.InvertBizDto;
@@ -16,8 +15,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @org.apache.dubbo.config.annotation.Service
