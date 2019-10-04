@@ -7,34 +7,15 @@ import com.common.util.IGlossary;
  */
 public enum BizTypeEnum implements IGlossary {
     /**
-     * 订单系统
+     * 充值
      */
-    order("订单系统",1),
+    pay("充值",1),
     /**
-     * 棋牌
+     * 提款
      */
-    qipai("棋牌",3),
-    /**
-     * 彩票
-     */
-    caipiao("彩票",4),
-    /**
-     * 小游戏
-     */
-    smallgame("小游戏",5),
-    /**
-     * 签到系统
-     */
-    qiandao("签到系统",6),
-    /**
-     * 签到系统
-     */
-    movie("电影",7),
+    tiguan("提款",3),
 
-    /**
-     * 账本系统
-     */
-    account("账本系统",100);
+    ;
 
     BizTypeEnum(String name, Integer value) {
         this.name = name;

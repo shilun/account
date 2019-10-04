@@ -13,23 +13,12 @@ import java.util.Map;
  */
 public interface AccountRPCService {
 
-
     /**
-     * 查询账本信息
-     * @param proxyId
+     * 查询账户
      * @param pin
-     * @param tokenType   * 保险柜 1   现金 2
      * @return
      */
-    RPCResult<AccountDto>  findAccount(Long proxyId,String pin,Integer tokenType);
-    /**
-     * 查看用户账户
-     * @param pin 用户id
-     * @param proxyId 代理商
-     * @return
-     */
-    RPCResult<List<AccountDto>> queryAccount(String pin, Long proxyId);
-
+    RPCResult<AccountDto>  findAccount(String pin);
 
     /**
      * 执行业务
@@ -40,17 +29,6 @@ public interface AccountRPCService {
      */
     RPCResult<BigDecimal> invertBiz(InvertBizDto dto);
 
-
-    /**
-     * 账户转账
-     * @param proxyId 代理商id
-     * @param pin 用户 pin
-     * @param sourceType 源币种
-     * @param sourceAmount 源数量
-     * @param targetType 目标币种
-     * @return
-     */
-    RPCResult changeTo(Long proxyId, String pin, Integer sourceType,BigDecimal sourceAmount, Integer targetType);
 
 
 }

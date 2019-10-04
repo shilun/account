@@ -2,8 +2,6 @@ package com.account.service.impl;
 
 import com.account.domain.Account;
 import com.account.domain.AccountDetail;
-import com.account.domain.module.DetailStatusEnum;
-import com.account.domain.module.TokenTypeEnum;
 import com.account.rpc.dto.BizTypeEnum;
 import com.account.rpc.dto.InvertBizDto;
 import com.account.service.AccountDetailtService;
@@ -44,12 +42,6 @@ public class AccountServiceImpl extends AbstractMongoService<Account> implements
 
     @Transactional
     public BigDecimal newBiz(InvertBizDto dto) {
-        if (dto.getProxyId() == null) {
-            throw new BizException("dto.error.proxyId", "数据验证失败,proxyId null");
-        }
-        if (dto.getTokenType() == null) {
-            throw new BizException("dto.error.tokenType", "数据验证失败,tokenType null");
-        }
         if (StringUtils.isBlank(dto.getBizId())) {
             throw new BizException("dto.error.BizId", "数据验证失败, bizId null");
         }
@@ -59,39 +51,27 @@ public class AccountServiceImpl extends AbstractMongoService<Account> implements
         if (StringUtils.isBlank(dto.getPin())) {
             throw new BizException("dto.error.pin", "数据验证失败 pin null");
         }
-        if (dto.getTokenType() == null) {
-            throw new BizException("dto.error.tokenType", "数据验证失败");
-        }
         if (dto.getAmount() == null) {
             dto.setAmount(BigDecimal.ZERO);
         }
-        TokenTypeEnum tokenType = GlosseryEnumUtils.getItem(TokenTypeEnum.class, dto.getTokenType());
-        if (tokenType == null) {
-            throw new BizException("dto.error.tokenType", "tokenType 非法");
-        }
-        BizTypeEnum bizType = GlosseryEnumUtils.getItem(BizTypeEnum.class, dto.getBizType());
+        BizTypeEnum bizType = GlosseryEnumUtils.getItem(BizTypeEnum.class, dto.getBizType().getValue());
         if (bizType == null) {
             throw new BizException("dto.error.bizType", "bizType 非法");
         }
         Account query = new Account();
         query.setPin(dto.getPin());
-        query.setProxyId(dto.getProxyId());
-        query.setTokenType(dto.getTokenType());
         Account account = findByOne(query, true);
         //账户充值总额
         if (account == null) {
             account = new Account();
-            account.setTokenType(dto.getTokenType());
             account.setAmount(BigDecimal.ZERO);
-            account.setProxyId(dto.getProxyId());
             account.setPin(dto.getPin());
+            account.setVer(0);
+            account.setStatus(YesOrNoEnum.YES.getValue());
         }
         AccountDetail detail = new AccountDetail();
         detail.setPin(dto.getPin());
-        detail.setProxyId(dto.getProxyId());
-        detail.setTokenType(dto.getTokenType());
         detail.setStatus(YesOrNoEnum.YES.getValue());
-        detail.setBizType(bizType.getValue());
         detail.setBizId(dto.getBizId());
         detail.setRemark(dto.getRemark());
         detail.setOperator(dto.getOperator());
@@ -103,7 +83,7 @@ public class AccountServiceImpl extends AbstractMongoService<Account> implements
             logger.warn("pin:" + dto.getPin() + "消费：" + dto.getAmount() + "分，账户余额不足");
             throw new BizException("account.error", "账户余额不足");
         }
-        detail.setStatus(DetailStatusEnum.Normal.getValue());
+        detail.setStatus(YesOrNoEnum.YES.getValue());
         accountDetailtService.insert(detail);
         //修改充值总额
         if (StringUtils.isBlank(account.getId())) {
@@ -111,8 +91,6 @@ public class AccountServiceImpl extends AbstractMongoService<Account> implements
         } else {
             Query upQuery = new Query();
             Criteria criteria = Criteria.where("pin").is(dto.getPin());
-            criteria.and("proxyId").is(dto.getProxyId());
-            criteria.and("tokenType").is(dto.getTokenType());
             criteria.and("ver").is(account.getVer());
             upQuery.addCriteria(criteria);
             Update upAccount = new Update();

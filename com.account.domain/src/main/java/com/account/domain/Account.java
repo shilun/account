@@ -16,15 +16,9 @@ public class Account extends AbstractBaseEntity implements java.io.Serializable 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 代理商id
-     */
-    private Long proxyId;
-    /**
      * pin
      */
     private String pin;
-    /***币种 1(人民币)    2 金币*/
-    private Integer tokenType;
     /**
      * 总金额
      */

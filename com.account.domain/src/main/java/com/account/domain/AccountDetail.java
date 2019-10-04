@@ -18,25 +18,11 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
      * pin
      */
     private String pin;
-    /**
-     * 代理商id
-     */
-    private Long proxyId;
 
-    /**
-     * 系统类型 1 订单 3 棋牌 4 彩票 5小游戏
-     */
-    private Integer bizType;
     /**
      * 业务标识（外键流水号）
      */
     private String bizId;
-
-    /***
-     * 币种
-     * * 1(人民币)    2 金币   3 农场币  4彩票币
-     */
-    private Integer tokenType;
     /**
      * before_总余额
      */
