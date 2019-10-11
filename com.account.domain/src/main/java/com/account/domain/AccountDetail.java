@@ -2,11 +2,8 @@ package com.account.domain;
 
 import com.common.util.AbstractBaseEntity;
 import lombok.Data;
-import org.springframework.data.mongodb.core.index.CompoundIndex;
-import org.springframework.data.mongodb.core.index.CompoundIndexes;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * @desc 账本流水账
