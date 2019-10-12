@@ -51,8 +51,11 @@ public class AccountServiceImpl extends AbstractMongoService<Account> implements
         if (StringUtils.isBlank(dto.getPin())) {
             throw new BizException("dto.error.pin", "数据验证失败 pin null");
         }
-        if (dto.getAmount() == null) {
-            dto.setAmount(BigDecimal.ZERO);
+        if (dto.getTokenType() == null) {
+            throw new BizException("dto.error.tokenType", "数据验证失败tokenType null");
+        }
+        if (dto.getAmount() == null || BigDecimal.ZERO.compareTo(dto.getAmount()) == 0) {
+            throw new BizException("dto.error.amount", "数据验证失败acount null");
         }
         BizTypeEnum bizType = GlosseryEnumUtils.getItem(BizTypeEnum.class, dto.getBizType().getValue());
         if (bizType == null) {
@@ -60,10 +63,12 @@ public class AccountServiceImpl extends AbstractMongoService<Account> implements
         }
         Account query = new Account();
         query.setPin(dto.getPin());
+        query.setTokenType(dto.getTokenType());
         Account account = findByOne(query, true);
         //账户充值总额
         if (account == null) {
             account = new Account();
+            account.setTokenType(dto.getTokenType());
             account.setAmount(BigDecimal.ZERO);
             account.setPin(dto.getPin());
             account.setVer(0);
@@ -78,11 +83,13 @@ public class AccountServiceImpl extends AbstractMongoService<Account> implements
         detail.setBeforeAmount(account.getAmount());
         account.setAmount(account.getAmount().add(dto.getAmount()));
         detail.setChangeAmount(dto.getAmount());
+        detail.setTokenType(dto.getTokenType());
         detail.setAfterAmount(account.getAmount());
         if (account.getAmount().compareTo(BigDecimal.ZERO) < 0) {
             logger.warn("pin:" + dto.getPin() + "消费：" + dto.getAmount() + "分，账户余额不足");
             throw new BizException("account.error", "账户余额不足");
         }
+
         detail.setStatus(YesOrNoEnum.YES.getValue());
         accountDetailtService.insert(detail);
         //修改充值总额
@@ -91,14 +98,15 @@ public class AccountServiceImpl extends AbstractMongoService<Account> implements
         } else {
             Query upQuery = new Query();
             Criteria criteria = Criteria.where("pin").is(dto.getPin());
+            criteria.and("tokenType").is(dto.getTokenType());
             criteria.and("ver").is(account.getVer());
             upQuery.addCriteria(criteria);
             Update upAccount = new Update();
             upAccount.inc("ver", 1);
-            upAccount.set("amount", account.getAmount());
+            upAccount.inc("amount", account.getAmount());
             UpdateResult updateResult = primaryTemplate.updateFirst(upQuery, upAccount, Account.class);
             if (1 != updateResult.getMatchedCount()) {
-                throw new ApplicationException("mongodb乐观锁异常");
+                throw new ApplicationException("mongodb更新失败");
             }
         }
         return account.getAmount();

@@ -23,6 +23,11 @@ public class Account extends AbstractBaseEntity implements java.io.Serializable 
      * 总金额
      */
     private BigDecimal amount;
+
+    /**
+     * 账户类型
+     */
+    private Integer tokenType;
     /**
      * 状态 1 启用 2 禁用
      */

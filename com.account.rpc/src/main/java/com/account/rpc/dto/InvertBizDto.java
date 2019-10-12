@@ -14,6 +14,10 @@ import java.math.BigDecimal;
 public class InvertBizDto implements Serializable {
     private String pin;
     /**
+     * 账户类型
+     */
+    private Integer tokenType;
+    /**
      * 业务类型
      */
     private BizTypeEnum bizType;

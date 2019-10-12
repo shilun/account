@@ -30,10 +30,10 @@ public class AccountRPCServiceImpl implements AccountRPCService {
 
 
     @Override
-    public RPCResult<AccountDto> findAccount(String pin) {
+    public RPCResult<AccountDto> findAccount(String pin, Integer tokenType) {
         RPCResult<AccountDto> result = new RPCResult<>();
         try {
-            AccountDto resultlist = getAccountDtos(pin);
+            AccountDto resultlist = getAccountDtos(pin, tokenType);
             result.setSuccess(true);
             result.setData(resultlist);
             return result;
@@ -47,9 +47,10 @@ public class AccountRPCServiceImpl implements AccountRPCService {
     }
 
 
-    private AccountDto getAccountDtos(String pin) {
+    private AccountDto getAccountDtos(String pin, Integer tokenType) {
         Account account = new Account();
         account.setPin(pin);
+        account.setTokenType(tokenType);
         account = accountService.findByOne(account);
         if (account == null) {
             account = new Account();

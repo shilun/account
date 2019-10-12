@@ -16,9 +16,10 @@ public interface AccountRPCService {
     /**
      * 查询账户
      * @param pin
+     * @param tokenType 账户类型
      * @return
      */
-    RPCResult<AccountDto>  findAccount(String pin);
+    RPCResult<AccountDto>  findAccount(String pin,Integer tokenType);
 
     /**
      * 执行业务

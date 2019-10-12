@@ -17,6 +17,11 @@ public class AccountDetail extends AbstractBaseEntity implements java.io.Seriali
     private String pin;
 
     /**
+     * 账户类型
+     */
+    private Integer tokenType;
+
+    /**
      * 业务标识（外键流水号）
      */
     private String bizId;
