@@ -10,10 +10,15 @@ public enum BizTypeEnum implements IGlossary {
      * 充值
      */
     pay("充值",1),
+
     /**
      * 提款
      */
-    tiguan("提款",3),
+    tiguan("提款",2),
+    /**
+     * 彩票
+     */
+    caipiao("彩票",3)
 
     ;
 

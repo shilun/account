@@ -71,8 +71,7 @@ public class AccountRPCServiceImpl implements AccountRPCService {
             result.setSuccess(true);
             return result;
         } catch (BizException e) {
-            result.setCode(e.getCode());
-            result.setMessage(e.getMessage());
+            result.setException(e);
             return result;
         } catch (Exception e) {
             log.error("执行业务失败", e);
