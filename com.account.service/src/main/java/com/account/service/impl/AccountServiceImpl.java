@@ -87,7 +87,7 @@ public class AccountServiceImpl extends AbstractMongoService<Account> implements
         detail.setAfterAmount(account.getAmount());
         if (account.getAmount().compareTo(BigDecimal.ZERO) < 0) {
             logger.warn("pin:" + dto.getPin() + "消费：" + dto.getAmount() + "分，账户余额不足");
-            throw new BizException("account.error", "账户余额不足");
+            throw new BizException("account.not.enough", "账户余额不足");
         }
 
         detail.setStatus(YesOrNoEnum.YES.getValue());
